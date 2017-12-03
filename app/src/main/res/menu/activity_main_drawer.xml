@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_bill"
+            android:icon="@drawable/ic_receipt_black_24dp"
+            android:title="@string/monthly_bill_nav" />
+        <item
+            android:id="@+id/nav_room"
+            android:icon="@drawable/ic_store_black_24dp"
+            android:title="@string/rooms_nav" />
+        <item
+            android:id="@+id/nav_fee"
+            android:icon="@drawable/ic_attach_money_black_24dp"
+            android:title="@string/fee_details_nav" />
+        <item
+            android:id="@+id/nav_leave"
+            android:icon="@drawable/ic_local_airport_black_24dp"
+            android:title="@string/leave_nav" />
+    </group>
+
+    <item android:title="@string/manage_nav_group">
+        <menu>
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/send_nav" />
+            <item
+                android:id="@+id/nav_how"
+                android:icon="@drawable/ic_live_help_black_24dp"
+                android:title="@string/how_it_works_nav" />
+        </menu>
+    </item>
+
+</menu>

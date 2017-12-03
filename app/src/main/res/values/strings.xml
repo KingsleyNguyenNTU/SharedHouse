@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Shared House</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="monthly_bill_nav">Monthly Bill</string>
+    <string name="rooms_nav">Rooms</string>
+    <string name="fee_details_nav">Fee Details</string>
+    <string name="manage_nav_group">Manage</string>
+    <string name="send_nav">Send</string>
+    <string name="how_it_works_nav">How it works</string>
+    <string name="leave_nav">Housemates Vacations</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="room_name_label">Room Name:</string>
+    <string name="save_btn_label">Save</string>
+    <string name="edit_room_text_label">Please register a new room for sharing renting fee.</string>
+    <string name="edit_room_roommate_label">Roommates:</string>
+    <string name="add_btn_label">Add</string>
+</resources>
