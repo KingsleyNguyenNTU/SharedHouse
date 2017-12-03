@@ -1,16 +1,20 @@
 package com.example.mkhoi.sharedhouse.rooms_view
 
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 
 import com.example.mkhoi.sharedhouse.R
+import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
 import com.example.mkhoi.sharedhouse.rooms_view.dummy.DummyContent
+import kotlinx.android.synthetic.main.app_bar_main.*
 
 class RoomsFragment : Fragment() {
     // TODO: Customize parameters
@@ -39,6 +43,19 @@ class RoomsFragment : Fragment() {
             view.adapter = MyRoomRecyclerViewAdapter(DummyContent.ITEMS)
         }
         return view
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val fab = activity.findViewById(R.id.fab) as FloatingActionButton
+        fab.visibility = VISIBLE
+        fab?.setOnClickListener { view ->
+            activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_content_fragment, EditRoomFragment.newInstance())
+                    .addToBackStack(EditRoomFragment::class.java.canonicalName)
+                    .commit()
+        }
     }
 
     companion object {

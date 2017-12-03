@@ -20,4 +20,9 @@
     <string name="edit_room_text_label">Please register a new room for sharing renting fee.</string>
     <string name="edit_room_roommate_label">Roommates:</string>
     <string name="add_btn_label">Add</string>
+    <string name="roommate_name_label">Name</string>
+    <string name="roommate_phone_label">Phone Number</string>
+    <string name="add_roommate_dialog_title">Add new roommate</string>
+    <string name="ok_btn_label">OK</string>
+    <string name="cancel_btn_label">Cancel</string>
 </resources>

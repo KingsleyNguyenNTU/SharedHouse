@@ -12,7 +12,7 @@ class EditRoomRepository @Inject constructor(val unitDao: UnitDao, val personDao
     fun addRoom(unit: Unit, roommates: List<Person>){
         val unitId = unitDao.insertUnit(unit).toInt()
         for (roommate in roommates){
-            roommate.id = unitId
+            roommate.unitId = unitId
         }
         personDao.insertPersons(roommates)
     }
