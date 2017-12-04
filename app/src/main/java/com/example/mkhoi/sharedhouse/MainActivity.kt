@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_room -> {
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_content_fragment, RoomsFragment.newInstance(1))
+                        .replace(R.id.main_content_fragment, RoomsFragment.newInstance())
                         .commitNow()
             }
         }

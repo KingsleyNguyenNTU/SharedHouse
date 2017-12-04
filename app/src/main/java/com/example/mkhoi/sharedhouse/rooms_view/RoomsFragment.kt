@@ -1,52 +1,44 @@
 package com.example.mkhoi.sharedhouse.rooms_view
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-
+import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
-import com.example.mkhoi.sharedhouse.rooms_view.dummy.DummyContent
-import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.fragment_room_list.*
 
 class RoomsFragment : Fragment() {
-    // TODO: Customize parameters
-    private var mColumnCount = 1
+
+    companion object {
+        fun newInstance()= RoomsFragment()
+    }
+
+    internal lateinit var viewModel: RoomsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (arguments != null) {
-            mColumnCount = arguments.getInt(ARG_COLUMN_COUNT)
-        }
+        viewModel = ViewModelProviders.of(this, RoomsViewModel.Factory())
+                .get(RoomsViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_room_list, container, false)
-
-        // Set the adapter
-        if (view is RecyclerView) {
-            val context = view.getContext()
-            if (mColumnCount <= 1) {
-                view.layoutManager = LinearLayoutManager(context)
-            } else {
-                view.layoutManager = GridLayoutManager(context, mColumnCount)
-            }
-            view.adapter = MyRoomRecyclerViewAdapter(DummyContent.ITEMS)
-        }
-        return view
-    }
+                              savedInstanceState: Bundle?) =
+            inflater.inflate(R.layout.fragment_room_list, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        room_list.layoutManager = LinearLayoutManager(context)
+        room_list.adapter = MyRoomRecyclerViewAdapter(emptyList(), context)
+        (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
 
         val fab = activity.findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = VISIBLE
@@ -56,20 +48,12 @@ class RoomsFragment : Fragment() {
                     .addToBackStack(EditRoomFragment::class.java.canonicalName)
                     .commit()
         }
-    }
 
-    companion object {
-
-        // TODO: Customize parameter argument names
-        private val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        fun newInstance(columnCount: Int): RoomsFragment {
-            val fragment = RoomsFragment()
-            val args = Bundle()
-            args.putInt(ARG_COLUMN_COUNT, columnCount)
-            fragment.arguments = args
-            return fragment
-        }
+        viewModel.rooms.observe(this, Observer {
+            it?.let {
+                (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = GONE
+                room_list.adapter = MyRoomRecyclerViewAdapter(it, context)
+            }
+        })
     }
 }

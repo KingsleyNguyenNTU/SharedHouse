@@ -21,6 +21,11 @@ import javax.inject.Singleton
     @Singleton
     fun providePersonDao(appDatabase: AppDatabase) =  appDatabase.personDao()
 
+
+    @Provides
+    @Singleton
+    fun provideUnitPersonDao(appDatabase: AppDatabase) =  appDatabase.unitPersonDao()
+
     @Provides
     @Singleton
     fun provideDatabase() =  Room.databaseBuilder(app, AppDatabase::class.java!!, AppDatabase.DB_NAME).build()

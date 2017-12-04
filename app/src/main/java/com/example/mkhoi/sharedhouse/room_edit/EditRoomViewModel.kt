@@ -9,15 +9,15 @@ import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.database.entity.Unit
 
 class EditRoomViewModel(val repository: EditRoomRepository): ViewModel() {
-    var room: MutableLiveData<Unit> = MutableLiveData()
-    var roommates: MutableLiveData<List<Person>> = MutableLiveData()
+    val room: MutableLiveData<Unit> = MutableLiveData()
+    val roommates: MutableLiveData<List<Person>> = MutableLiveData()
         get() {
             if (field.value == null) {
                 field.value = emptyList()
             }
             return field
         }
-    var isSaving: MutableLiveData<Boolean> = MutableLiveData()
+    val isSaving: MutableLiveData<Boolean> = MutableLiveData()
 
     fun save(newRoom: Unit) {
         isSaving.value = true

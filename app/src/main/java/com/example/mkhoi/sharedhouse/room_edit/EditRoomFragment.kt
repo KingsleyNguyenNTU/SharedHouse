@@ -43,9 +43,9 @@ class EditRoomFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         roommates_list.layoutManager = LinearLayoutManager(context)
+        roommates_list.adapter = RoommatesRecyclerViewAdapter(emptyList())
 
         initButtonListener()
-        roommates_list.adapter = RoommatesRecyclerViewAdapter(emptyList())
 
         viewModel.roommates.observe(this, Observer {
             roommates_list.adapter = it?.let { roommates -> RoommatesRecyclerViewAdapter(roommates) }
