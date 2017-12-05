@@ -27,13 +27,12 @@ class EditRoomViewModel(val repository: EditRoomRepository,
         }
     val isSaving: MutableLiveData<Boolean> = MutableLiveData()
 
-    fun save(newRoom: Unit) {
+    fun save() {
         isSaving.value = true
-        room.value = newRoom
         room.value?.let {
             val task = DatabaseAsyncTask()
             task.execute({
-                repository.addRoom(it, roommates.value?: emptyList())
+                repository.saveRoom(it, roommates.value?: emptyList())
                 isSaving.postValue(false)
             })
         }

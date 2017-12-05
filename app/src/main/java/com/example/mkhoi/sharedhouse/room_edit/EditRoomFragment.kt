@@ -87,8 +87,7 @@ class EditRoomFragment : Fragment() {
         fab.visibility = GONE
 
         save_room_btn.setOnClickListener {
-            val newRoom = Unit(name = input_room_name.text.toString())
-            viewModel.save(newRoom)
+            viewModel.save()
         }
 
         add_room_btn.setOnClickListener {
