@@ -25,4 +25,7 @@
     <string name="add_roommate_dialog_title">Add new roommate</string>
     <string name="ok_btn_label">OK</string>
     <string name="cancel_btn_label">Cancel</string>
+    <string name="rooms_fragment_title">Rooms</string>
+    <string name="edit_rooms_fragment_title">Edit Room</string>
+    <string name="add_rooms_fragment_title">Add New Room</string>
 </resources>

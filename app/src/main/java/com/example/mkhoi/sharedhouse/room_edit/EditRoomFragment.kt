@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -14,16 +15,23 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
+import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.database.entity.Unit
+import com.example.mkhoi.sharedhouse.databinding.FragmentEditRoomBinding
 import kotlinx.android.synthetic.main.fragment_edit_room.*
 
 
 class EditRoomFragment : Fragment() {
 
     companion object {
-        fun newInstance(): EditRoomFragment {
+        val ROOM_BUNDLE_KEY = "ROOM_BUNDLE_KEY"
+
+        fun newInstance(room: UnitWithPersons? = null): EditRoomFragment {
             val fragment = EditRoomFragment()
+            var arguments = Bundle()
+            arguments.putParcelable(ROOM_BUNDLE_KEY, room)
+            fragment.arguments = arguments
             return fragment
         }
     }
@@ -32,16 +40,25 @@ class EditRoomFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, EditRoomViewModel.Factory())
+        viewModel = ViewModelProviders
+                .of(this, EditRoomViewModel.Factory(arguments[ROOM_BUNDLE_KEY] as UnitWithPersons?))
                 .get(EditRoomViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_edit_room, container, false)
+                              savedInstanceState: Bundle?): View?{
+        val view = inflater.inflate(R.layout.fragment_edit_room, container, false)
+
+        val binding = FragmentEditRoomBinding.bind(view)
+        binding.viewModel = this.viewModel
+
+        return view
+    }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.add_rooms_fragment_title)
+
         roommates_list.layoutManager = LinearLayoutManager(context)
         roommates_list.adapter = RoommatesRecyclerViewAdapter(emptyList())
 

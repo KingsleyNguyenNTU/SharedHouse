@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -36,8 +37,10 @@ class RoomsFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.rooms_fragment_title)
+
         room_list.layoutManager = LinearLayoutManager(context)
-        room_list.adapter = MyRoomRecyclerViewAdapter(emptyList(), context)
+        room_list.adapter = MyRoomRecyclerViewAdapter(emptyList(), activity)
         (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
 
         val fab = activity.findViewById(R.id.fab) as FloatingActionButton
@@ -52,7 +55,7 @@ class RoomsFragment : Fragment() {
         viewModel.rooms.observe(this, Observer {
             it?.let {
                 (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = GONE
-                room_list.adapter = MyRoomRecyclerViewAdapter(it, context)
+                room_list.adapter = MyRoomRecyclerViewAdapter(it, activity)
             }
         })
     }

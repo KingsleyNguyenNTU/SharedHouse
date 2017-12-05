@@ -5,15 +5,23 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
 import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
+import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.database.entity.Unit
 
-class EditRoomViewModel(val repository: EditRoomRepository): ViewModel() {
+class EditRoomViewModel(val repository: EditRoomRepository,
+                        val existingRoom: UnitWithPersons?): ViewModel() {
     val room: MutableLiveData<Unit> = MutableLiveData()
+        get() {
+            if (field.value == null ) {
+                existingRoom?.let{ field.value = it.unit}
+            }
+            return field
+        }
     val roommates: MutableLiveData<List<Person>> = MutableLiveData()
         get() {
             if (field.value == null) {
-                field.value = emptyList()
+                field.value = existingRoom?.roommates?:emptyList()
             }
             return field
         }
@@ -35,9 +43,9 @@ class EditRoomViewModel(val repository: EditRoomRepository): ViewModel() {
         roommates.value = roommates.value?.plus(roommate)
     }
 
-    class Factory : ViewModelProvider.NewInstanceFactory() {
+    class Factory(val existingRoom: UnitWithPersons?) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return EditRoomViewModel(MyApp.component.editRoomRepository()) as T
+            return EditRoomViewModel(MyApp.component.editRoomRepository(), existingRoom) as T
         }
     }
 }
