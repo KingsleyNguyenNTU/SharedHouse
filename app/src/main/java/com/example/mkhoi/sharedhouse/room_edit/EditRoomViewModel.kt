@@ -25,6 +25,13 @@ class EditRoomViewModel(val repository: EditRoomRepository,
             }
             return field
         }
+    val deletedRoommates: MutableLiveData<MutableList<Person>> = MutableLiveData()
+        get() {
+            if (field.value == null) {
+                field.value = mutableListOf()
+            }
+            return field
+        }
     val isSaving: MutableLiveData<Boolean> = MutableLiveData()
 
     fun save() {
@@ -32,14 +39,22 @@ class EditRoomViewModel(val repository: EditRoomRepository,
         room.value?.let {
             val task = DatabaseAsyncTask()
             task.execute({
-                repository.saveRoom(it, roommates.value?: emptyList())
+                repository.saveRoom(
+                        it,
+                        roommates.value?: emptyList(),
+                        deletedRoommates.value?: emptyList())
                 isSaving.postValue(false)
             })
         }
     }
 
-    fun addRoomate(roommate: Person) {
+    fun addRoommate(roommate: Person) {
         roommates.value = roommates.value?.plus(roommate)
+    }
+
+    fun deleteRoommate(roommate: Person){
+        roommates.value = roommates.value?.minus(roommate)
+        deletedRoommates.value?.add(roommate)
     }
 
     class Factory(val existingRoom: UnitWithPersons?) : ViewModelProvider.NewInstanceFactory() {

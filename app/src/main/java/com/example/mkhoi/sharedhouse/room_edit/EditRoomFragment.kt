@@ -17,7 +17,6 @@ import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.entity.Person
-import com.example.mkhoi.sharedhouse.database.entity.Unit
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditRoomBinding
 import kotlinx.android.synthetic.main.fragment_edit_room.*
 
@@ -60,12 +59,12 @@ class EditRoomFragment : Fragment() {
         (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.add_rooms_fragment_title)
 
         roommates_list.layoutManager = LinearLayoutManager(context)
-        roommates_list.adapter = RoommatesRecyclerViewAdapter(emptyList())
+        roommates_list.adapter = RoommatesRecyclerViewAdapter(emptyList(), this)
 
         initButtonListener()
 
         viewModel.roommates.observe(this, Observer {
-            roommates_list.adapter = it?.let { roommates -> RoommatesRecyclerViewAdapter(roommates) }
+            roommates_list.adapter = it?.let { roommates -> RoommatesRecyclerViewAdapter(roommates, this) }
         })
 
         viewModel.isSaving.observe(this, Observer {
@@ -102,7 +101,7 @@ class EditRoomFragment : Fragment() {
                         val roomatePhone = (dialogView.findViewById(R.id.input_roommate_phone) as EditText).text.toString()
                         val newRoomate = Person(name = roommateName, phone = roomatePhone)
 
-                        viewModel.addRoomate(newRoomate)
+                        viewModel.addRoommate(newRoomate)
                     })
                     .setNegativeButton(getString(R.string.cancel_btn_label), { dialog, whichButton -> dialog.cancel()})
                     .show()

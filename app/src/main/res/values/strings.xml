@@ -28,4 +28,6 @@
     <string name="rooms_fragment_title">Rooms</string>
     <string name="edit_rooms_fragment_title">Edit Room</string>
     <string name="add_rooms_fragment_title">Add New Room</string>
+    <string name="delete_roommate_dialog_title">Remove roomate</string>
+    <string name="delete_roommate_dialog_message">Are you sure that you want to remove %1$s from this room?</string>
 </resources>

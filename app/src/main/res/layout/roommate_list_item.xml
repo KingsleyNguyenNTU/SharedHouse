@@ -20,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
@@ -38,5 +39,14 @@
             tools:text="+65 9119 1991"/>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/roommate_delete_btn"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="8dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/delete_btn"
+        style="?android:attr/borderlessButtonStyle" />
 
 </LinearLayout>

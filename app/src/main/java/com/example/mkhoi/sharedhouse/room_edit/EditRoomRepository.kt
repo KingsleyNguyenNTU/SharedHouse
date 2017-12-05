@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class EditRoomRepository @Inject constructor(val unitDao: UnitDao, val personDao: PersonDao) {
-    fun saveRoom(unit: Unit, roommates: List<Person>){
+    fun saveRoom(unit: Unit, roommates: List<Person>, deletedRoommates: List<Person>){
         val unitId: Int
         if (unit.id == null) {
             unitId = unitDao.insertUnit(unit).toInt()
@@ -24,5 +24,6 @@ class EditRoomRepository @Inject constructor(val unitDao: UnitDao, val personDao
 
         personDao.insertPersons(newRoomates)
         personDao.updatePersons(existingRoomates)
+        personDao.deletePersons(deletedRoommates.filter { it.id != null }.toList())
     }
 }
