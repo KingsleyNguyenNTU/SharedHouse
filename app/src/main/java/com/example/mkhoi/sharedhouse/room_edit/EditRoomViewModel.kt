@@ -26,13 +26,11 @@ class EditRoomViewModel(val repository: EditRoomRepository,
             return field
         }
     val deletedRoommates: MutableLiveData<MutableList<Person>> = MutableLiveData()
-        get() {
-            if (field.value == null) {
-                field.value = mutableListOf()
-            }
-            return field
-        }
     val isSaving: MutableLiveData<Boolean> = MutableLiveData()
+
+    init {
+        deletedRoommates.value = mutableListOf()
+    }
 
     fun save() {
         isSaving.value = true
