@@ -23,6 +23,7 @@
     <string name="roommate_name_label">Name</string>
     <string name="roommate_phone_label">Phone Number</string>
     <string name="add_roommate_dialog_title">Add new roommate</string>
+    <string name="edit_roommate_dialog_title">Edit roommate</string>
     <string name="ok_btn_label">OK</string>
     <string name="cancel_btn_label">Cancel</string>
     <string name="rooms_fragment_title">Rooms</string>

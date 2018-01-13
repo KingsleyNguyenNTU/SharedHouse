@@ -18,6 +18,7 @@ import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditRoomBinding
+import com.example.mkhoi.sharedhouse.util.showCustomDialog
 import kotlinx.android.synthetic.main.fragment_edit_room.*
 
 
@@ -81,6 +82,10 @@ class EditRoomFragment : Fragment() {
         })
     }
 
+    fun updateRoommate(){
+        roommates_list.adapter.notifyDataSetChanged()
+    }
+
     private fun initButtonListener() {
         val fab = activity.findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = GONE
@@ -91,20 +96,17 @@ class EditRoomFragment : Fragment() {
 
         add_room_btn.setOnClickListener {
             val dialogView = layoutInflater.inflate(R.layout.add_roommate_dialog, null)
-
-            AlertDialog.Builder(context)
-                    .setTitle(getString(R.string.add_roommate_dialog_title))
-                    .setView(dialogView)
-                    .setPositiveButton(getString(R.string.ok_btn_label), { dialog, whichButton ->
-
+            context.showCustomDialog(
+                    customView = dialogView,
+                    titleResId = R.string.add_roommate_dialog_title,
+                    positiveFunction = {
                         val roommateName = (dialogView.findViewById(R.id.input_roommate_name) as EditText).text.toString()
-                        val roomatePhone = (dialogView.findViewById(R.id.input_roommate_phone) as EditText).text.toString()
-                        val newRoomate = Person(name = roommateName, phone = roomatePhone)
+                        val roommatePhone = (dialogView.findViewById(R.id.input_roommate_phone) as EditText).text.toString()
+                        val newRoomate = Person(name = roommateName, phone = roommatePhone)
 
                         viewModel.addRoommate(newRoomate)
-                    })
-                    .setNegativeButton(getString(R.string.cancel_btn_label), { dialog, whichButton -> dialog.cancel()})
-                    .show()
+                    }
+            )
         }
     }
 }
