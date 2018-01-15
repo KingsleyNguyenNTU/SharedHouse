@@ -7,10 +7,8 @@ import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeFragment
-import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
 
 class FeesFragment : Fragment() {
     companion object {
@@ -24,7 +22,6 @@ class FeesFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.fees_fragment_title)
-
         //(activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
 
         val fab = activity.findViewById(R.id.fab) as FloatingActionButton

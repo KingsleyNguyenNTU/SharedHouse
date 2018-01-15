@@ -6,6 +6,6 @@ enum class FeeType {
     PUB,
     GROCERY,
     EATING,
-    ENTERTAIMENT,
+    ENTERTAINMENT,
     OTHERS
 }

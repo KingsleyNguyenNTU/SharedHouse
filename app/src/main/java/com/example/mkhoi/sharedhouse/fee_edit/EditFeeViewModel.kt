@@ -5,16 +5,17 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
 import com.example.mkhoi.sharedhouse.database.bean.FeeType
+import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.bean.ShareType
 import com.example.mkhoi.sharedhouse.database.entity.Fee
 
 
-class EditFeeViewModel(private val fee: Fee?,
-                       private val editFeeRepository: EditFeeRepository) {
-    val feeLiveData: MutableLiveData<Fee> = MutableLiveData()
+class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
+                       private val editFeeRepository: EditFeeRepository): ViewModel() {
+    val fee: MutableLiveData<Fee> = MutableLiveData()
         get() {
             if (field.value == null ) {
-                field.value = fee ?: Fee(
+                field.value = feeWithSplitters?.fee ?: Fee(
                         name = "",
                         feeType = FeeType.RENTAL,
                         shareType = ShareType.SHARE_BY_ROOM_WITHOUT_TIME,
@@ -25,9 +26,9 @@ class EditFeeViewModel(private val fee: Fee?,
             return field
         }
 
-    class Factory(val fee: Fee?) : ViewModelProvider.NewInstanceFactory() {
+    class Factory(val feeWithSplitters: FeeWithSplitters?) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return EditFeeViewModel(fee,MyApp.component.editFeeRepository()) as T
+            return EditFeeViewModel(feeWithSplitters,MyApp.component.editFeeRepository()) as T
         }
     }
 }
