@@ -10,7 +10,7 @@ import android.widget.TextView
 import com.example.mkhoi.sharedhouse.R
 
 
-class ListItemRecyclerViewAdapter<T>(private val data: List<ListItem<T>>) : RecyclerView.Adapter<ListItemRecyclerViewAdapter.ViewHolder>() {
+class ListItemRecyclerViewAdapter<T>(private val data: List<ListItem<T>>) : RecyclerView.Adapter<ListItemRecyclerViewAdapter<T>.ViewHolder>() {
     override fun getItemCount() = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

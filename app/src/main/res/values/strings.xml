@@ -33,4 +33,6 @@
     <string name="fee_name_label">Fee Name</string>
     <string name="fee_amount_label">Total Amount</string>
     <string name="edit_fee_splitters_text_label">Split between</string>
+    <string name="delete_room_dialog_title">Remove room</string>
+    <string name="delete_room_dialog_message">Are you sure that you want to remove %1$s as a shared room?</string>
 </resources>

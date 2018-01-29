@@ -14,7 +14,7 @@ class EditRoomViewModel(private val repository: EditRoomRepository,
     val room: MutableLiveData<Unit> = MutableLiveData()
         get() {
             if (field.value == null ) {
-                field.value = existingRoom?.unit?:Unit(name = "", active = false)
+                field.value = existingRoom?.unit?:Unit(name = "", active = true)
             }
             return field
         }

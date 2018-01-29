@@ -70,7 +70,7 @@ class EditRoomFragment : Fragment() {
             roommates_list.adapter = it?.let { roommates ->
                 ListItemRecyclerViewAdapter(
                         data = roommates.map {
-                            ListItem.fromPerson(person = it).apply {
+                            ListItem<Person>(mainName = it.name, caption = it.phone).apply {
                                 deleteAction = {
                                     context.showBasicDialog(
                                             titleResId = R.string.delete_roommate_dialog_title,
