@@ -1,6 +1,5 @@
 package com.example.mkhoi.sharedhouse.room_edit
 
-import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -18,6 +17,9 @@ import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditRoomBinding
+import com.example.mkhoi.sharedhouse.list_view.ListItem
+import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
+import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import com.example.mkhoi.sharedhouse.util.showCustomDialog
 import kotlinx.android.synthetic.main.fragment_edit_room.*
 
@@ -60,12 +62,46 @@ class EditRoomFragment : Fragment() {
         (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.add_rooms_fragment_title)
 
         roommates_list.layoutManager = LinearLayoutManager(context)
-        roommates_list.adapter = RoommatesRecyclerViewAdapter(emptyList(), this)
+        roommates_list.adapter = ListItemRecyclerViewAdapter<Person>(emptyList())
 
         initButtonListener()
 
         viewModel.roommates.observe(this, Observer {
-            roommates_list.adapter = it?.let { roommates -> RoommatesRecyclerViewAdapter(roommates, this) }
+            roommates_list.adapter = it?.let { roommates ->
+                ListItemRecyclerViewAdapter(
+                        data = roommates.map {
+                            ListItem.fromPerson(person = it).apply {
+                                deleteAction = {
+                                    context.showBasicDialog(
+                                            titleResId = R.string.delete_roommate_dialog_title,
+                                            message = getString(R.string.delete_roommate_dialog_message, it.name),
+                                            positiveFunction = {
+                                                viewModel.deleteRoommate(it)
+                                            }
+                                    )
+                                }
+                                onClickAction = {
+                                    val dialogView = LayoutInflater.from(context).inflate(R.layout.add_roommate_dialog, null)
+                                    val inputRoommateName = dialogView.findViewById(R.id.input_roommate_name) as EditText
+                                    val inputRoommatePhone = dialogView.findViewById(R.id.input_roommate_phone) as EditText
+                                    inputRoommateName.setText(it.name)
+                                    inputRoommatePhone.setText(it.phone)
+
+                                    context.showCustomDialog(
+                                            customView = dialogView,
+                                            titleResId = R.string.edit_roommate_dialog_title,
+                                            positiveFunction = {
+                                                it.name = inputRoommateName.text.toString()
+                                                mainName = inputRoommateName.text.toString()
+                                                it.phone = inputRoommatePhone.text.toString()
+                                                caption = inputRoommatePhone.text.toString()
+                                                roommates_list.adapter.notifyDataSetChanged()
+                                            }
+                                    )
+                                }
+                            }
+                        })
+            }
         })
 
         viewModel.isSaving.observe(this, Observer {
@@ -80,10 +116,6 @@ class EditRoomFragment : Fragment() {
                 }
             }
         })
-    }
-
-    fun updateRoommate(){
-        roommates_list.adapter.notifyDataSetChanged()
     }
 
     private fun initButtonListener() {

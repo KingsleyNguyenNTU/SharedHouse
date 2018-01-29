@@ -7,7 +7,7 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/roommate_avatar"
+        android:id="@+id/list_item_avatar"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="4dp"
@@ -24,14 +24,14 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/roommate_name"
+            android:id="@+id/list_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/TextAppearance.AppCompat.Body2"
             tools:text="Francessco Totti"/>
 
         <TextView
-            android:id="@+id/roommate_phone"
+            android:id="@+id/list_item_caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/roommate_delete_btn"
+        android:id="@+id/list_item_delete_btn"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginRight="8dp"
