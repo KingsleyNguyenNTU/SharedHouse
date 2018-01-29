@@ -24,8 +24,7 @@
     <string name="ok_btn_label">OK</string>
     <string name="cancel_btn_label">Cancel</string>
     <string name="rooms_fragment_title">Rooms</string>
-    <string name="edit_rooms_fragment_title">Edit Room</string>
-    <string name="add_rooms_fragment_title">Add New Room</string>
+    <string name="edit_rooms_fragment_title">Room Details</string>
     <string name="delete_roommate_dialog_title">Remove roommate</string>
     <string name="delete_roommate_dialog_message">Are you sure that you want to remove %1$s from this room?</string>
     <string name="fees_fragment_title">Expense Details</string>
@@ -35,4 +34,5 @@
     <string name="edit_fee_splitters_text_label">Split between</string>
     <string name="delete_room_dialog_title">Remove room</string>
     <string name="delete_room_dialog_message">Are you sure that you want to remove %1$s as a shared room?</string>
+    <string name="edit_fee_fragment_title">Expense Details</string>
 </resources>

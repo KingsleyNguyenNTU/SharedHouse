@@ -59,7 +59,7 @@ class EditRoomFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.add_rooms_fragment_title)
+        (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.edit_rooms_fragment_title)
 
         roommates_list.layoutManager = LinearLayoutManager(context)
         roommates_list.adapter = ListItemRecyclerViewAdapter<Person>(emptyList())

@@ -26,7 +26,7 @@ class FeesFragment : Fragment() {
 
         val fab = activity.findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = View.VISIBLE
-        fab?.setOnClickListener { view ->
+        fab.setOnClickListener { view ->
             activity.supportFragmentManager.beginTransaction()
                     .replace(R.id.main_content_fragment, EditFeeFragment.newInstance())
                     .addToBackStack(EditFeeFragment::class.java.canonicalName)

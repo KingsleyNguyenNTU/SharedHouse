@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
+import com.example.mkhoi.sharedhouse.database.bean.FeeSplitter
 import com.example.mkhoi.sharedhouse.database.bean.FeeType
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.bean.ShareType
@@ -22,6 +23,14 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
                         month = 0,
                         year = 1970,
                         amount = 0.0)
+            }
+            return field
+        }
+
+    val splitters: MutableLiveData<List<FeeSplitter>> = MutableLiveData()
+        get(){
+            if (field.value == null ) {
+                field.value = feeWithSplitters?.splitters ?: emptyList<FeeSplitter>()
             }
             return field
         }

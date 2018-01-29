@@ -4,12 +4,22 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import com.example.mkhoi.sharedhouse.R
+import com.example.mkhoi.sharedhouse.database.bean.FeeSplitter
+import com.example.mkhoi.sharedhouse.database.bean.ShareType
+import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditFeeBinding
+import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
+import com.example.mkhoi.sharedhouse.util.showCustomDialog
+import kotlinx.android.synthetic.main.fragment_edit_fee.*
+import kotlinx.android.synthetic.main.fragment_edit_room.*
 
 
 class EditFeeFragment: Fragment() {
@@ -38,9 +48,32 @@ class EditFeeFragment: Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.edit_fee_fragment_title)
+
+        splitters_list.layoutManager = LinearLayoutManager(context)
+        splitters_list.adapter = ListItemRecyclerViewAdapter<FeeSplitter>(emptyList())
+
+        initButtonListener()
+    }
+
+    private fun initButtonListener() {
         val fab = activity.findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener {
-            Log.d("EditFeeFragment", viewModel.fee.toString())
+        fab.visibility = View.GONE
+
+        save_room_btn.setOnClickListener {
+            //viewModel.save()
+        }
+
+        add_splitters_btn.setOnClickListener{
+            when(viewModel.fee.value?.shareType){
+                ShareType.SHARE_BY_ROOM_WITHOUT_TIME, ShareType.SHARE_BY_ROOM_WITH_TIME -> {
+                    //TODO open dialog to add room
+                }
+
+                ShareType.SHARE_BY_PERSON_WITHOUT_TIME, ShareType.SHARE_BY_PERSON_WITH_TIME -> {
+                    //TODO open dialog to add person
+                }
+            }
         }
     }
 }
