@@ -24,6 +24,6 @@ class EditRoomRepository @Inject constructor(val unitDao: UnitDao, val personDao
 
         personDao.insertPersons(newRoomates)
         personDao.updatePersons(existingRoomates)
-        personDao.deletePersons(deletedRoommates.filter { it.id != null }.toList())
+        personDao.updatePersons(deletedRoommates.filter { it.id != null }.toList().map { it.apply { active = false } })
     }
 }

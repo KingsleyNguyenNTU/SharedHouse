@@ -10,6 +10,7 @@ import com.example.mkhoi.sharedhouse.database.entity.Unit
 class UnitWithPersons(@Embedded var unit: Unit): Parcelable {
     @Relation(parentColumn = "id", entityColumn = "unitId")
     var roommates: List<Person>? = null
+        get() = field?.filter { it.active }
 
     constructor(parcel: Parcel) : this(unit = parcel.readParcelable(Unit::class.java.classLoader)) {
         roommates = parcel.createTypedArrayList(Person)
