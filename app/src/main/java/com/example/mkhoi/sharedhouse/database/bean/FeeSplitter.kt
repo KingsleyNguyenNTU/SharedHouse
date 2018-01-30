@@ -6,19 +6,25 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.example.mkhoi.sharedhouse.database.entity.FeeShare
 import com.example.mkhoi.sharedhouse.database.entity.Person
+import com.example.mkhoi.sharedhouse.database.entity.Unit
 
 
 class FeeSplitter(@Embedded var feeShare: FeeShare): Parcelable {
     @Relation(parentColumn = "personId", entityColumn = "id")
-    var splitter: Person? = null
+    var splitterAsPerson: Person? = null
+
+    @Relation(parentColumn = "unitId", entityColumn = "id")
+    var splitterAsUnit: Unit? = null
 
     constructor(parcel: Parcel) : this(feeShare = parcel.readParcelable(FeeShare::class.java.classLoader)) {
-        splitter = parcel.readParcelable(Person::class.java.classLoader)
+        splitterAsPerson = parcel.readParcelable(Person::class.java.classLoader)
+        splitterAsUnit = parcel.readParcelable(Unit::class.java.classLoader)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeParcelable(feeShare, flags)
-        parcel.writeParcelable(splitter, flags)
+        parcel.writeParcelable(splitterAsPerson, flags)
+        parcel.writeParcelable(splitterAsUnit, flags)
     }
 
     override fun describeContents(): Int {

@@ -35,4 +35,6 @@
     <string name="delete_room_dialog_title">Remove room</string>
     <string name="delete_room_dialog_message">Are you sure that you want to remove %1$s as a shared room?</string>
     <string name="edit_fee_fragment_title">Expense Details</string>
+    <string name="add_room_splitter_dialog_title">Select sharing rooms</string>
+    <string name="add_person_splitter_dialog_title">Select sharing people</string>
 </resources>

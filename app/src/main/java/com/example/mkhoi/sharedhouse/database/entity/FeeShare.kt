@@ -9,10 +9,12 @@ import android.os.Parcelable
 data class FeeShare(@PrimaryKey(autoGenerate = true) var id: Int? = null,
                     var feeId: Int,
                     var personId: Int,
+                    var unitId: Int,
                     var share: Int): Parcelable {
 
     constructor(parcel: Parcel) : this(
             parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readInt(),
             parcel.readInt(),
             parcel.readInt(),
             parcel.readInt()) {
@@ -22,6 +24,7 @@ data class FeeShare(@PrimaryKey(autoGenerate = true) var id: Int? = null,
         parcel.writeValue(id)
         parcel.writeInt(feeId)
         parcel.writeInt(personId)
+        parcel.writeInt(unitId)
         parcel.writeInt(share)
     }
 

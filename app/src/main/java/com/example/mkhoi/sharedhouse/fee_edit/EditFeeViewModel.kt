@@ -9,6 +9,7 @@ import com.example.mkhoi.sharedhouse.database.bean.FeeType
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.bean.ShareType
 import com.example.mkhoi.sharedhouse.database.entity.Fee
+import com.example.mkhoi.sharedhouse.database.entity.Unit
 
 
 class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
@@ -34,6 +35,12 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
             }
             return field
         }
+
+    val activeRooms = editFeeRepository.getActiveRooms()
+
+    val activePersons = editFeeRepository.getActivePersons()
+
+    val roomSplitters: MutableLiveData<List<Unit>> = MutableLiveData()
 
     class Factory(val feeWithSplitters: FeeWithSplitters?) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
