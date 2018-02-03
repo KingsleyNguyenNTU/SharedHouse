@@ -7,12 +7,14 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.FeeSplitter
 import com.example.mkhoi.sharedhouse.database.bean.ShareType
+import com.example.mkhoi.sharedhouse.database.entity.FeeShare
 import com.example.mkhoi.sharedhouse.database.entity.Unit
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditFeeBinding
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
@@ -56,8 +58,40 @@ class EditFeeFragment: Fragment() {
         initButtonListener()
 
         viewModel.roomSplitters.observe(this, Observer {
-            //TODO update list of splitters
+            Log.d("EditFeeFragment", "Splitters Room: $it")
+            viewModel.inactiveRoomSplitters.value?.putAll(viewModel.activeRoomSplitters.value!!)
+            viewModel.activeRoomSplitters.value = mutableMapOf()
+            it?.forEach {
+                addSelectRoomToActiveList(it)
+            }
+
+            Log.d("EditFeeFragment", "inactiveRoomSplitters: ${viewModel.inactiveRoomSplitters.value}")
+            Log.d("EditFeeFragment", "activeRoomSplitters: ${viewModel.activeRoomSplitters.value}")
         })
+    }
+
+    private fun addSelectRoomToActiveList(selectedRoom: Unit){
+        viewModel.inactiveRoomSplitters.value?.let {inActiveList ->
+            inActiveList[selectedRoom.id]?.let {
+                viewModel.activeRoomSplitters.value!!.put(it.feeShare.unitId, it)
+                inActiveList.remove(it.feeShare.unitId)
+            }
+
+            if (inActiveList[selectedRoom.id] == null){
+                //create new fee splitter for this room
+                val newFeeSplitter = FeeSplitter(feeShare = FeeShare(
+                        id = null,
+                        feeId = viewModel.fee.value?.id ?: 0,
+                        personId = 0,
+                        unitId = selectedRoom.id!!,
+                        share = 0
+                )).apply {
+                    splitterAsUnit = selectedRoom
+                }
+
+                viewModel.activeRoomSplitters.value!!.put(newFeeSplitter.feeShare.unitId, newFeeSplitter)
+            }
+        }
     }
 
     private fun initButtonListener() {
@@ -69,30 +103,33 @@ class EditFeeFragment: Fragment() {
         }
 
         add_splitters_btn.setOnClickListener{
-            when(viewModel.fee.value?.shareType){
-                ShareType.SHARE_BY_ROOM_WITHOUT_TIME, ShareType.SHARE_BY_ROOM_WITH_TIME -> {
+            when(viewModel.fee.value?.isSharedByRoom()){
+                true -> {
                     val selectedItems: MutableList<Int> = mutableListOf()
                     val listOptions: HashMap<Int, Unit> = HashMap()
 
-                    var index = 0
-                    viewModel.activeRooms.value?.map {
-                        listOptions.put(index, it)
-                        index++
-                    }
-                    val multipleChoices: Array<String> = Array(listOptions.size, {""})
-                    listOptions.map { multipleChoices[it.key] = it.value.name }
+                    viewModel.activeRooms.observe(this, Observer {
+                        Log.d("EditFeeFragment", "Active rooms: $it")
+                        var index = 0
+                        it?.map {
+                            listOptions.put(index, it)
+                            index++
+                        }
+                        val multipleChoices: Array<String> = Array(listOptions.size, {""})
+                        listOptions.map { multipleChoices[it.key] = it.value.name }
 
-                    context.showMultipleChoicesDialog(
-                            titleResId = R.string.add_room_splitter_dialog_title,
-                            selectedItems = selectedItems,
-                            multipleChoices = multipleChoices,
-                            positiveFunction = {
-                                viewModel.roomSplitters.value = listOptions.filter { selectedItems.contains(it.key) }.map { it.value }
-                            }
-                    )
+                        context.showMultipleChoicesDialog(
+                                titleResId = R.string.add_room_splitter_dialog_title,
+                                selectedItems = selectedItems,
+                                multipleChoices = multipleChoices,
+                                positiveFunction = {
+                                    viewModel.roomSplitters.value = listOptions.filter { selectedItems.contains(it.key) }.map { it.value }
+                                }
+                        )
+                    })
                 }
 
-                ShareType.SHARE_BY_PERSON_WITHOUT_TIME, ShareType.SHARE_BY_PERSON_WITH_TIME -> {
+                false -> {
                     //TODO open dialog to add person
                 }
             }

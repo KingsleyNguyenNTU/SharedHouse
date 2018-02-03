@@ -28,10 +28,22 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
             return field
         }
 
-    val splitters: MutableLiveData<List<FeeSplitter>> = MutableLiveData()
+    val activeRoomSplitters: MutableLiveData<MutableMap<Int, FeeSplitter>> = MutableLiveData()
+        get(){
+            if (fee.value?.isSharedByRoom()?.not() ?: false){
+                field.value = mutableMapOf()
+            }
+            else if (field.value == null) {
+                field.value = feeWithSplitters?.splitters?.associate { Pair(it.feeShare.unitId, it) } ?.toMutableMap()
+                        ?: mutableMapOf()
+            }
+            return field
+        }
+
+    val inactiveRoomSplitters: MutableLiveData<MutableMap<Int, FeeSplitter>> = MutableLiveData()
         get(){
             if (field.value == null ) {
-                field.value = feeWithSplitters?.splitters ?: emptyList<FeeSplitter>()
+                field.value = mutableMapOf()
             }
             return field
         }

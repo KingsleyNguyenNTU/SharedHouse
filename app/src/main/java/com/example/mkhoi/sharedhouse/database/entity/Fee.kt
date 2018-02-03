@@ -49,4 +49,9 @@ data class Fee(@PrimaryKey(autoGenerate = true) var id: Int? = null,
             return arrayOfNulls(size)
         }
     }
+
+    fun isSharedByRoom(): Boolean{
+        return (shareType == ShareType.SHARE_BY_ROOM_WITH_TIME ||
+                shareType == ShareType.SHARE_BY_ROOM_WITHOUT_TIME)
+    }
 }
