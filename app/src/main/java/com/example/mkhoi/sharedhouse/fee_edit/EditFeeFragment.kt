@@ -19,6 +19,7 @@ import com.example.mkhoi.sharedhouse.database.bean.ReducedShareType
 import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
 import com.example.mkhoi.sharedhouse.database.entity.FeeShare
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditFeeBinding
+import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.util.showMultipleChoicesDialog
 import kotlinx.android.synthetic.main.fragment_edit_fee.*
@@ -147,7 +148,7 @@ class EditFeeFragment: Fragment() {
                                 feeId = viewModel.fee.value?.id ?: 0,
                                 personId = 0,
                                 unitId = roomSplitter.room.id!!,
-                                share = 0
+                                share = 1
                         )
                     }
                 }
@@ -157,6 +158,30 @@ class EditFeeFragment: Fragment() {
                 Log.d("EditFeeFragment", "Room Splitter: ${roomSplitter.room.name}, " +
                         "Fee Share: ${roomSplitter.feeShare?.share}")
             }
+        }
+
+        val totalShare = viewModel.roomSplitters.value?.map { it.feeShare?.share ?:0 }?.sum() ?: 0
+        val totalExpense = viewModel.fee.value?.amount ?: 0.0
+
+        splitters_list.adapter = viewModel.roomSplitters.value?.let { roomSplitters ->
+            ListItemRecyclerViewAdapter(
+                    data = roomSplitters.filter { it.feeShare != null }.map {
+                        val shareAmount = it.feeShare!!.share.toDouble()*totalExpense/totalShare.toDouble()
+                        ListItem<RoomSplitter>(
+                                mainName = it.room.name,
+                                caption = getString(R.string.splitter_caption_text,
+                                        String.format("%.2f", shareAmount),
+                                        it.feeShare!!.share,
+                                        totalShare)
+                        ).apply {
+                            deleteAction = {
+
+                            }
+                            onClickAction = {
+
+                            }
+                        }
+                    })
         }
     }
 }
