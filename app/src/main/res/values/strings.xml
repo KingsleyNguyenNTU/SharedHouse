@@ -37,4 +37,6 @@
     <string name="edit_fee_fragment_title">Expense Details</string>
     <string name="add_room_splitter_dialog_title">Select sharing rooms</string>
     <string name="add_person_splitter_dialog_title">Select sharing people</string>
+    <string name="expense_type_label">Expense Type</string>
+    <string name="share_type_label">Share Type</string>
 </resources>

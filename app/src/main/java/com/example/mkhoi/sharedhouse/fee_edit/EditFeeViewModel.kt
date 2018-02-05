@@ -13,12 +13,13 @@ import com.example.mkhoi.sharedhouse.database.entity.Fee
 
 class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
                        private val editFeeRepository: EditFeeRepository): ViewModel() {
+
     val fee: MutableLiveData<Fee> = MutableLiveData()
         get() {
             if (field.value == null ) {
                 field.value = feeWithSplitters?.fee ?: Fee(
                         name = "",
-                        feeType = FeeType.RENTAL,
+                        feeType = FeeType.ENTERTAINMENT,
                         shareType = ShareType.SHARE_BY_ROOM_WITHOUT_TIME,
                         month = 0,
                         year = 1970,

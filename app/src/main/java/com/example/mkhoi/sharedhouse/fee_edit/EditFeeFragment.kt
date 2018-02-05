@@ -11,7 +11,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import com.example.mkhoi.sharedhouse.R
+import com.example.mkhoi.sharedhouse.database.bean.FeeType
+import com.example.mkhoi.sharedhouse.database.bean.ReducedShareType
 import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
 import com.example.mkhoi.sharedhouse.database.entity.FeeShare
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditFeeBinding
@@ -26,6 +30,7 @@ class EditFeeFragment: Fragment() {
     }
 
     internal lateinit var viewModel: EditFeeViewModel
+    internal lateinit var binding: FragmentEditFeeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,21 +39,55 @@ class EditFeeFragment: Fragment() {
                 .get(EditFeeViewModel::class.java)
     }
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?{
         val view = inflater.inflate(R.layout.fragment_edit_fee, container, false)
-
-        val binding = FragmentEditFeeBinding.bind(view)
-        binding.viewModel = this.viewModel
-
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentEditFeeBinding.bind(view)
+        binding.viewModel = viewModel
         (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.edit_fee_fragment_title)
 
+        initViewModelObserver()
         initView()
+    }
+
+    private fun initViewModelObserver() {
+        viewModel.fee.observe(this, Observer {
+            binding.executePendingBindings()
+            initDropDownLists()
+            updateAddSplitterBtnListener()
+        })
+
+        viewModel.roomSplitters.observe(this, Observer {
+            updateAddSplitterBtnListener()
+        })
+    }
+
+    private fun initDropDownLists() {
+        val feeTypeAdapter = ArrayAdapter<String>(context,
+                android.R.layout.simple_spinner_dropdown_item ,
+                FeeType.values().map { it.name.toLowerCase().capitalize() }.toList())
+        input_fee_type.setAdapter(feeTypeAdapter)
+        input_fee_type.keyListener = null
+        input_fee_type.setOnTouchListener {v, _ -> v.let {
+            (it as AutoCompleteTextView).showDropDown()
+            false
+        }}
+
+        val shareTypeAdapter = ArrayAdapter<String>(context,
+                android.R.layout.simple_spinner_dropdown_item ,
+                ReducedShareType.values().map { it.name.toLowerCase().capitalize() }.toList())
+        input_share_type.setAdapter(shareTypeAdapter)
+        input_share_type.keyListener = null
+        input_share_type.setOnTouchListener {v, _ -> v.let {
+            (it as AutoCompleteTextView).showDropDown()
+            false
+        }}
     }
 
     private fun initView() {
@@ -61,14 +100,6 @@ class EditFeeFragment: Fragment() {
 
         splitters_list.layoutManager = LinearLayoutManager(context)
         splitters_list.adapter = ListItemRecyclerViewAdapter<RoomSplitter>(emptyList())
-
-        viewModel.fee.observe(this, Observer {
-            updateAddSplitterBtnListener()
-        })
-
-        viewModel.roomSplitters.observe(this, Observer {
-            updateAddSplitterBtnListener()
-        })
     }
 
     private fun updateAddSplitterBtnListener() {
