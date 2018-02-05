@@ -1,7 +1,8 @@
 package com.example.mkhoi.sharedhouse.database.dao
 
-import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.*
+import android.arch.persistence.room.Dao
+import android.arch.persistence.room.Insert
+import android.arch.persistence.room.Update
 import com.example.mkhoi.sharedhouse.database.entity.Person
 
 @Dao
@@ -11,7 +12,4 @@ interface PersonDao {
 
     @Update
     fun updatePersons(persons: List<Person>)
-
-    @Query("select * from person where active = :active")
-    fun getAllActivePersons(active: Boolean = true): LiveData<List<Person>>
 }

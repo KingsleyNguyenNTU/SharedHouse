@@ -4,12 +4,11 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
-import com.example.mkhoi.sharedhouse.database.bean.FeeSplitter
 import com.example.mkhoi.sharedhouse.database.bean.FeeType
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
+import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
 import com.example.mkhoi.sharedhouse.database.bean.ShareType
 import com.example.mkhoi.sharedhouse.database.entity.Fee
-import com.example.mkhoi.sharedhouse.database.entity.Unit
 
 
 class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
@@ -28,33 +27,18 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
             return field
         }
 
-    val activeRoomSplitters: MutableLiveData<MutableMap<Int, FeeSplitter>> = MutableLiveData()
+    val roomSplitters: MutableLiveData<List<RoomSplitter>> = MutableLiveData()
         get(){
             if (fee.value?.isSharedByRoom()?.not() ?: false){
-                field.value = mutableMapOf()
+                field.value = emptyList()
             }
             else if (field.value == null) {
-                field.value = feeWithSplitters?.splitters?.associate { Pair(it.feeShare.unitId, it) } ?.toMutableMap()
-                        ?: mutableMapOf()
+                editFeeRepository.getRoomSplitters(field, fee.value?.id)
             }
             return field
         }
 
-    val inactiveRoomSplitters: MutableLiveData<MutableMap<Int, FeeSplitter>> = MutableLiveData()
-        get(){
-            if (field.value == null ) {
-                field.value = mutableMapOf()
-            }
-            return field
-        }
-
-    val activeRooms = editFeeRepository.getActiveRooms()
-
-    val activePersons = editFeeRepository.getActivePersons()
-
-    val roomSplitters: MutableLiveData<List<Unit>> = MutableLiveData()
-
-    class Factory(val feeWithSplitters: FeeWithSplitters?) : ViewModelProvider.NewInstanceFactory() {
+    class Factory(private val feeWithSplitters: FeeWithSplitters?) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return EditFeeViewModel(feeWithSplitters,MyApp.component.editFeeRepository()) as T
         }

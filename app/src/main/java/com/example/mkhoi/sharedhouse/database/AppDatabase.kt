@@ -7,10 +7,7 @@ import com.example.mkhoi.sharedhouse.database.converter.BooleanConverters
 import com.example.mkhoi.sharedhouse.database.converter.DateConverters
 import com.example.mkhoi.sharedhouse.database.converter.FeeTypeConverters
 import com.example.mkhoi.sharedhouse.database.converter.ShareTypeConverters
-import com.example.mkhoi.sharedhouse.database.dao.FeeDao
-import com.example.mkhoi.sharedhouse.database.dao.PersonDao
-import com.example.mkhoi.sharedhouse.database.dao.UnitDao
-import com.example.mkhoi.sharedhouse.database.dao.UnitPersonDao
+import com.example.mkhoi.sharedhouse.database.dao.*
 import com.example.mkhoi.sharedhouse.database.entity.*
 import com.example.mkhoi.sharedhouse.database.entity.Unit
 
@@ -24,6 +21,7 @@ import com.example.mkhoi.sharedhouse.database.entity.Unit
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun unitPersonDao(): UnitPersonDao
+    abstract fun splitterDao(): SplitterDao
     abstract fun unitDao(): UnitDao
     abstract fun personDao(): PersonDao
     abstract fun feeDao(): FeeDao

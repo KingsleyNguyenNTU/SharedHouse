@@ -31,5 +31,9 @@ import javax.inject.Singleton
 
     @Provides
     @Singleton
+    fun provideSplitterDao(appDatabase: AppDatabase) = appDatabase.splitterDao()
+
+    @Provides
+    @Singleton
     fun provideDatabase() =  Room.databaseBuilder(app, AppDatabase::class.java!!, AppDatabase.DB_NAME).build()
 }
