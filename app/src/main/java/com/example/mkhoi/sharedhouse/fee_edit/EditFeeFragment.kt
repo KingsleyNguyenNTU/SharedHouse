@@ -82,6 +82,9 @@ class EditFeeFragment: Fragment() {
                         var index = 0
                         it.forEach {
                             multipleChoices[index] = it.room.name
+                            it.feeShare?.let {
+                                selectedItems.add(index)
+                            }
                             index++
                         }
 

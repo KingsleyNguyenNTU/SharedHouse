@@ -41,9 +41,12 @@ fun Context.showMultipleChoicesDialog(@StringRes titleResId: Int,
                                       multipleChoices: Array<String>,
                                       selectedItems: MutableList<Int>,
                                       positiveFunction: () -> Unit){
+    val checkedItems = BooleanArray(multipleChoices.size, {false})
+    selectedItems.forEach { checkedItems[it] = true }
+
     AlertDialog.Builder(this)
             .setTitle(this.getString(titleResId))
-            .setMultiChoiceItems(multipleChoices, null, {
+            .setMultiChoiceItems(multipleChoices, checkedItems, {
                 dialog: DialogInterface, selectedPosition: Int, isChecked: Boolean ->
                 if (isChecked) {
                     selectedItems.add(selectedPosition)
