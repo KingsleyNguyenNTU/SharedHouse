@@ -96,7 +96,7 @@ class EditFeeFragment: Fragment() {
         fab.visibility = View.GONE
 
         save_fee_btn.setOnClickListener {
-            //viewModel.save()
+            viewModel.save()
         }
 
         splitters_list.layoutManager = LinearLayoutManager(context)

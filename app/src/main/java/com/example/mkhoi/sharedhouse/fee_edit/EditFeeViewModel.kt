@@ -39,6 +39,15 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
             return field
         }
 
+    fun save() {
+        fee.value?.let {fee ->
+            roomSplitters.value?.let {roomSplitters ->
+                editFeeRepository.saveFee(fee, roomSplitters)
+            }
+        }
+
+    }
+
     class Factory(private val feeWithSplitters: FeeWithSplitters?) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return EditFeeViewModel(feeWithSplitters,MyApp.component.editFeeRepository()) as T

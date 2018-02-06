@@ -19,11 +19,11 @@ class EditRoomRepository @Inject constructor(val unitDao: UnitDao, val personDao
         }
 
         roommates.forEach { roommate -> roommate.unitId = unitId }
-        val newRoomates = roommates.filter { it.id == null }.toList()
-        val existingRoomates = roommates.filter { it.id != null }.toList()
+        val newRoommates = roommates.filter { it.id == null }.toList()
+        val existingRoommates = roommates.filter { it.id != null }.toList()
 
-        personDao.insertPersons(newRoomates)
-        personDao.updatePersons(existingRoomates)
+        personDao.insertPersons(newRoommates)
+        personDao.updatePersons(existingRoommates)
         personDao.updatePersons(deletedRoommates.filter { it.id != null }.toList().map { it.apply { active = false } })
     }
 }
