@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
-import com.example.mkhoi.sharedhouse.database.entity.Fee
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeFragment
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
@@ -42,7 +41,7 @@ class FeesFragment : Fragment() {
         (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.fees_fragment_title)
 
         fee_list.layoutManager = LinearLayoutManager(context)
-        fee_list.adapter = ListItemRecyclerViewAdapter<Fee>(emptyList())
+        fee_list.adapter = ListItemRecyclerViewAdapter(emptyList())
         (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
 
         val fab = activity.findViewById(R.id.fab) as FloatingActionButton
@@ -57,8 +56,8 @@ class FeesFragment : Fragment() {
         viewModel.fees.observe(this, Observer {
             it?.let {
                 (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.GONE
-                fee_list.adapter = ListItemRecyclerViewAdapter<Fee>(it.map {
-                    ListItem<Fee>(
+                fee_list.adapter = ListItemRecyclerViewAdapter(it.map {
+                    ListItem(
                             mainName = it.fee.name,
                             caption = it.fee.displayAmount
                     ).apply {

@@ -6,6 +6,7 @@ import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
+import com.example.mkhoi.sharedhouse.database.bean.PersonSplitter
 import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
 import com.example.mkhoi.sharedhouse.database.entity.FeeShare
 
@@ -33,4 +34,15 @@ interface SplitterDao {
             "on unit.id = FeeShare.unitId and FeeShare.feeId = :feeId " +
             "where Unit.active = :active")
     fun getAllRoomSplitters(feeId: Int?, active: Boolean = true): List<RoomSplitter>
+
+    @Query("select person.*, " +
+            "FeeShare.id as FeeShare_id, " +
+            "FeeShare.feeId as FeeShare_feeId, " +
+            "FeeShare.personId as FeeShare_personId, " +
+            "FeeShare.unitId as FeeShare_unitId, " +
+            "FeeShare.share as FeeShare_share " +
+            "from Person left join FeeShare " +
+            "on person.id = FeeShare.personId and FeeShare.feeId = :feeId " +
+            "where person.active = :active")
+    fun getAllPersonSplitters(feeId: Int?, active: Boolean = true): List<PersonSplitter>
 }

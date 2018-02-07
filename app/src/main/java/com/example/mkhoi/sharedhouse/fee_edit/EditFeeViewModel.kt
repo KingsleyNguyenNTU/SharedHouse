@@ -5,10 +5,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
 import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
-import com.example.mkhoi.sharedhouse.database.bean.FeeType
-import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
-import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
-import com.example.mkhoi.sharedhouse.database.bean.ShareType
+import com.example.mkhoi.sharedhouse.database.bean.*
 import com.example.mkhoi.sharedhouse.database.entity.Fee
 import java.util.*
 
@@ -32,24 +29,27 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
 
     val roomSplitters: MutableLiveData<List<RoomSplitter>> = MutableLiveData()
         get(){
-            if (fee.value?.isSharedByRoom() == false){
-                field.value = emptyList()
-            }
-            else if (field.value == null) {
+            if (field.value == null) {
                 editFeeRepository.getRoomSplitters(field, fee.value?.id)
             }
             return field
         }
+
+    val personSplitters: MutableLiveData<List<PersonSplitter>> = MutableLiveData()
+        get(){
+            if (field.value == null) {
+                editFeeRepository.getPersonSplitters(field, fee.value?.id)
+            }
+            return field
+        }
+
     val isSaving: MutableLiveData<Boolean> = MutableLiveData()
 
     fun save() {
         isSaving.value = true
         fee.value?.let {fee ->
             DatabaseAsyncTask().execute({
-                roomSplitters.value?.let { roomSplitters ->
-                    editFeeRepository.saveFee(fee, roomSplitters, isSaving)
-                }
-
+                editFeeRepository.saveFee(fee, roomSplitters.value, personSplitters.value)
                 isSaving.postValue(false)
             })
         }

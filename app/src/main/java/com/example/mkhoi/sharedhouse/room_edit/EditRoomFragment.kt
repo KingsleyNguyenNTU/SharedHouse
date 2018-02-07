@@ -62,7 +62,7 @@ class EditRoomFragment : Fragment() {
         (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.edit_rooms_fragment_title)
 
         roommates_list.layoutManager = LinearLayoutManager(context)
-        roommates_list.adapter = ListItemRecyclerViewAdapter<Person>(emptyList())
+        roommates_list.adapter = ListItemRecyclerViewAdapter(emptyList())
 
         initButtonListener()
 
@@ -70,7 +70,7 @@ class EditRoomFragment : Fragment() {
             roommates_list.adapter = it?.let { roommates ->
                 ListItemRecyclerViewAdapter(
                         data = roommates.map {
-                            ListItem<Person>(mainName = it.name, caption = it.phone).apply {
+                            ListItem(mainName = it.name, caption = it.phone).apply {
                                 deleteAction = {
                                     context.showBasicDialog(
                                             titleResId = R.string.delete_roommate_dialog_title,

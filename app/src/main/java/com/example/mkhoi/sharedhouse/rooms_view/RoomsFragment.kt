@@ -14,7 +14,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
-import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
@@ -44,7 +43,7 @@ class RoomsFragment : Fragment() {
         (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.rooms_fragment_title)
 
         room_list.layoutManager = LinearLayoutManager(context)
-        room_list.adapter = ListItemRecyclerViewAdapter<UnitWithPersons>(emptyList())
+        room_list.adapter = ListItemRecyclerViewAdapter(emptyList())
         (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
 
         val fab = activity.findViewById(R.id.fab) as FloatingActionButton
@@ -59,8 +58,8 @@ class RoomsFragment : Fragment() {
         viewModel.rooms.observe(this, Observer {
             it?.let {
                 (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = GONE
-                room_list.adapter = ListItemRecyclerViewAdapter<UnitWithPersons>(it.map {
-                    ListItem<UnitWithPersons>(
+                room_list.adapter = ListItemRecyclerViewAdapter(it.map {
+                    ListItem(
                         mainName = it.unit.name,
                         caption = resources.getQuantityString(R.plurals.unitSize,
                                 it.roommates?.size?:0,
