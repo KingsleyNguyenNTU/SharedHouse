@@ -2,6 +2,7 @@ package com.example.mkhoi.sharedhouse.dagger
 
 import com.example.mkhoi.sharedhouse.MyApp
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeRepository
+import com.example.mkhoi.sharedhouse.fees_view.FeesRepository
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomRepository
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsRepository
 import dagger.Component
@@ -15,4 +16,5 @@ interface MyAppComponent {
     fun editRoomRepository(): EditRoomRepository
     fun roomsRepository(): RoomsRepository
     fun editFeeRepository(): EditFeeRepository
+    fun feesRepository(): FeesRepository
 }

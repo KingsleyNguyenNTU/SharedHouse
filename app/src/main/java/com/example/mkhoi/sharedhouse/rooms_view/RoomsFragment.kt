@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
-import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment

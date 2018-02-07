@@ -9,6 +9,7 @@ import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
 import com.example.mkhoi.sharedhouse.database.bean.ShareType
 import com.example.mkhoi.sharedhouse.database.entity.Fee
+import java.util.*
 
 
 class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
@@ -21,8 +22,8 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
                         name = "",
                         feeType = FeeType.ENTERTAINMENT,
                         shareType = ShareType.SHARE_BY_ROOM_WITHOUT_TIME,
-                        month = 0,
-                        year = 1970,
+                        month = Calendar.getInstance().get(Calendar.MONTH),
+                        year = Calendar.getInstance().get(Calendar.YEAR),
                         amount = 0.0)
             }
             return field
