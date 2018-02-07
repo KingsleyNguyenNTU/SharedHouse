@@ -3,6 +3,7 @@ package com.example.mkhoi.sharedhouse.list_view
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
@@ -17,8 +18,12 @@ class ListItemRecyclerViewAdapter<T>(private val data: List<ListItem<T>>) : Recy
         holder.name.text = data[position].mainName
         holder.caption.text = data[position].caption
 
+        if (data[position].deleteAction == null){
+            holder.delete.visibility = GONE
+        }
+
         holder.delete.setOnClickListener{
-            data[position].deleteAction.invoke()
+            data[position].deleteAction?.invoke()
         }
 
         holder.mainView.setOnClickListener {

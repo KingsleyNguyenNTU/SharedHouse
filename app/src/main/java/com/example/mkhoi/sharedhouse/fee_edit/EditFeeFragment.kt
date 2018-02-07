@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.EditText
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.FeeType
@@ -23,6 +24,7 @@ import com.example.mkhoi.sharedhouse.database.entity.FeeShare
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditFeeBinding
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
+import com.example.mkhoi.sharedhouse.util.showCustomDialog
 import com.example.mkhoi.sharedhouse.util.showMultipleChoicesDialog
 import kotlinx.android.synthetic.main.fragment_edit_fee.*
 
@@ -196,11 +198,20 @@ class EditFeeFragment: Fragment() {
                                         it.feeShare!!.share,
                                         totalShare)
                         ).apply {
-                            deleteAction = {
-
-                            }
+                            deleteAction = null
                             onClickAction = {
+                                val dialogView = LayoutInflater.from(context).inflate(R.layout.add_feeshare_dialog, null)
+                                val inputShareFraction = dialogView.findViewById(R.id.input_splitter_fraction) as EditText
+                                inputShareFraction.setText((it.feeShare?.share ?: 1).toString())
 
+                                context.showCustomDialog(
+                                        customView = dialogView,
+                                        titleResId = R.string.edit_roommate_dialog_title,
+                                        positiveFunction = {
+                                            it.feeShare?.share = inputShareFraction.text.toString().toInt()
+                                            reloadRoomSplitterList()
+                                        }
+                                )
                             }
                         }
                     })

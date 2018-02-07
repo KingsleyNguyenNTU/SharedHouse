@@ -42,4 +42,5 @@
     <string name="splitter_caption_text">Share Amount: %1$s (%2$d/%3$d)</string>
     <string name="delete_fee_dialog_title">Remove expense</string>
     <string name="delete_fee_dialog_message">Are you sure that you want to remove this expense: %1$s?</string>
+    <string name="splitter_fraction_label">Share fraction</string>
 </resources>
