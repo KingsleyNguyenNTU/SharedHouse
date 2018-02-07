@@ -58,8 +58,8 @@ class FeesFragment : Fragment() {
                 (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.GONE
                 fee_list.adapter = ListItemRecyclerViewAdapter<Fee>(it.map {
                     ListItem<Fee>(
-                            mainName = it.name,
-                            caption = it.displayAmount
+                            mainName = it.fee.name,
+                            caption = it.fee.displayAmount
                     ).apply {
                         deleteAction = {
                             context.showBasicDialog(
