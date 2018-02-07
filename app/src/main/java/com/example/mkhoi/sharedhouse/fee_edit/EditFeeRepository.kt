@@ -20,7 +20,7 @@ class EditFeeRepository @Inject constructor(private val splitterDao: SplitterDao
         })
     }
 
-    fun saveFee(fee: Fee, roomSplitters: List<RoomSplitter>) {
+    fun saveFee(fee: Fee, roomSplitters: List<RoomSplitter>, isSaving: MutableLiveData<Boolean>) {
         val task = DatabaseAsyncTask()
         task.execute({
             if (fee.id == null){
@@ -30,6 +30,7 @@ class EditFeeRepository @Inject constructor(private val splitterDao: SplitterDao
                     splitterDao.insertFeeShares(it)
                 }
             }
+            isSaving.postValue(false)
         })
     }
 }

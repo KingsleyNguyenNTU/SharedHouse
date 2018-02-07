@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.FeeType
 import com.example.mkhoi.sharedhouse.database.bean.ReducedShareType
@@ -66,6 +67,19 @@ class EditFeeFragment: Fragment() {
 
         viewModel.roomSplitters.observe(this, Observer {
             updateAddSplitterBtnListener()
+        })
+
+        viewModel.isSaving.observe(this, Observer {
+            when (it) {
+                true -> {
+                    save_fee_btn.isEnabled = false
+                    (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
+                }
+                false -> {
+                    (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.GONE
+                    activity.supportFragmentManager.popBackStack()
+                }
+            }
         })
     }
 

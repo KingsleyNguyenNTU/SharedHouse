@@ -30,7 +30,7 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
 
     val roomSplitters: MutableLiveData<List<RoomSplitter>> = MutableLiveData()
         get(){
-            if (fee.value?.isSharedByRoom()?.not() ?: false){
+            if (fee.value?.isSharedByRoom() == false){
                 field.value = emptyList()
             }
             else if (field.value == null) {
@@ -38,11 +38,13 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
             }
             return field
         }
+    val isSaving: MutableLiveData<Boolean> = MutableLiveData()
 
     fun save() {
+        isSaving.value = true
         fee.value?.let {fee ->
             roomSplitters.value?.let {roomSplitters ->
-                editFeeRepository.saveFee(fee, roomSplitters)
+                editFeeRepository.saveFee(fee, roomSplitters, isSaving)
             }
         }
 
