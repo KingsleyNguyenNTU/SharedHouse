@@ -1,5 +1,6 @@
 package com.example.mkhoi.sharedhouse.rooms_view
 
+import android.arch.persistence.room.Transaction
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.dao.PersonDao
 import com.example.mkhoi.sharedhouse.database.dao.UnitDao
@@ -13,6 +14,7 @@ class RoomsRepository @Inject constructor(val unitPersonDao: UnitPersonDao,
                                           val personDao: PersonDao) {
     fun getActiveRooms() = unitPersonDao.getAllActiveUnits()
 
+    @Transaction
     fun deleteRoom(unitWithPersons: UnitWithPersons) {
         unitWithPersons.roommates?.map { it.apply { active = false } }?.let { personDao.updatePersons(it) }
         unitDao.updateUnit(unitWithPersons.unit.apply { active = false })

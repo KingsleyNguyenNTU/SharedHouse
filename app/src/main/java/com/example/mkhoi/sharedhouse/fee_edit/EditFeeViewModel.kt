@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
+import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.FeeType
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
@@ -44,9 +45,13 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
     fun save() {
         isSaving.value = true
         fee.value?.let {fee ->
-            roomSplitters.value?.let {roomSplitters ->
-                editFeeRepository.saveFee(fee, roomSplitters, isSaving)
-            }
+            DatabaseAsyncTask().execute({
+                roomSplitters.value?.let { roomSplitters ->
+                    editFeeRepository.saveFee(fee, roomSplitters, isSaving)
+                }
+
+                isSaving.postValue(false)
+            })
         }
 
     }

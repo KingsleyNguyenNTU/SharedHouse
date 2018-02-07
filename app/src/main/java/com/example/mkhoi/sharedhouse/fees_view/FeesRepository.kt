@@ -1,6 +1,6 @@
 package com.example.mkhoi.sharedhouse.fees_view
 
-import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
+import android.arch.persistence.room.Transaction
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.dao.FeeDao
 import com.example.mkhoi.sharedhouse.database.dao.SplitterDao
@@ -15,11 +15,9 @@ class FeesRepository @Inject constructor(private val splitterDao: SplitterDao,
             Calendar.getInstance().get(Calendar.MONTH),
             Calendar.getInstance().get(Calendar.YEAR))
 
+    @Transaction
     fun deleteFee(fee: FeeWithSplitters) {
-        val task = DatabaseAsyncTask()
-        task.execute({
-            fee.splitters?.let { splitterDao.deleteSplitters(it) }
-            feeDao.deleteFee(fee.fee)
-        })
+        fee.splitters?.let { splitterDao.deleteSplitters(it) }
+        feeDao.deleteFee(fee.fee)
     }
 }

@@ -16,6 +16,7 @@ import com.example.mkhoi.sharedhouse.database.entity.Fee
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeFragment
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
+import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import kotlinx.android.synthetic.main.fragment_fees.*
 
@@ -71,10 +72,10 @@ class FeesFragment : Fragment() {
                             )
                         }
                         onClickAction = {
-                            /*activity.supportFragmentManager.beginTransaction()
+                            activity.supportFragmentManager.beginTransaction()
                                     .replace(R.id.main_content_fragment, EditFeeFragment.newInstance(it))
                                     .addToBackStack(EditRoomFragment::class.java.canonicalName)
-                                    .commit()*/
+                                    .commit()
                         }
                     }
                 })

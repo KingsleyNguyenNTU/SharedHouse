@@ -16,6 +16,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.FeeType
+import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.bean.ReducedShareType
 import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
 import com.example.mkhoi.sharedhouse.database.entity.FeeShare
@@ -28,25 +29,27 @@ import kotlinx.android.synthetic.main.fragment_edit_fee.*
 
 class EditFeeFragment: Fragment() {
     companion object {
-        fun newInstance() = EditFeeFragment()
+        private const val FEE_BUNDLE_KEY = "FEE_BUNDLE_KEY"
+
+        fun newInstance(feeWithSplitters: FeeWithSplitters? = null) = EditFeeFragment().apply {
+            arguments = Bundle().apply { putParcelable(FEE_BUNDLE_KEY, feeWithSplitters) }
+        }
     }
 
     internal lateinit var viewModel: EditFeeViewModel
-    internal lateinit var binding: FragmentEditFeeBinding
+    private lateinit var binding: FragmentEditFeeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders
-                .of(this, EditFeeViewModel.Factory(null))
+                .of(this, EditFeeViewModel.Factory(arguments[FEE_BUNDLE_KEY] as? FeeWithSplitters))
                 .get(EditFeeViewModel::class.java)
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View?{
-        val view = inflater.inflate(R.layout.fragment_edit_fee, container, false)
-        return view
-    }
+                              savedInstanceState: Bundle?): View?
+            = inflater.inflate(R.layout.fragment_edit_fee, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,6 +70,7 @@ class EditFeeFragment: Fragment() {
 
         viewModel.roomSplitters.observe(this, Observer {
             updateAddSplitterBtnListener()
+            reloadRoomSplitterList()
         })
 
         viewModel.isSaving.observe(this, Observer {
@@ -174,6 +178,10 @@ class EditFeeFragment: Fragment() {
             }
         }
 
+        reloadRoomSplitterList()
+    }
+
+    private fun reloadRoomSplitterList(){
         val totalShare = viewModel.roomSplitters.value?.map { it.feeShare?.share ?:0 }?.sum() ?: 0
         val totalExpense = viewModel.fee.value?.amount ?: 0.0
 

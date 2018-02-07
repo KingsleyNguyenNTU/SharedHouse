@@ -7,7 +7,6 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
-import com.example.mkhoi.sharedhouse.database.entity.Fee
 import com.example.mkhoi.sharedhouse.database.entity.FeeShare
 
 @Dao
@@ -17,6 +16,9 @@ interface SplitterDao {
 
     @Delete
     fun deleteSplitters(splitters: List<FeeShare>)
+
+    @Query("delete from feeShare where feeId = :feeId")
+    fun deleteSplittersByFeeId(feeId: Int)
 
     @Query("select * from fee where month = :month and year = :year")
     fun getAllFeesFromMonth(month: Int, year: Int): LiveData<List<FeeWithSplitters>>

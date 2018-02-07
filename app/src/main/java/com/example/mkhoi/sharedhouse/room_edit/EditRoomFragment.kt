@@ -31,7 +31,7 @@ class EditRoomFragment : Fragment() {
 
         fun newInstance(room: UnitWithPersons? = null): EditRoomFragment {
             val fragment = EditRoomFragment()
-            var arguments = Bundle()
+            val arguments = Bundle()
             arguments.putParcelable(ROOM_BUNDLE_KEY, room)
             fragment.arguments = arguments
             return fragment

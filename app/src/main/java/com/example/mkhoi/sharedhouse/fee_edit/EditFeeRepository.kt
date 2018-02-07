@@ -1,6 +1,7 @@
 package com.example.mkhoi.sharedhouse.fee_edit
 
 import android.arch.lifecycle.MutableLiveData
+import android.arch.persistence.room.Transaction
 import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
 import com.example.mkhoi.sharedhouse.database.dao.FeeDao
@@ -20,17 +21,26 @@ class EditFeeRepository @Inject constructor(private val splitterDao: SplitterDao
         })
     }
 
+    @Transaction
     fun saveFee(fee: Fee, roomSplitters: List<RoomSplitter>, isSaving: MutableLiveData<Boolean>) {
-        val task = DatabaseAsyncTask()
-        task.execute({
-            if (fee.id == null){
-                val feeId = feeDao.insertFee(fee).toInt()
-                fee.id = feeId
-                roomSplitters.map { it.feeShare?.apply { this.feeId = feeId } }.filterNotNull().let {
+        if (fee.id == null){
+            val feeId = feeDao.insertFee(fee).toInt()
+            fee.id = feeId
+            roomSplitters.map { it.feeShare?.apply { this.feeId = feeId } }.filterNotNull().let {
+                splitterDao.insertFeeShares(it)
+            }
+        }
+        else {
+            feeDao.updateFee(fee)
+            fee.id?.let {feeId ->
+                roomSplitters.map { it.feeShare?.apply {
+                    this.feeId = feeId
+                    this.id = null
+                } }.filterNotNull().let {
+                    splitterDao.deleteSplittersByFeeId(feeId)
                     splitterDao.insertFeeShares(it)
                 }
             }
-            isSaving.postValue(false)
-        })
+        }
     }
 }
