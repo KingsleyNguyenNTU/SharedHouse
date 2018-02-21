@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.example.mkhoi.sharedhouse.fees_view.FeesFragment
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -41,6 +42,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_room -> {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.main_content_fragment, RoomsFragment.newInstance())
+                        .commitNow()
+            }
+            R.id.nav_fee -> {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_content_fragment, FeesFragment.newInstance())
                         .commitNow()
             }
         }

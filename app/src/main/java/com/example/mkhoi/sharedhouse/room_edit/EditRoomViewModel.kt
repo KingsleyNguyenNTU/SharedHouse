@@ -9,8 +9,8 @@ import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.database.entity.Unit
 
-class EditRoomViewModel(val repository: EditRoomRepository,
-                        val existingRoom: UnitWithPersons?): ViewModel() {
+class EditRoomViewModel(private val repository: EditRoomRepository,
+                        private val existingRoom: UnitWithPersons?): ViewModel() {
     val room: MutableLiveData<Unit> = MutableLiveData()
         get() {
             if (field.value == null ) {

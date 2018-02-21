@@ -12,9 +12,6 @@
     <string name="send_nav">Send</string>
     <string name="how_it_works_nav">How it works</string>
     <string name="leave_nav">Housemates Vacations</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="room_name_label">Room Name:</string>
     <string name="save_btn_label">Save</string>
     <string name="edit_room_text_label">Please register a new room for sharing renting fee.</string>
@@ -29,6 +26,9 @@
     <string name="rooms_fragment_title">Rooms</string>
     <string name="edit_rooms_fragment_title">Edit Room</string>
     <string name="add_rooms_fragment_title">Add New Room</string>
-    <string name="delete_roommate_dialog_title">Remove roomate</string>
+    <string name="delete_roommate_dialog_title">Remove roommate</string>
     <string name="delete_roommate_dialog_message">Are you sure that you want to remove %1$s from this room?</string>
+    <string name="fees_fragment_title">Fee Details</string>
+    <string name="edit_fee_text_label">Expense General Info</string>
+    <string name="fee_name_label">Fee Name</string>
 </resources>
