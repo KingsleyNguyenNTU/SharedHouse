@@ -46,4 +46,6 @@
     <string name="edit_splitter_fraction_dialog_title">Edit share fraction</string>
     <string name="bill_detail_roommate_list_caption">This expense should be paid by:</string>
     <string name="bill_fragment_title">Monthly Bill</string>
+    <string name="send_bill_dialog_title">Send Bill</string>
+    <string name="send_bill_dialog_msg">Do you want to send bill for %1$s?</string>
 </resources>

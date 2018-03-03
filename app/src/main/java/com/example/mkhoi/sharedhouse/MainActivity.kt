@@ -80,9 +80,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         .addToBackStack(FeesFragment::class.java.canonicalName)
                         .commit()
             }
-            R.id.nav_send -> {
-                sendWhatsAppMsg()
-            }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)

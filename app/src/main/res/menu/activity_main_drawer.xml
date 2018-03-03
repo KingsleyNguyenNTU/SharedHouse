@@ -22,17 +22,4 @@
             android:title="@string/leave_nav" />
     </group>
 
-    <item android:title="@string/manage_nav_group">
-        <menu>
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/send_nav" />
-            <item
-                android:id="@+id/nav_how"
-                android:icon="@drawable/ic_live_help_black_24dp"
-                android:title="@string/how_it_works_nav" />
-        </menu>
-    </item>
-
 </menu>
