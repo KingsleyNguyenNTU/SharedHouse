@@ -45,4 +45,5 @@
     <string name="splitter_fraction_label">Share fraction</string>
     <string name="edit_splitter_fraction_dialog_title">Edit share fraction</string>
     <string name="bill_detail_roommate_list_caption">This expense should be paid by:</string>
+    <string name="bill_fragment_title">Monhtly Bill</string>
 </resources>

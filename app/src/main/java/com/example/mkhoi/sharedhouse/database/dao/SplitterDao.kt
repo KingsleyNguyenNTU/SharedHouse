@@ -24,6 +24,9 @@ interface SplitterDao {
     @Query("select * from fee where month = :month and year = :year")
     fun getAllFeesFromMonth(month: Int, year: Int): LiveData<List<FeeWithSplitters>>
 
+    @Query("select * from fee where month = :month and year = :year")
+    fun getAllFeesFromMonthStatic(month: Int, year: Int): List<FeeWithSplitters>
+
     @Query("select unit.*, " +
             "FeeShare.id as FeeShare_id, " +
             "FeeShare.feeId as FeeShare_feeId, " +
