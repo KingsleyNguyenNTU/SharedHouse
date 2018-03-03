@@ -27,6 +27,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.main_content_fragment, MonthlyBillFragment.newInstance())
+                .commitNow()
     }
 
     override fun onBackPressed() {
@@ -43,17 +48,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_bill ->{
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.main_content_fragment, MonthlyBillFragment.newInstance())
-                        .commitNow()
+                        .addToBackStack(MonthlyBillFragment::class.java.canonicalName)
+                        .commit()
             }
             R.id.nav_room -> {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.main_content_fragment, RoomsFragment.newInstance())
-                        .commitNow()
+                        .addToBackStack(RoomsFragment::class.java.canonicalName)
+                        .commit()
             }
             R.id.nav_fee -> {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.main_content_fragment, FeesFragment.newInstance())
-                        .commitNow()
+                        .addToBackStack(FeesFragment::class.java.canonicalName)
+                        .commit()
             }
         }
 
