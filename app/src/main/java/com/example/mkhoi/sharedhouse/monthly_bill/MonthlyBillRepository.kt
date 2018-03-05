@@ -61,6 +61,8 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
                         ?: BillListItem(
                                 mainName = room.name,
                                 amount = 0f,
+                                phoneNumbers = rooms[roomId]!!.roommates?.map { it.phone.removePrefix("+") }
+                                        ?: emptyList(),
                                 billDetails = mutableListOf()
                         )
                 billItem.amount += amount

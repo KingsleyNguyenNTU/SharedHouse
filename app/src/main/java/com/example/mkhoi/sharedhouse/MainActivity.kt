@@ -1,13 +1,8 @@
 package com.example.mkhoi.sharedhouse
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore.Images
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -20,7 +15,6 @@ import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillFragment
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import java.io.ByteArrayOutputStream
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -84,24 +78,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    fun sendWhatsAppMsg() {
-        val b = Bitmap.createBitmap(nav_view.getWidth(), nav_view.getHeight(), Bitmap.Config.ARGB_8888)
-        val c = Canvas(b)
-        nav_view.draw(c)
-
-        val bytes = ByteArrayOutputStream()
-        b.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val path = Images.Media.insertImage(contentResolver, b, "Title", null)
-        val imageUri =  Uri.parse(path)
-        val sendIntent = Intent(Intent.ACTION_SEND)
-        sendIntent.`package` = "com.whatsapp"
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "My sample image text");
-        sendIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-        sendIntent.setType("image/jpeg");
-        sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        sendIntent.putExtra("jid", "6594572814@s.whatsapp.net")
-        startActivity(sendIntent)
     }
 }
