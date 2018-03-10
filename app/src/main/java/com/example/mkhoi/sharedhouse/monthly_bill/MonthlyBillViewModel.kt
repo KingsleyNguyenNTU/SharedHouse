@@ -6,19 +6,26 @@ import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
 import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
 import com.example.mkhoi.sharedhouse.list_view.BillListItem
+import java.util.*
 
 
 class MonthlyBillViewModel(private val repository: MonthlyBillRepository): ViewModel() {
     val monthlyBillList : MutableLiveData<List<BillListItem>> = MutableLiveData()
-        get(){
+    val selectedMonth: MutableLiveData<Calendar> = MutableLiveData()
+        get() {
             if (field.value == null){
-                field.value = emptyList()
-                DatabaseAsyncTask().execute({
-                    repository.getMonthlyBills(field)
-                })
+                field.value = Calendar.getInstance().apply {
+                    set(Calendar.DATE, 1)
+                }
             }
             return field
         }
+
+    fun reloadMonthlyBills(selectedMonth: Calendar){
+        DatabaseAsyncTask().execute({
+            repository.getMonthlyBills(selectedMonth, monthlyBillList)
+        })
+    }
 
     class Factory : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

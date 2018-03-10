@@ -19,13 +19,13 @@ import javax.inject.Singleton
 class MonthlyBillRepository @Inject constructor(private val splitterDao: SplitterDao,
                                                 private val unitPersonDao: UnitPersonDao,
                                                 private val personDao: PersonDao) {
-    fun getMonthlyBills(resultLiveData: MutableLiveData<List<BillListItem>>) {
+    fun getMonthlyBills(selectedMonth: Calendar, resultLiveData: MutableLiveData<List<BillListItem>>) {
         val billItemToRoomId: MutableMap<Int, BillListItem> = mutableMapOf()
 
         //load required data from DB
         val feesWithSplitters = splitterDao.getAllFeesFromMonthStatic(
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.YEAR))
+                selectedMonth.get(Calendar.MONTH),
+                selectedMonth.get(Calendar.YEAR))
 
         val rooms = unitPersonDao.getAllUnits().associateBy({it.unit.id}, {it})
         val persons = personDao.getAllPersons().associateBy({it.id}, {it})

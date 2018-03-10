@@ -7,12 +7,12 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.view.View.GONE
-import android.view.ViewGroup
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.list_view.BillListItemRecyclerViewAdapter
+import com.example.mkhoi.sharedhouse.util.showMonthPickerDialog
+import com.example.mkhoi.sharedhouse.util.toString
 import kotlinx.android.synthetic.main.fragment_monthly_bill_list.*
 
 class MonthlyBillFragment : Fragment() {
@@ -25,8 +25,22 @@ class MonthlyBillFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         viewModel = ViewModelProviders.of(this, MonthlyBillViewModel.Factory())
                 .get(MonthlyBillViewModel::class.java)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.month_picker_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.action_month_picker){
+            context.showMonthPickerDialog(viewModel.selectedMonth)
+            return true
+        }
+        else return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +58,13 @@ class MonthlyBillFragment : Fragment() {
         viewModel.monthlyBillList.observe(this, Observer {
             it?.let {
                 monthly_bill_list.adapter = BillListItemRecyclerViewAdapter(it)
+            }
+        })
+
+        viewModel.selectedMonth.observe(this, Observer {
+            it?.let {
+                (activity.findViewById(R.id.toolbar) as Toolbar).title = it.toString("MMMM yyyy")
+                viewModel.reloadMonthlyBills(it)
             }
         })
     }
