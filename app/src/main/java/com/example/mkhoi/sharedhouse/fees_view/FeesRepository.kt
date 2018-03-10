@@ -11,9 +11,9 @@ import javax.inject.Singleton
 @Singleton
 class FeesRepository @Inject constructor(private val splitterDao: SplitterDao,
                                          private val feeDao: FeeDao) {
-    fun getCurrentFees() = splitterDao.getAllFeesFromMonth(
-            Calendar.getInstance().get(Calendar.MONTH),
-            Calendar.getInstance().get(Calendar.YEAR))
+    fun getFeesByMonth(selectedMonth: Calendar) = splitterDao.getAllFeesFromMonth(
+            selectedMonth.get(Calendar.MONTH),
+            selectedMonth.get(Calendar.YEAR))
 
     @Transaction
     fun deleteFee(fee: FeeWithSplitters) {

@@ -1,18 +1,33 @@
 package com.example.mkhoi.sharedhouse.fees_view
 
-import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
 import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
+import java.util.*
 
 class FeesViewModel(private val repository: FeesRepository): ViewModel() {
-    val fees: LiveData<List<FeeWithSplitters>> = repository.getCurrentFees()
+    val fees: MutableLiveData<List<FeeWithSplitters>> = MutableLiveData()
+    val selectedMonth: MutableLiveData<Calendar> = MutableLiveData()
+        get() {
+            if (field.value == null){
+                field.value = Calendar.getInstance().apply {
+                    set(Calendar.DATE, 1)
+                }
+            }
+            return field
+        }
+
+    fun reloadFees(selectedMonth: Calendar) {
+        DatabaseAsyncTask().execute({
+            fees.postValue(repository.getFeesByMonth(selectedMonth))
+        })
+    }
 
     fun deleteFee(fee: FeeWithSplitters) {
-        val task = DatabaseAsyncTask()
-        task.execute({
+        DatabaseAsyncTask().execute({
             repository.deleteFee(fee)
         })
     }

@@ -22,7 +22,7 @@ interface SplitterDao {
     fun deleteSplittersByFeeId(feeId: Int)
 
     @Query("select * from fee where month = :month and year = :year")
-    fun getAllFeesFromMonth(month: Int, year: Int): LiveData<List<FeeWithSplitters>>
+    fun getAllFeesFromMonth(month: Int, year: Int): List<FeeWithSplitters>
 
     @Query("select * from fee where month = :month and year = :year")
     fun getAllFeesFromMonthStatic(month: Int, year: Int): List<FeeWithSplitters>

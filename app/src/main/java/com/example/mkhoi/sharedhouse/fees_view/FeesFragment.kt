@@ -7,9 +7,7 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeFragment
@@ -17,7 +15,10 @@ import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
+import com.example.mkhoi.sharedhouse.util.showMonthPickerDialog
+import com.example.mkhoi.sharedhouse.util.toString
 import kotlinx.android.synthetic.main.fragment_fees.*
+
 
 class FeesFragment : Fragment() {
     companion object {
@@ -28,8 +29,22 @@ class FeesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         viewModel = ViewModelProviders.of(this, FeesViewModel.Factory())
                 .get(FeesViewModel::class.java)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.month_picker_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.action_month_picker){
+            context.showMonthPickerDialog(viewModel.selectedMonth)
+            return true
+        }
+        else return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -78,6 +93,13 @@ class FeesFragment : Fragment() {
                         }
                     }
                 })
+            }
+        })
+
+        viewModel.selectedMonth.observe(this, Observer {
+            it?.let {
+                (activity.findViewById(R.id.toolbar) as Toolbar).title = it.toString("MMMM yyyy")
+                viewModel.reloadFees(it)
             }
         })
     }

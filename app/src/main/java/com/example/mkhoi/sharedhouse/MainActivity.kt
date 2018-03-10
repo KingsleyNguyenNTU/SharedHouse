@@ -9,10 +9,13 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.widget.NumberPicker
 import com.example.mkhoi.sharedhouse.fees_view.FeesFragment
 import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillFragment
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsFragment
+import com.example.mkhoi.sharedhouse.util.showCustomDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
@@ -33,7 +36,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         supportFragmentManager.beginTransaction()
-                .replace(R.id.main_content_fragment, MonthlyBillFragment.newInstance())
+                .add(R.id.main_content_fragment, MonthlyBillFragment.newInstance())
                 .commitNow()
         if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
