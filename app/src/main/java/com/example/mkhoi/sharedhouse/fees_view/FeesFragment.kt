@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.*
+import android.widget.CalendarView
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeFragment
@@ -16,8 +17,10 @@ import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import com.example.mkhoi.sharedhouse.util.showMonthPickerDialog
+import com.example.mkhoi.sharedhouse.util.showMultipleChoicesDialog
 import com.example.mkhoi.sharedhouse.util.toString
 import kotlinx.android.synthetic.main.fragment_fees.*
+import java.util.*
 
 
 class FeesFragment : Fragment() {
@@ -26,6 +29,7 @@ class FeesFragment : Fragment() {
     }
 
     internal lateinit var viewModel: FeesViewModel
+    internal var menu: Menu? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,16 +39,39 @@ class FeesFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.month_picker_menu, menu)
+        inflater.inflate(R.menu.fees_menu, menu)
+        this.menu = menu
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.action_month_picker){
-            context.showMonthPickerDialog(viewModel.selectedMonth)
-            return true
+        when (item?.itemId){
+            R.id.action_month_picker -> {
+                context.showMonthPickerDialog(viewModel.selectedMonth)
+                return true
+            }
+            R.id.action_copy_fee -> {
+                viewModel.fees.value?.let {
+                    val selectedItems: MutableList<Int> = mutableListOf()
+                    context.showMultipleChoicesDialog(
+                            titleResId = R.string.action_copy_fee_title,
+                            multipleChoices = it.map { it.fee.name }.toTypedArray(),
+                            selectedItems = selectedItems,
+                            positiveFunction = {
+                                viewModel.copyFees(selectedItems)
+                            }
+                    )
+                }
+
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
-        else return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        menu?.findItem(R.id.action_copy_fee)?.isVisible = false
+        super.onPrepareOptionsMenu(menu)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -104,6 +131,9 @@ class FeesFragment : Fragment() {
             it?.let {
                 (activity.findViewById(R.id.toolbar) as Toolbar).title = it.toString("MMMM yyyy")
                 viewModel.reloadFees(it)
+                menu?.findItem(R.id.action_copy_fee)?.isVisible =
+                        (it.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH) &&
+                        it.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)).not()
             }
         })
     }

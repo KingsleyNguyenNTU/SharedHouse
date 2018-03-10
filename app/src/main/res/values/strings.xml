@@ -50,4 +50,5 @@
     <string name="send_bill_dialog_msg">Do you want to send bill for %1$s?</string>
     <string name="bill_template_total_label">Total</string>
     <string name="action_month_picker_title">Select month</string>
+    <string name="action_copy_fee_title">Copy Expenses to Current Month</string>
 </resources>

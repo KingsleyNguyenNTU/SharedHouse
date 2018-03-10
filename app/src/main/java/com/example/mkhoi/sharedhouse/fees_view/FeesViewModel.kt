@@ -26,9 +26,20 @@ class FeesViewModel(private val repository: FeesRepository): ViewModel() {
         })
     }
 
+    fun copyFees(selectedItems: MutableList<Int>) {
+        fees.value?.let {
+            DatabaseAsyncTask().execute({
+                repository.copyFee(it.filterIndexed{index, value -> selectedItems.contains(index) })
+            })
+        }
+    }
+
     fun deleteFee(fee: FeeWithSplitters) {
         DatabaseAsyncTask().execute({
             repository.deleteFee(fee)
+            selectedMonth.value?.let {
+                fees.postValue(repository.getFeesByMonth(it))
+            }
         })
     }
 
