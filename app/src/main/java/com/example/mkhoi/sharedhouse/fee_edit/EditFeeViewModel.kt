@@ -10,7 +10,8 @@ import com.example.mkhoi.sharedhouse.database.entity.Fee
 import java.util.*
 
 
-class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
+class EditFeeViewModel(private val selectedMonth: Calendar,
+                       private val feeWithSplitters: FeeWithSplitters?,
                        private val editFeeRepository: EditFeeRepository): ViewModel() {
 
     val fee: MutableLiveData<Fee> = MutableLiveData()
@@ -20,8 +21,8 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
                         name = "",
                         feeType = FeeType.ENTERTAINMENT,
                         shareType = ShareType.SHARE_BY_ROOM_WITHOUT_TIME,
-                        month = Calendar.getInstance().get(Calendar.MONTH),
-                        year = Calendar.getInstance().get(Calendar.YEAR),
+                        month = selectedMonth.get(Calendar.MONTH),
+                        year = selectedMonth.get(Calendar.YEAR),
                         amount = 0.0)
             }
             return field
@@ -56,9 +57,12 @@ class EditFeeViewModel(private val feeWithSplitters: FeeWithSplitters?,
 
     }
 
-    class Factory(private val feeWithSplitters: FeeWithSplitters?) : ViewModelProvider.NewInstanceFactory() {
+    class Factory(private val selectedMonth: Calendar,
+                  private val feeWithSplitters: FeeWithSplitters?) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return EditFeeViewModel(feeWithSplitters,MyApp.component.editFeeRepository()) as T
+            return EditFeeViewModel(
+                    selectedMonth,
+                    feeWithSplitters,MyApp.component.editFeeRepository()) as T
         }
     }
 }

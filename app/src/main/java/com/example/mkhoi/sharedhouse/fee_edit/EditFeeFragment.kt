@@ -28,14 +28,20 @@ import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.util.showCustomDialog
 import com.example.mkhoi.sharedhouse.util.showMultipleChoicesDialog
 import kotlinx.android.synthetic.main.fragment_edit_fee.*
+import java.util.*
 
 
 class EditFeeFragment: Fragment() {
     companion object {
         private const val FEE_BUNDLE_KEY = "FEE_BUNDLE_KEY"
+        private const val SELECTED_MONTH_KEY = "SELECTED_MONTH_KEY"
 
-        fun newInstance(feeWithSplitters: FeeWithSplitters? = null) = EditFeeFragment().apply {
-            arguments = Bundle().apply { putParcelable(FEE_BUNDLE_KEY, feeWithSplitters) }
+        fun newInstance(selectedMonth: Calendar,
+                        feeWithSplitters: FeeWithSplitters? = null) = EditFeeFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(SELECTED_MONTH_KEY, selectedMonth)
+                putParcelable(FEE_BUNDLE_KEY, feeWithSplitters)
+            }
         }
     }
 
@@ -45,7 +51,9 @@ class EditFeeFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders
-                .of(this, EditFeeViewModel.Factory(arguments[FEE_BUNDLE_KEY] as? FeeWithSplitters))
+                .of(this, EditFeeViewModel.Factory(
+                        arguments[SELECTED_MONTH_KEY] as Calendar,
+                        arguments[FEE_BUNDLE_KEY] as? FeeWithSplitters))
                 .get(EditFeeViewModel::class.java)
     }
 

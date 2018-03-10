@@ -62,10 +62,12 @@ class FeesFragment : Fragment() {
         val fab = activity.findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = View.VISIBLE
         fab.setOnClickListener { view ->
-            activity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.main_content_fragment, EditFeeFragment.newInstance())
-                    .addToBackStack(EditFeeFragment::class.java.canonicalName)
-                    .commit()
+            viewModel.selectedMonth.value?.let {
+                activity.supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_content_fragment, EditFeeFragment.newInstance(it))
+                        .addToBackStack(EditFeeFragment::class.java.canonicalName)
+                        .commit()
+            }
         }
 
         viewModel.fees.observe(this, Observer {
@@ -86,10 +88,12 @@ class FeesFragment : Fragment() {
                             )
                         }
                         onClickAction = {
-                            activity.supportFragmentManager.beginTransaction()
-                                    .replace(R.id.main_content_fragment, EditFeeFragment.newInstance(it))
-                                    .addToBackStack(EditRoomFragment::class.java.canonicalName)
-                                    .commit()
+                            viewModel.selectedMonth.value?.let {selectedMonth ->
+                                activity.supportFragmentManager.beginTransaction()
+                                        .replace(R.id.main_content_fragment, EditFeeFragment.newInstance(selectedMonth,it))
+                                        .addToBackStack(EditRoomFragment::class.java.canonicalName)
+                                        .commit()
+                            }
                         }
                     }
                 })
