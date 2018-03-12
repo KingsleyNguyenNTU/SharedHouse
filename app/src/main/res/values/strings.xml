@@ -51,4 +51,15 @@
     <string name="bill_template_total_label">Total</string>
     <string name="action_month_picker_title">Select month</string>
     <string name="action_copy_fee_title">Copy Expenses to Current Month</string>
+    <string name="backup_nav">Backup</string>
+    <string name="restore_nav">Restore</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="backup_text_title">Backup Database</string>
+    <string name="backup_text_details">Backup your database to prevent your exisitng data from losing as well as importing it to a new device.</string>
+    <string name="backup_btn_label">Backup</string>
+    <string name="backup_fragment_title">Backup</string>
+    <string name="backup_fail_msg">Fail to backup database.</string>
+    <string name="backup_success_msg">Backup database successfully!</string>
 </resources>

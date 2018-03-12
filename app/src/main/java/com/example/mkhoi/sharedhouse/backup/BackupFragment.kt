@@ -1,0 +1,48 @@
+package com.example.mkhoi.sharedhouse.backup
+
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v7.widget.Toolbar
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import com.example.mkhoi.sharedhouse.R
+import kotlinx.android.synthetic.main.fragment_backup.*
+
+class BackupFragment : Fragment() {
+
+    companion object {
+        fun newInstance() = BackupFragment()
+    }
+
+    internal lateinit var viewModel: BackupViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProviders.of(this, BackupViewModel.Factory(activity))
+                .get(BackupViewModel::class.java)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View?
+            = inflater.inflate(R.layout.fragment_backup, container, false)
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        activity.findViewById<Toolbar>(R.id.toolbar).title = getString(R.string.backup_fragment_title)
+
+        backup_btn.setOnClickListener{
+            viewModel.backup()
+        }
+
+        viewModel.backupResultLiveData.observe(this, Observer {
+            when (it){
+                true -> Toast.makeText(activity, R.string.backup_success_msg, Toast.LENGTH_LONG).show()
+                false -> Toast.makeText(activity, R.string.backup_fail_msg, Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+}

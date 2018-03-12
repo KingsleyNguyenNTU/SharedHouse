@@ -1,6 +1,7 @@
 package com.example.mkhoi.sharedhouse.dagger
 
 import com.example.mkhoi.sharedhouse.MyApp
+import com.example.mkhoi.sharedhouse.backup.BackupRepository
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeRepository
 import com.example.mkhoi.sharedhouse.fees_view.FeesRepository
 import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillRepository
@@ -19,4 +20,5 @@ interface MyAppComponent {
     fun editFeeRepository(): EditFeeRepository
     fun feesRepository(): FeesRepository
     fun monthlyBillRepository(): MonthlyBillRepository
+    fun backupRepository(): BackupRepository
 }
