@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.example.mkhoi.sharedhouse.backup.BackupFragment
+import com.example.mkhoi.sharedhouse.backup.RestoreFragment
 import com.example.mkhoi.sharedhouse.fees_view.FeesFragment
 import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillFragment
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsFragment
@@ -93,6 +94,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.main_content_fragment, BackupFragment.newInstance())
                         .addToBackStack(BackupFragment::class.java.canonicalName)
+                        .commit()
+            }
+            R.id.nav_restore -> {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_content_fragment, RestoreFragment.newInstance())
+                        .addToBackStack(RestoreFragment::class.java.canonicalName)
                         .commit()
             }
         }

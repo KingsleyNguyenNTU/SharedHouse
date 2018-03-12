@@ -62,4 +62,11 @@
     <string name="backup_fragment_title">Backup</string>
     <string name="backup_fail_msg">Fail to backup database.</string>
     <string name="backup_success_msg">Backup database successfully!</string>
+    <string name="restore_fail_msg">Fail to restore database.</string>
+    <string name="restore_success_msg">Restore database successfully!</string>
+    <string name="restore_text_title">Restore Database</string>
+    <string name="restore_text_details">Select an existing backup databse file to restore the database</string>
+    <string name="restore_btn_label">Restore</string>
+    <string name="select_file_btn_label">Select File</string>
+    <string name="restore_fragment_title">Restore</string>
 </resources>
