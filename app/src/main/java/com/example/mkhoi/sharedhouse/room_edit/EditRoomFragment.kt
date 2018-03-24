@@ -1,5 +1,6 @@
 package com.example.mkhoi.sharedhouse.room_edit
 
+import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -7,10 +8,14 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
@@ -21,13 +26,16 @@ import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import com.example.mkhoi.sharedhouse.util.showCustomDialog
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import kotlinx.android.synthetic.main.fragment_edit_room.*
+import java.util.*
 
 
 class EditRoomFragment : Fragment() {
 
     companion object {
         val ROOM_BUNDLE_KEY = "ROOM_BUNDLE_KEY"
+        private val phoneUtil = PhoneNumberUtil.getInstance()
 
         fun newInstance(room: UnitWithPersons? = null): EditRoomFragment {
             val fragment = EditRoomFragment()
@@ -81,23 +89,7 @@ class EditRoomFragment : Fragment() {
                                     )
                                 }
                                 onClickAction = {
-                                    val dialogView = LayoutInflater.from(context).inflate(R.layout.add_roommate_dialog, null)
-                                    val inputRoommateName = dialogView.findViewById(R.id.input_roommate_name) as EditText
-                                    val inputRoommatePhone = dialogView.findViewById(R.id.input_roommate_phone) as EditText
-                                    inputRoommateName.setText(it.name)
-                                    inputRoommatePhone.setText(it.phone)
-
-                                    context.showCustomDialog(
-                                            customView = dialogView,
-                                            titleResId = R.string.edit_roommate_dialog_title,
-                                            positiveFunction = {
-                                                it.name = inputRoommateName.text.toString()
-                                                mainName = inputRoommateName.text.toString()
-                                                it.phone = inputRoommatePhone.text.toString()
-                                                caption = inputRoommatePhone.text.toString()
-                                                roommates_list.adapter.notifyDataSetChanged()
-                                            }
-                                    )
+                                    openEditRoommateDialog(it)
                                 }
                             }
                         })
@@ -127,18 +119,124 @@ class EditRoomFragment : Fragment() {
         }
 
         add_room_btn.setOnClickListener {
-            val dialogView = layoutInflater.inflate(R.layout.add_roommate_dialog, null)
-            context.showCustomDialog(
-                    customView = dialogView,
-                    titleResId = R.string.add_roommate_dialog_title,
-                    positiveFunction = {
-                        val roommateName = (dialogView.findViewById(R.id.input_roommate_name) as EditText).text.toString()
-                        val roommatePhone = (dialogView.findViewById(R.id.input_roommate_phone) as EditText).text.toString()
-                        val newRoomate = Person(name = roommateName, phone = roommatePhone)
-
-                        viewModel.addRoommate(newRoomate)
-                    }
-            )
+            openAddRoommateDialog()
         }
+    }
+
+    private fun openAddRoommateDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.add_roommate_dialog, null)
+
+        val countryCodeView = dialogView.findViewById<AutoCompleteTextView>(R.id.input_roommate_country_code)
+        prepareCountryCodeList(countryCodeView, Locale.getDefault())
+
+        val dialog = context.showCustomDialog(
+                customView = dialogView,
+                titleResId = R.string.add_roommate_dialog_title,
+                positiveFunction = {
+                    val roommateName = (dialogView.findViewById(R.id.input_roommate_name) as EditText).text.toString()
+                    val roommatePhone = (dialogView.findViewById(R.id.input_roommate_phone) as EditText).text.toString()
+                    val fullPhoneNumber = "${countryCodeView.text}$roommatePhone"
+                    val newRoommate = Person(name = roommateName, phone = fullPhoneNumber)
+
+                    viewModel.addRoommate(newRoommate)
+                }
+        )
+        dialog?.let { validatePhoneNumber(it, dialogView) }
+    }
+
+    private fun ListItem.openEditRoommateDialog(roommate: Person) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.add_roommate_dialog, null)
+        val countryCodeView = dialogView.findViewById<AutoCompleteTextView>(R.id.input_roommate_country_code)
+        val inputRoommateName = dialogView.findViewById(R.id.input_roommate_name) as EditText
+        val inputRoommatePhone = dialogView.findViewById(R.id.input_roommate_phone) as EditText
+
+        inputRoommateName.setText(roommate.name)
+
+        try {
+            val phoneNumber = phoneUtil.parse(roommate.phone, null)
+            prepareCountryCodeList(countryCodeView,
+                    Locale.Builder().setRegion(
+                            phoneUtil.getRegionCodeForNumber(phoneNumber)).build())
+            inputRoommatePhone.setText(phoneNumber.nationalNumber.toString())
+        } catch (e: Exception) {
+            prepareCountryCodeList(countryCodeView, Locale.getDefault())
+            inputRoommatePhone.setText(roommate.phone)
+        }
+
+        val dialog = context.showCustomDialog(
+                customView = dialogView,
+                titleResId = R.string.edit_roommate_dialog_title,
+                positiveFunction = {
+                    roommate.name = inputRoommateName.text.toString()
+                    mainName = inputRoommateName.text.toString()
+                    val fullPhoneNumber = "+${countryCodeView.text}${inputRoommatePhone.text}"
+                    roommate.phone = fullPhoneNumber
+                    caption = roommate.phone
+                    roommates_list.adapter.notifyDataSetChanged()
+                }
+        )
+        dialog?.let { validatePhoneNumber(it, dialogView) }
+    }
+
+    private fun prepareCountryCodeList(countryCodeView: AutoCompleteTextView, defaultLocale: Locale): AutoCompleteTextView? {
+        val phoneCountryCodeAdapter = ArrayAdapter<String>(context,
+                android.R.layout.simple_spinner_dropdown_item,
+                Locale.getAvailableLocales()
+                        .map { "${phoneUtil.getCountryCodeForRegion(it.country)}" }
+                        .toSet()
+                        .sorted())
+        defaultLocale.let {
+            countryCodeView.setText("${phoneUtil.getCountryCodeForRegion(it.country)}")
+        }
+        countryCodeView.setAdapter(phoneCountryCodeAdapter)
+        countryCodeView.keyListener = null
+        countryCodeView.setOnTouchListener { v, _ ->
+            v.let {
+                (it as AutoCompleteTextView).showDropDown()
+                false
+            }
+        }
+        return countryCodeView
+    }
+
+    private fun validatePhoneNumber(dialog: AlertDialog, dialogView: View){
+        val phoneNumberView = dialogView.findViewById<EditText>(R.id.input_roommate_phone)
+        val countryCodeView = dialogView.findViewById<AutoCompleteTextView>(R.id.input_roommate_country_code)
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = checkPhoneNumber(
+                phoneNumber = phoneNumberView.text.toString(),
+                countryCode = countryCodeView.text.toString().toInt())
+
+        phoneNumberView.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                val validationResult = checkPhoneNumber(
+                        phoneNumber = s.toString(),
+                        countryCode = countryCodeView.text.toString().toInt())
+                if (validationResult){
+                    phoneNumberView.error = null
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
+                } else {
+                    phoneNumberView.error = getString(R.string.phone_number_error_msg)
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+        })
+    }
+
+    private fun checkPhoneNumber(phoneNumber: String, countryCode: Int): Boolean{
+        var validationResult: Boolean
+        try {
+            validationResult = phoneUtil.isValidNumber(phoneUtil.parse(phoneNumber,
+                    phoneUtil.getRegionCodeForCountryCode(countryCode)))
+        } catch (e: Exception) {
+            //fail to parse phone number
+            validationResult = false
+        }
+
+        return validationResult
     }
 }

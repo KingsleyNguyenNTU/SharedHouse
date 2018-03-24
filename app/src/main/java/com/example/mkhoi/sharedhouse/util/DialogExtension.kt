@@ -13,8 +13,8 @@ import java.util.*
 
 fun Context.showCustomDialog(customView: View,
                              @StringRes titleResId: Int,
-                             positiveFunction: () -> Unit){
-    AlertDialog.Builder(this)
+                             positiveFunction: () -> Unit): AlertDialog? {
+    return AlertDialog.Builder(this)
             .setTitle(this.getString(titleResId))
             .setView(customView)
             .setPositiveButton(this.getString(R.string.ok_btn_label), { _, _ ->

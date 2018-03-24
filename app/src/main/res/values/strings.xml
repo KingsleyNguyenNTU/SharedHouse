@@ -69,4 +69,6 @@
     <string name="restore_btn_label">Restore</string>
     <string name="select_file_btn_label">Select File</string>
     <string name="restore_fragment_title">Restore</string>
+    <string name="roommate_country_code_label">Country Code</string>
+    <string name="phone_number_error_msg">Wrong phone number</string>
 </resources>
