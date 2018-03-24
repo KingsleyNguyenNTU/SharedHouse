@@ -2,6 +2,7 @@ package com.example.mkhoi.sharedhouse.fee_edit
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
@@ -25,6 +26,7 @@ import com.example.mkhoi.sharedhouse.database.entity.FeeShare
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditFeeBinding
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
+import com.example.mkhoi.sharedhouse.util.getProfilePicture
 import com.example.mkhoi.sharedhouse.util.showCustomDialog
 import com.example.mkhoi.sharedhouse.util.showMultipleChoicesDialog
 import kotlinx.android.synthetic.main.fragment_edit_fee.*
@@ -257,7 +259,7 @@ class EditFeeFragment: Fragment() {
                 viewModel.roomSplitters.value?.let {
                     val dataList = it.map{
                         it.feeShare?.let { feeShare ->
-                            Pair<String, FeeShare>(first = it.room.name, second = feeShare)
+                            Pair(first = it.room.name, second = Pair(feeShare, null))
                         }
                     }
                     reloadSplitterList(dataList.filterNotNull())
@@ -267,7 +269,7 @@ class EditFeeFragment: Fragment() {
                 viewModel.personSplitters.value?.let {
                     val dataList = it.map{
                         it.feeShare?.let { feeShare ->
-                            Pair<String, FeeShare>(first = it.person.name, second = feeShare)
+                            Pair(first = it.person.name, second = Pair(feeShare, it.person.getProfilePicture(context)))
                         }
                     }
                     reloadSplitterList(dataList.filterNotNull())
@@ -276,31 +278,32 @@ class EditFeeFragment: Fragment() {
         }
     }
 
-    private fun reloadSplitterList(dataList: List<Pair<String, FeeShare>>){
-        val totalShare = dataList.map { it.second.share }.sum()
+    private fun reloadSplitterList(dataList: List<Pair<String, Pair<FeeShare, Uri?>>>){
+        val totalShare = dataList.map { it.second.first.share }.sum()
         val totalExpense = viewModel.fee.value?.amount ?: 0.0
 
         splitters_list.adapter = ListItemRecyclerViewAdapter(
                 data = dataList.map {
-                    val shareAmount = it.second.share.toDouble()*totalExpense/totalShare.toDouble()
+                    val shareAmount = it.second.first.share.toDouble()*totalExpense/totalShare.toDouble()
                     ListItem(
                             mainName = it.first,
                             caption = getString(R.string.splitter_caption_text,
                                     String.format("%.2f", shareAmount),
-                                    it.second.share,
-                                    totalShare)
+                                    it.second.first.share,
+                                    totalShare),
+                            profilePicture = it.second.second
                     ).apply {
                         deleteAction = null
                         onClickAction = {
                             val dialogView = LayoutInflater.from(context).inflate(R.layout.add_feeshare_dialog, null)
                             val inputShareFraction = dialogView.findViewById(R.id.input_splitter_fraction) as EditText
-                            inputShareFraction.setText((it.second.share).toString())
+                            inputShareFraction.setText((it.second.first.share).toString())
 
                             context.showCustomDialog(
                                     customView = dialogView,
                                     titleResId = R.string.edit_splitter_fraction_dialog_title,
                                     positiveFunction = {
-                                        it.second.share = inputShareFraction.text.toString().toInt()
+                                        it.second.first.share = inputShareFraction.text.toString().toInt()
                                         updateSplitterList()
                                     }
                             )
