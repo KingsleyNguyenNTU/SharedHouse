@@ -14,8 +14,8 @@
     <string name="leave_nav">Housemates Vacations</string>
     <string name="room_name_label">Room Name:</string>
     <string name="save_btn_label">Save</string>
-    <string name="edit_room_text_label">Please register a new room for sharing renting fee.</string>
-    <string name="edit_room_roommate_label">Roommates:</string>
+    <string name="edit_room_text_label">Room General Info</string>
+    <string name="edit_room_roommate_label">Roommates</string>
     <string name="add_btn_label">Add</string>
     <string name="roommate_name_label">Name</string>
     <string name="roommate_phone_label">Phone Number</string>

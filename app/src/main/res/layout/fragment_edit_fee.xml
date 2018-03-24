@@ -122,19 +122,13 @@
 
         </LinearLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/splitters_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/splitters_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layoutManager="LinearLayoutManager"
-                tools:listitem="@layout/list_item"/>
-
-        </android.support.v4.widget.NestedScrollView>
+            android:layout_weight="1"
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/list_item"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/save_fee_btn"

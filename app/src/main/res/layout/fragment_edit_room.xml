@@ -20,7 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            style="@style/TextAppearance.AppCompat.Body2"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/colorPrimary"
             android:text="@string/edit_room_text_label" />
 
         <android.support.design.widget.TextInputLayout
@@ -45,9 +46,10 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_weight="1"
-                style="@style/TextAppearance.AppCompat.Body2"
+                android:layout_gravity="center_vertical"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:textColor="@color/colorPrimary"
                 android:text="@string/edit_room_roommate_label" />
 
             <android.support.v7.widget.AppCompatButton
@@ -59,20 +61,13 @@
 
         </LinearLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/roommates_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_weight="1">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/roommates_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layoutManager="LinearLayoutManager"
-                tools:listitem="@layout/list_item"/>
-
-        </android.support.v4.widget.NestedScrollView>
+            android:layout_weight="1"
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/list_item"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/save_room_btn"
