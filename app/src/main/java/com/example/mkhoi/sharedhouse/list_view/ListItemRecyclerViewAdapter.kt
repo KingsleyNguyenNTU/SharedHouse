@@ -9,6 +9,16 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.mkhoi.sharedhouse.R
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import android.databinding.adapters.ImageViewBindingAdapter.setImageDrawable
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.Bitmap
+import com.example.mkhoi.sharedhouse.util.displayRoundImage
 
 
 class ListItemRecyclerViewAdapter(private val data: List<ListItem>) : RecyclerView.Adapter<ListItemRecyclerViewAdapter.ViewHolder>() {
@@ -29,6 +39,21 @@ class ListItemRecyclerViewAdapter(private val data: List<ListItem>) : RecyclerVi
         holder.mainView.setOnClickListener {
             data[position].onClickAction.invoke()
         }
+
+        Picasso.with(holder.mainView.context)
+                .load(data[position].profilePicture)
+                .placeholder(R.drawable.ic_account_circle_grey_24dp)
+                .error(R.drawable.ic_account_circle_grey_24dp)
+                .into(holder.avatar, object : Callback{
+                    override fun onSuccess() {
+                        holder.avatar.displayRoundImage(holder.mainView.context.resources)
+                    }
+
+                    override fun onError() {
+                        holder.avatar.setImageResource(R.drawable.ic_account_circle_grey_24dp)
+                    }
+
+                })
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

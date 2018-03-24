@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     companion object {
         private const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 0
+        private const val READ_CONTACTS_REQUEST_CODE = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,15 +42,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_content_fragment, MonthlyBillFragment.newInstance())
                 .commitNow()
+
         if (hasWriteExternalPermission().not()) {
             ActivityCompat.requestPermissions(this,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                     WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
         }
+
+        if(hasReadContactsPermission().not()) {
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.READ_CONTACTS),
+                    READ_CONTACTS_REQUEST_CODE)
+        }
     }
 
     private fun hasWriteExternalPermission() = (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+
+    private fun hasReadContactsPermission() = (ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE){
@@ -57,6 +68,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 ActivityCompat.requestPermissions(this,
                         arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                         WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
+            }
+        }
+
+        if (requestCode == READ_CONTACTS_REQUEST_CODE){
+            if (hasReadContactsPermission().not()){
+                ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.READ_CONTACTS),
+                        READ_CONTACTS_REQUEST_CODE)
             }
         }
     }
