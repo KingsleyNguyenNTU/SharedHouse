@@ -38,10 +38,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-
-        supportFragmentManager.beginTransaction()
-                .add(R.id.main_content_fragment, MonthlyBillFragment.newInstance())
-                .commitNow()
+        if (supportFragmentManager.findFragmentById(R.id.main_content_fragment) == null) {
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.main_content_fragment, MonthlyBillFragment.newInstance())
+                    .commitNow()
+        }
 
         if (hasWriteExternalPermission().not()) {
             ActivityCompat.requestPermissions(this,

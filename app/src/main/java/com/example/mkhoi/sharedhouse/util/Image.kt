@@ -12,11 +12,16 @@ import android.provider.ContactsContract
 import android.content.ContentUris
 import android.content.res.Resources
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.widget.ImageView
 import java.io.ByteArrayInputStream
 
+
+private const val IMAGE_SIZE = 200
+private const val BORDER_SIZE = 10
 
 fun Bitmap.toUri(context: Context): Uri {
     val fileName = UUID.randomUUID().toString()
@@ -80,4 +85,77 @@ fun ImageView.displayRoundImage(resources: Resources){
     imageDrawable.isCircular = true
     imageDrawable.cornerRadius = Math.max(imageBitmap.width, imageBitmap.height) / 2.0f
     setImageDrawable(imageDrawable)
+}
+
+fun Uri.toBitmap(context: Context) = MediaStore.Images.Media.getBitmap(context.contentResolver, this)
+
+/**
+ * Maximum combine 4 pictures
+ */
+fun List<Uri?>.combineProfilePictures(context: Context) : Uri?{
+    val width = (IMAGE_SIZE - BORDER_SIZE)/2
+    val listImages = this.filterNotNull()
+    listImages.apply {
+        when (size){
+            0 -> null
+            1 -> return this[0]
+            2 -> {
+                //merge 2 pictures: 1 on the left, 1 on the right
+                val firstImage = Bitmap.createScaledBitmap(this[0].toBitmap(context), IMAGE_SIZE, IMAGE_SIZE, false)
+                val secondImage = Bitmap.createScaledBitmap(this[1].toBitmap(context), IMAGE_SIZE, IMAGE_SIZE, false)
+
+                //crop half of each images
+                val croppedFirstImage = Bitmap.createBitmap(firstImage, 0, 0, width, IMAGE_SIZE)
+                val croppedSecondImage = Bitmap.createBitmap(secondImage, IMAGE_SIZE - width, 0, width, IMAGE_SIZE)
+
+                //combined together
+                val combinedBitmap  = Bitmap.createBitmap(IMAGE_SIZE, IMAGE_SIZE, Bitmap.Config.ARGB_8888)
+                val combinedImage = Canvas(combinedBitmap)
+                combinedImage.drawColor(Color.WHITE)
+                combinedImage.drawBitmap(croppedFirstImage, 0f, 0f, null)
+                combinedImage.drawBitmap(croppedSecondImage, (IMAGE_SIZE - width).toFloat(), 0f, null)
+
+                return combinedBitmap.toUri(context)
+            }
+            3 -> {
+                //1 on the left, 1 on top right, 1 on bottom right
+                val firstImage = Bitmap.createScaledBitmap(this[0].toBitmap(context), IMAGE_SIZE, IMAGE_SIZE, false)
+                val secondImage = Bitmap.createScaledBitmap(this[1].toBitmap(context), width, width, false)
+                val thirdImage = Bitmap.createScaledBitmap(this[2].toBitmap(context), width, width, false)
+
+                //crop half of first
+                val croppedFirstImage = Bitmap.createBitmap(firstImage, 0, 0, width, IMAGE_SIZE)
+
+                //combined together
+                val combinedBitmap  = Bitmap.createBitmap(IMAGE_SIZE, IMAGE_SIZE, Bitmap.Config.ARGB_8888)
+                val combinedImage = Canvas(combinedBitmap)
+                combinedImage.drawColor(Color.WHITE)
+                combinedImage.drawBitmap(croppedFirstImage, 0f, 0f, null)
+                combinedImage.drawBitmap(secondImage, (IMAGE_SIZE - width).toFloat(), 0f, null)
+                combinedImage.drawBitmap(thirdImage, (IMAGE_SIZE - width).toFloat(), (IMAGE_SIZE - width).toFloat(), null)
+
+                return combinedBitmap.toUri(context)
+            }
+            else -> {
+                //1 on each corners, maximum 4 pictures
+                val firstImage = Bitmap.createScaledBitmap(this[0].toBitmap(context), width, width, false)
+                val secondImage = Bitmap.createScaledBitmap(this[1].toBitmap(context), width, width, false)
+                val thirdImage = Bitmap.createScaledBitmap(this[2].toBitmap(context), width, width, false)
+                val fourthImage = Bitmap.createScaledBitmap(this[3].toBitmap(context), width, width, false)
+
+                //combined together
+                val combinedBitmap  = Bitmap.createBitmap(IMAGE_SIZE, IMAGE_SIZE, Bitmap.Config.ARGB_8888)
+                val combinedImage = Canvas(combinedBitmap)
+                combinedImage.drawColor(Color.WHITE)
+                combinedImage.drawBitmap(firstImage, 0f, 0f, null)
+                combinedImage.drawBitmap(secondImage, (IMAGE_SIZE - width).toFloat(), 0f, null)
+                combinedImage.drawBitmap(thirdImage, (IMAGE_SIZE - width).toFloat(), (IMAGE_SIZE - width).toFloat(), null)
+                combinedImage.drawBitmap(fourthImage, 0f, (IMAGE_SIZE - width).toFloat(), null)
+
+                return combinedBitmap.toUri(context)
+            }
+        }
+    }
+
+    return null
 }
