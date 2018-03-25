@@ -95,10 +95,10 @@ fun Uri.toBitmap(context: Context) = MediaStore.Images.Media.getBitmap(context.c
 fun List<Uri?>.combineProfilePictures(context: Context) : Uri?{
     val width = (IMAGE_SIZE - BORDER_SIZE)/2
     val listImages = this.filterNotNull()
-    listImages.apply {
+    return with(listImages) {
         when (size){
             0 -> null
-            1 -> return this[0]
+            1 -> this[0]
             2 -> {
                 //merge 2 pictures: 1 on the left, 1 on the right
                 val firstImage = Bitmap.createScaledBitmap(this[0].toBitmap(context), IMAGE_SIZE, IMAGE_SIZE, false)
@@ -115,7 +115,7 @@ fun List<Uri?>.combineProfilePictures(context: Context) : Uri?{
                 combinedImage.drawBitmap(croppedFirstImage, 0f, 0f, null)
                 combinedImage.drawBitmap(croppedSecondImage, (IMAGE_SIZE - width).toFloat(), 0f, null)
 
-                return combinedBitmap.toUri(context)
+                combinedBitmap.toUri(context)
             }
             3 -> {
                 //1 on the left, 1 on top right, 1 on bottom right
@@ -134,7 +134,7 @@ fun List<Uri?>.combineProfilePictures(context: Context) : Uri?{
                 combinedImage.drawBitmap(secondImage, (IMAGE_SIZE - width).toFloat(), 0f, null)
                 combinedImage.drawBitmap(thirdImage, (IMAGE_SIZE - width).toFloat(), (IMAGE_SIZE - width).toFloat(), null)
 
-                return combinedBitmap.toUri(context)
+                combinedBitmap.toUri(context)
             }
             else -> {
                 //1 on each corners, maximum 4 pictures
@@ -152,10 +152,8 @@ fun List<Uri?>.combineProfilePictures(context: Context) : Uri?{
                 combinedImage.drawBitmap(thirdImage, (IMAGE_SIZE - width).toFloat(), (IMAGE_SIZE - width).toFloat(), null)
                 combinedImage.drawBitmap(fourthImage, 0f, (IMAGE_SIZE - width).toFloat(), null)
 
-                return combinedBitmap.toUri(context)
+                combinedBitmap.toUri(context)
             }
         }
     }
-
-    return null
 }

@@ -138,7 +138,7 @@ class EditRoomFragment : Fragment() {
                 positiveFunction = {
                     val roommateName = (dialogView.findViewById(R.id.input_roommate_name) as EditText).text.toString()
                     val roommatePhone = (dialogView.findViewById(R.id.input_roommate_phone) as EditText).text.toString()
-                    val fullPhoneNumber = "${countryCodeView.text}$roommatePhone"
+                    val fullPhoneNumber = "+${countryCodeView.text}$roommatePhone"
                     val newRoommate = Person(name = roommateName, phone = fullPhoneNumber)
 
                     viewModel.addRoommate(newRoommate)
