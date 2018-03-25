@@ -18,12 +18,11 @@ import android.graphics.drawable.BitmapDrawable
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.widget.ImageView
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
-import com.example.mkhoi.sharedhouse.database.entity.Unit
 import java.io.ByteArrayInputStream
 
 
-private const val IMAGE_SIZE = 200
-private const val BORDER_SIZE = 10
+private const val IMAGE_SIZE = 1000
+private const val BORDER_SIZE = 50
 
 fun Bitmap.toUri(context: Context): Uri {
     val fileName = UUID.randomUUID().toString()
