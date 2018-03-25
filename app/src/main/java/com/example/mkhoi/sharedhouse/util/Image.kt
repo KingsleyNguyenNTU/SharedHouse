@@ -17,6 +17,8 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.widget.ImageView
+import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
+import com.example.mkhoi.sharedhouse.database.entity.Unit
 import java.io.ByteArrayInputStream
 
 
@@ -88,6 +90,8 @@ fun ImageView.displayRoundImage(resources: Resources){
 }
 
 fun Uri.toBitmap(context: Context) = MediaStore.Images.Media.getBitmap(context.contentResolver, this)
+
+fun UnitWithPersons.getProfilePicture(context: Context) = roommates?.map { it.getProfilePicture(context) }?.toList()?.combineProfilePictures(context)
 
 /**
  * Maximum combine 4 pictures

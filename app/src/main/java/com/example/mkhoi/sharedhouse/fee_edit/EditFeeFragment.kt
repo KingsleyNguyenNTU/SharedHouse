@@ -153,11 +153,11 @@ class EditFeeFragment: Fragment() {
                 true -> {
                     val selectedItems: MutableList<Int> = mutableListOf()
                     viewModel.roomSplitters.value?.let {
-                        Log.d("EditFeeFragment", "Active rooms: ${it.map { it.room.name }}")
+                        Log.d("EditFeeFragment", "Active rooms: ${it.map { it.roomWithRoommates.unit.name }}")
                         val multipleChoices: Array<String> = Array(it.size, {""})
                         var index = 0
                         it.forEach {
-                            multipleChoices[index] = it.room.name
+                            multipleChoices[index] = it.roomWithRoommates.unit.name
                             it.feeShare?.let {
                                 selectedItems.add(index)
                             }
@@ -237,7 +237,7 @@ class EditFeeFragment: Fragment() {
                         roomSplitter.feeShare = FeeShare(
                                 feeId = viewModel.fee.value?.id ?: 0,
                                 personId = 0,
-                                unitId = roomSplitter.room.id!!,
+                                unitId = roomSplitter.roomWithRoommates.unit.id!!,
                                 share = 1
                         )
                     }
@@ -245,7 +245,7 @@ class EditFeeFragment: Fragment() {
                 else {
                     roomSplitter.feeShare = null
                 }
-                Log.d("EditFeeFragment", "Room Splitter: ${roomSplitter.room.name}, " +
+                Log.d("EditFeeFragment", "Room Splitter: ${roomSplitter.roomWithRoommates.unit.name}, " +
                         "Fee Share: ${roomSplitter.feeShare?.share}")
             }
         }
@@ -259,7 +259,7 @@ class EditFeeFragment: Fragment() {
                 viewModel.roomSplitters.value?.let {
                     val dataList = it.map{
                         it.feeShare?.let { feeShare ->
-                            Pair(first = it.room.name, second = Pair(feeShare, null))
+                            Pair(first = it.roomWithRoommates.unit.name, second = Pair(feeShare, it.roomWithRoommates.getProfilePicture(context)))
                         }
                     }
                     reloadSplitterList(dataList.filterNotNull())

@@ -41,11 +41,11 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
     }
 
     /**
-     * For each room sharing the current fee, combine the fee amount into the total fee amount
-     * of this room for the current month.
+     * For each roomWithRoommates sharing the current fee, combine the fee amount into the total fee amount
+     * of this roomWithRoommates for the current month.
      *
-     * Create a bill detail item for the sharing amount of this fee shared by this room,
-     * include this into list of bill details of this room
+     * Create a bill detail item for the sharing amount of this fee shared by this roomWithRoommates,
+     * include this into list of bill details of this roomWithRoommates
      */
     private fun prepareBillItems(roomSplitFees: MutableMap<Int, Float>,
                                  rooms: Map<Int?, UnitWithPersons>,
@@ -81,14 +81,14 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
     /**
      * Create 2 lists for the current fee:
      *  + List of person sharing this fee
-     *  + List of room sharing this fee
+     *  + List of roomWithRoommates sharing this fee
      *
-     * In case this fee is shared by room, for each room sharing this fee:
-     * include all roommates in this room into list of person sharing this fee,
-     * each roommate in same room will share the fee equally
+     * In case this fee is shared by roomWithRoommates, for each roomWithRoommates sharing this fee:
+     * include all roommates in this roomWithRoommates into list of person sharing this fee,
+     * each roommate in same roomWithRoommates will share the fee equally
      *
-     * In case this fee is shared by people, group all people shared same room
-     * to get the fee shared by room, then add it into list of room sharing this fee
+     * In case this fee is shared by people, group all people shared same roomWithRoommates
+     * to get the fee shared by roomWithRoommates, then add it into list of roomWithRoommates sharing this fee
      *
      */
     private fun createListFeeShareByRoomAndByPerson(feeWithSplitters: FeeWithSplitters,
@@ -124,8 +124,8 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
     }
 
     /**
-     * Create an bill detail item for the current room and the current room
-     * then add this new item into list of bill details of the current room
+     * Create an bill detail item for the current roomWithRoommates and the current roomWithRoommates
+     * then add this new item into list of bill details of the current roomWithRoommates
      */
     private fun prepareBillDetails(billDetails: MutableList<BillDetailListItem>,
                                    fee: Fee,
@@ -141,7 +141,7 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
     }
 
     /**
-     * Create a list of roommates sharing the current fee in the current room
+     * Create a list of roommates sharing the current fee in the current roomWithRoommates
      */
     private fun prepareBillRoommates(roommates: List<Person>?,
                                      personSplitFees: MutableMap<Int, Float>)

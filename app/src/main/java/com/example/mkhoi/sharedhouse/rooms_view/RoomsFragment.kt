@@ -66,7 +66,7 @@ class RoomsFragment : Fragment() {
                         caption = resources.getQuantityString(R.plurals.unitSize,
                                 it.roommates?.size?:0,
                                 it.roommates?.size?:0),
-                        profilePicture = it.roommates?.map { it.getProfilePicture(context) }?.toList()?.combineProfilePictures(context)
+                        profilePicture = it.getProfilePicture(context)
                     ).apply {
                         deleteAction = {
                             context.showBasicDialog(
