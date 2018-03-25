@@ -12,10 +12,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.mkhoi.sharedhouse.R
-import com.example.mkhoi.sharedhouse.util.showBasicDialog
-import com.example.mkhoi.sharedhouse.util.toDisplayAmount
-import com.example.mkhoi.sharedhouse.util.toImage
-import com.example.mkhoi.sharedhouse.util.toUri
+import com.example.mkhoi.sharedhouse.util.*
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 
 
 class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
@@ -27,6 +26,21 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
         holder.amount.text = data[position].amount.toDisplayAmount()
         holder.detailList.layoutManager = LinearLayoutManager(holder.context)
         holder.detailList.adapter = BillDetailListItemRecyclerViewAdapter(data[position].billDetails)
+
+        Picasso.with(holder.context)
+                .load(data[position].profilePicture)
+                .placeholder(R.drawable.ic_account_circle_grey_24dp)
+                .error(R.drawable.ic_account_circle_grey_24dp)
+                .into(holder.avatar, object : Callback {
+                    override fun onSuccess() {
+                        holder.avatar.displayRoundImage(holder.context.resources)
+                    }
+
+                    override fun onError() {
+                        holder.avatar.setImageResource(R.drawable.ic_account_circle_grey_24dp)
+                    }
+
+                })
 
         holder.sendBtn.setOnClickListener {
             holder.context.showBasicDialog(

@@ -14,12 +14,15 @@ import javax.inject.Singleton
 
     @Provides
     @Singleton
+    fun provideContext() =  app.applicationContext
+
+    @Provides
+    @Singleton
     fun provideUnitDao(appDatabase: AppDatabase) =  appDatabase.unitDao()
 
     @Provides
     @Singleton
     fun providePersonDao(appDatabase: AppDatabase) =  appDatabase.personDao()
-
 
     @Provides
     @Singleton

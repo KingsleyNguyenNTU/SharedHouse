@@ -1,6 +1,7 @@
 package com.example.mkhoi.sharedhouse.monthly_bill
 
 import android.arch.lifecycle.MutableLiveData
+import android.content.Context
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.dao.PersonDao
@@ -11,6 +12,7 @@ import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.list_view.BillDetailListItem
 import com.example.mkhoi.sharedhouse.list_view.BillListItem
 import com.example.mkhoi.sharedhouse.list_view.BillRoommateListItem
+import com.example.mkhoi.sharedhouse.util.getProfilePicture
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,7 +20,8 @@ import javax.inject.Singleton
 @Singleton
 class MonthlyBillRepository @Inject constructor(private val splitterDao: SplitterDao,
                                                 private val unitPersonDao: UnitPersonDao,
-                                                private val personDao: PersonDao) {
+                                                private val personDao: PersonDao,
+                                                private val context: Context) {
     fun getMonthlyBills(selectedMonth: Calendar, resultLiveData: MutableLiveData<List<BillListItem>>) {
         val billItemToRoomId: MutableMap<Int, BillListItem> = mutableMapOf()
 
@@ -63,6 +66,7 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
                                 amount = 0f,
                                 phoneNumbers = rooms[roomId]!!.roommates?.map { it.phone.removePrefix("+") }
                                         ?: emptyList(),
+                                profilePicture = rooms[roomId]!!.getProfilePicture(context),
                                 billDetails = mutableListOf()
                         )
                 billItem.amount += amount
