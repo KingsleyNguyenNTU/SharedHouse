@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:text="@={viewModel.room.value.name}"
+                android:text="@={viewModel.room.name}"
                 android:hint="@string/room_name_label"/>
         </android.support.design.widget.TextInputLayout>
 

@@ -41,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:text="@={viewModel.fee.value.name}"
+                    android:text="@={viewModel.fee.name}"
                     android:hint="@string/fee_name_label"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -54,7 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:text="@={viewModel.fee.value.displayAmount}"
+                    android:text="@={viewModel.fee.displayAmount}"
                     android:hint="@string/fee_amount_label"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -76,7 +76,7 @@
                     android:id="@+id/input_fee_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={viewModel.fee.value.displayFeeType}"
+                    android:text="@={viewModel.fee.displayFeeType}"
                     android:hint="@string/expense_type_label"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -91,7 +91,7 @@
                     android:id="@+id/input_share_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={viewModel.fee.value.displayShareType}"
+                    android:text="@={viewModel.fee.displayShareType}"
                     android:hint="@string/share_type_label"/>
 
             </android.support.design.widget.TextInputLayout>
