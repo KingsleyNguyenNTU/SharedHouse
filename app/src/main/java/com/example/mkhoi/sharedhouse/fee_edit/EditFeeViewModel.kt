@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
-import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
+import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.*
 import com.example.mkhoi.sharedhouse.database.entity.Fee
 import java.util.*
@@ -49,7 +49,7 @@ class EditFeeViewModel(private val selectedMonth: Calendar,
     fun save() {
         isSaving.value = true
         fee.value?.let {fee ->
-            DatabaseAsyncTask().execute({
+            BackgroundAsyncTask().execute({
                 editFeeRepository.saveFee(fee, roomSplitters.value, personSplitters.value)
                 isSaving.postValue(false)
             })

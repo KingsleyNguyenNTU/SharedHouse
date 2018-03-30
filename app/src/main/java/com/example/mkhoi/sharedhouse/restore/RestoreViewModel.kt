@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import android.net.Uri
 import com.example.mkhoi.sharedhouse.MyApp
-import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
+import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 
 
 class RestoreViewModel(private val restoreRepository: RestoreRepository): ViewModel() {
@@ -15,7 +15,7 @@ class RestoreViewModel(private val restoreRepository: RestoreRepository): ViewMo
 
     fun restore(context: Context) {
         backupFilePath.value?.let {
-            DatabaseAsyncTask().execute({
+            BackgroundAsyncTask().execute({
                 restoreRepository.restore(context, it, restoreResultLiveData)
             })
         }

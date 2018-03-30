@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
-import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
+import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 
 
@@ -12,7 +12,7 @@ class RoomsViewModel(private val repository: RoomsRepository): ViewModel() {
     val rooms: LiveData<List<UnitWithPersons>> = repository.getActiveRooms()
 
     fun deleteRoom(room: UnitWithPersons) {
-        val task = DatabaseAsyncTask()
+        val task = BackgroundAsyncTask()
         task.execute({
             repository.deleteRoom(room)
         })

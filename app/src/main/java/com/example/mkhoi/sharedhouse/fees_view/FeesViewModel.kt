@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
-import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
+import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import java.util.*
 
@@ -21,21 +21,21 @@ class FeesViewModel(private val repository: FeesRepository): ViewModel() {
         }
 
     fun reloadFees(selectedMonth: Calendar) {
-        DatabaseAsyncTask().execute({
+        BackgroundAsyncTask().execute({
             fees.postValue(repository.getFeesByMonth(selectedMonth))
         })
     }
 
     fun copyFees(selectedItems: MutableList<Int>) {
         fees.value?.let {
-            DatabaseAsyncTask().execute({
+            BackgroundAsyncTask().execute({
                 repository.copyFee(it.filterIndexed{index, value -> selectedItems.contains(index) })
             })
         }
     }
 
     fun deleteFee(fee: FeeWithSplitters) {
-        DatabaseAsyncTask().execute({
+        BackgroundAsyncTask().execute({
             repository.deleteFee(fee)
             selectedMonth.value?.let {
                 fees.postValue(repository.getFeesByMonth(it))

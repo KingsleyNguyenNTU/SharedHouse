@@ -3,8 +3,8 @@ package com.example.mkhoi.sharedhouse.database
 import android.os.AsyncTask
 import android.util.Log
 
-class DatabaseAsyncTask : AsyncTask<() -> Unit, Void, Void>() {
-    private val TAG = "DatabaseAsyncTask"
+class BackgroundAsyncTask : AsyncTask<() -> Unit, Void, Void>() {
+    private val TAG = "BackgroundAsyncTask"
 
     override fun doInBackground(functions: Array<() -> Unit>): Void? {
         try {

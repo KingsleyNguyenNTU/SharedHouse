@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
-import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
+import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.list_view.BillListItem
 import java.util.*
 
@@ -22,7 +22,7 @@ class MonthlyBillViewModel(private val repository: MonthlyBillRepository): ViewM
         }
 
     fun reloadMonthlyBills(selectedMonth: Calendar){
-        DatabaseAsyncTask().execute({
+        BackgroundAsyncTask().execute({
             repository.getMonthlyBills(selectedMonth, monthlyBillList)
         })
     }

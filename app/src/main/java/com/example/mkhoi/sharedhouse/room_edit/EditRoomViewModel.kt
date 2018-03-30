@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.mkhoi.sharedhouse.MyApp
-import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
+import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.database.entity.Unit
@@ -35,7 +35,7 @@ class EditRoomViewModel(private val repository: EditRoomRepository,
     fun save() {
         isSaving.value = true
         room.value?.let {
-            val task = DatabaseAsyncTask()
+            val task = BackgroundAsyncTask()
             task.execute({
                 repository.saveRoom(
                         it,

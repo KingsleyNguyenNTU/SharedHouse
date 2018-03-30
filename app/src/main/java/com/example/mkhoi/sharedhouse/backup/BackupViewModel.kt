@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.support.v4.app.FragmentActivity
 import com.example.mkhoi.sharedhouse.MyApp
 import com.example.mkhoi.sharedhouse.database.AppDatabase.Companion.DB_NAME
-import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
+import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 
 
 class BackupViewModel(private val activity: FragmentActivity,
@@ -15,7 +15,7 @@ class BackupViewModel(private val activity: FragmentActivity,
 
     fun backup() {
         val currentDBPath = activity.getDatabasePath(DB_NAME).absolutePath
-        DatabaseAsyncTask().execute({
+        BackgroundAsyncTask().execute({
             backupRepository.backup(currentDBPath, backupResultLiveData)
         })
     }

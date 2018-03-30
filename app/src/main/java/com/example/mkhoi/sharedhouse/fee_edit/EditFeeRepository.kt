@@ -2,7 +2,7 @@ package com.example.mkhoi.sharedhouse.fee_edit
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.persistence.room.Transaction
-import com.example.mkhoi.sharedhouse.database.DatabaseAsyncTask
+import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.PersonSplitter
 import com.example.mkhoi.sharedhouse.database.bean.RoomSplitter
 import com.example.mkhoi.sharedhouse.database.dao.FeeDao
@@ -16,14 +16,14 @@ class EditFeeRepository @Inject constructor(private val splitterDao: SplitterDao
                                             private val feeDao: FeeDao) {
     fun getRoomSplitters(result: MutableLiveData<List<RoomSplitter>>, feeId: Int?) {
         result.value = emptyList()
-        val task = DatabaseAsyncTask()
+        val task = BackgroundAsyncTask()
         task.execute({
             result.postValue(splitterDao.getAllRoomSplitters(feeId = feeId))
         })
     }
     fun getPersonSplitters(result: MutableLiveData<List<PersonSplitter>>, feeId: Int?) {
         result.value = emptyList()
-        val task = DatabaseAsyncTask()
+        val task = BackgroundAsyncTask()
         task.execute({
             result.postValue(splitterDao.getAllPersonSplitters(feeId = feeId))
         })
