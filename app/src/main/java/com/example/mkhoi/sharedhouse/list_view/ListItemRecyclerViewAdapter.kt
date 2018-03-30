@@ -40,20 +40,26 @@ class ListItemRecyclerViewAdapter(private val data: List<ListItem>) : RecyclerVi
             data[position].onClickAction.invoke()
         }
 
-        Picasso.with(holder.mainView.context)
-                .load(data[position].profilePicture)
-                .placeholder(R.drawable.ic_account_circle_grey_24dp)
-                .error(R.drawable.ic_account_circle_grey_24dp)
-                .into(holder.avatar, object : Callback{
-                    override fun onSuccess() {
-                        holder.avatar.displayRoundImage(holder.mainView.context.resources)
-                    }
+        data[position].profilePicture?.let {
+            Picasso.with(holder.mainView.context)
+                    .load(it)
+                    .placeholder(R.drawable.ic_account_circle_grey_24dp)
+                    .error(R.drawable.ic_account_circle_grey_24dp)
+                    .into(holder.avatar, object : Callback{
+                        override fun onSuccess() {
+                            holder.avatar.displayRoundImage(holder.mainView.context.resources)
+                        }
 
-                    override fun onError() {
-                        holder.avatar.setImageResource(R.drawable.ic_account_circle_grey_24dp)
-                    }
+                        override fun onError() {
+                            holder.avatar.setImageResource(R.drawable.ic_account_circle_grey_24dp)
+                        }
 
-                })
+                    })
+        }
+
+        data[position].profilePictureId?.let {
+            holder.avatar.setImageResource(it)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

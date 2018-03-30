@@ -103,7 +103,8 @@ class FeesFragment : Fragment() {
                 fee_list.adapter = ListItemRecyclerViewAdapter(it.map {
                     ListItem(
                             mainName = it.fee.name,
-                            caption = it.fee.displayAmount
+                            caption = it.fee.displayAmount,
+                            profilePictureId = it.fee.feeType.drawableId
                     ).apply {
                         deleteAction = {
                             context.showBasicDialog(
