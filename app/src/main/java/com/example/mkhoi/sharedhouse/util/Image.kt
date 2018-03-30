@@ -20,10 +20,10 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.widget.ImageView
 import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
-import java.io.ByteArrayInputStream
+import java.io.IOException
 
 
-private const val IMAGE_SIZE = 1000
+private const val IMAGE_SIZE = 1024
 private const val BORDER_SIZE = 50
 
 fun Bitmap.toUri(context: Context): Uri {
@@ -72,16 +72,12 @@ fun Person.getProfilePicture(context: Context): Uri?{
     //find photo by contact ID
     contactId?.let {
         val contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, it)
-        val photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY)
-        contentResolver.query(photoUri, arrayOf(ContactsContract.Contacts.Photo.PHOTO),
-                null, null, null)?.apply {
-            if (moveToFirst()) {
-                val data = getBlob(0)
-                if (data != null) {
-                    photo = BitmapFactory.decodeStream(ByteArrayInputStream(data))
-                }
-            }
-            close()
+        val photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.DISPLAY_PHOTO)
+        try {
+            val fd = contentResolver.openAssetFileDescriptor(photoUri, "r")
+            photo = BitmapFactory.decodeStream(fd.createInputStream())
+        } catch (e: IOException) {
+            photo = null
         }
     }
 
