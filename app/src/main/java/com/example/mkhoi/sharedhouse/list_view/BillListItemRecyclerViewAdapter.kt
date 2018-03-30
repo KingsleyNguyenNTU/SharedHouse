@@ -27,20 +27,22 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
         holder.detailList.layoutManager = LinearLayoutManager(holder.context)
         holder.detailList.adapter = BillDetailListItemRecyclerViewAdapter(data[position].billDetails)
 
-        Picasso.with(holder.context)
-                .load(data[position].profilePicture)
-                .placeholder(R.drawable.ic_account_circle_grey_24dp)
-                .error(R.drawable.ic_account_circle_grey_24dp)
-                .into(holder.avatar, object : Callback {
-                    override fun onSuccess() {
-                        holder.avatar.displayRoundImage(holder.context.resources)
-                    }
+        data[position].profilePicture.observeForever {
+            Picasso.with(holder.context)
+                    .load(it)
+                    .placeholder(R.drawable.ic_account_circle_grey_24dp)
+                    .error(R.drawable.ic_account_circle_grey_24dp)
+                    .into(holder.avatar, object : Callback {
+                        override fun onSuccess() {
+                            holder.avatar.displayRoundImage(holder.context.resources)
+                        }
 
-                    override fun onError() {
-                        holder.avatar.setImageResource(R.drawable.ic_account_circle_grey_24dp)
-                    }
+                        override fun onError() {
+                            holder.avatar.setImageResource(R.drawable.ic_account_circle_grey_24dp)
+                        }
 
-                })
+                    })
+        }
 
         holder.sendBtn.setOnClickListener {
             holder.context.showBasicDialog(

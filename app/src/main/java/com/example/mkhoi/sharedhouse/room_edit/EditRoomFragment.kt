@@ -25,6 +25,7 @@ import com.example.mkhoi.sharedhouse.databinding.FragmentEditRoomBinding
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.util.getProfilePicture
+import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import com.example.mkhoi.sharedhouse.util.showCustomDialog
 import com.google.i18n.phonenumbers.PhoneNumberUtil
@@ -80,8 +81,8 @@ class EditRoomFragment : Fragment() {
                 ListItemRecyclerViewAdapter(
                         data = roommates.map {
                             ListItem(mainName = it.name,
-                                    caption = it.phone,
-                                    profilePicture = it.getProfilePicture(context)).apply {
+                                     caption = it.phone).apply {
+                                it.getProfilePictureLiveData(context, profilePicture)
                                 deleteAction = {
                                     context.showBasicDialog(
                                             titleResId = R.string.delete_roommate_dialog_title,

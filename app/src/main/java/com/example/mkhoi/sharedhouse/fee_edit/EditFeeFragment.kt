@@ -1,5 +1,6 @@
 package com.example.mkhoi.sharedhouse.fee_edit
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.net.Uri
@@ -27,6 +28,7 @@ import com.example.mkhoi.sharedhouse.databinding.FragmentEditFeeBinding
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.util.getProfilePicture
+import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import com.example.mkhoi.sharedhouse.util.showCustomDialog
 import com.example.mkhoi.sharedhouse.util.showMultipleChoicesDialog
 import kotlinx.android.synthetic.main.fragment_edit_fee.*
@@ -258,8 +260,12 @@ class EditFeeFragment: Fragment() {
             true -> {
                 viewModel.roomSplitters.value?.let {
                     val dataList = it.map{
+                        val uriLiveData: MutableLiveData<Uri?> = MutableLiveData()
+                        it.roomWithRoommates.getProfilePictureLiveData(context, uriLiveData)
                         it.feeShare?.let { feeShare ->
-                            Pair(first = it.roomWithRoommates.unit.name, second = Pair(feeShare, it.roomWithRoommates.getProfilePicture(context)))
+                            Pair(
+                                    first = it.roomWithRoommates.unit.name,
+                                    second = Pair(feeShare, uriLiveData))
                         }
                     }
                     reloadSplitterList(dataList.filterNotNull())
@@ -268,8 +274,12 @@ class EditFeeFragment: Fragment() {
             false -> {
                 viewModel.personSplitters.value?.let {
                     val dataList = it.map{
+                        val uriLiveData: MutableLiveData<Uri?> = MutableLiveData()
+                        it.person.getProfilePictureLiveData(context, uriLiveData)
                         it.feeShare?.let { feeShare ->
-                            Pair(first = it.person.name, second = Pair(feeShare, it.person.getProfilePicture(context)))
+                            Pair(
+                                    first = it.person.name,
+                                    second = Pair(feeShare, uriLiveData))
                         }
                     }
                     reloadSplitterList(dataList.filterNotNull())
@@ -278,7 +288,7 @@ class EditFeeFragment: Fragment() {
         }
     }
 
-    private fun reloadSplitterList(dataList: List<Pair<String, Pair<FeeShare, Uri?>>>){
+    private fun reloadSplitterList(dataList: List<Pair<String, Pair<FeeShare, MutableLiveData<Uri?>>>>){
         val totalShare = dataList.map { it.second.first.share }.sum()
         val totalExpense = viewModel.fee.value?.amount ?: 0.0
 

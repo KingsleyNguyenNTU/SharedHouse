@@ -13,6 +13,7 @@ import com.example.mkhoi.sharedhouse.list_view.BillDetailListItem
 import com.example.mkhoi.sharedhouse.list_view.BillListItem
 import com.example.mkhoi.sharedhouse.list_view.BillRoommateListItem
 import com.example.mkhoi.sharedhouse.util.getProfilePicture
+import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -66,9 +67,10 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
                                 amount = 0f,
                                 phoneNumbers = rooms[roomId]!!.roommates?.map { it.phone.removePrefix("+") }
                                         ?: emptyList(),
-                                profilePicture = rooms[roomId]!!.getProfilePicture(context),
                                 billDetails = mutableListOf()
-                        )
+                        ).apply {
+                            rooms[roomId]!!.getProfilePictureLiveData(context, profilePicture)
+                        }
                 billItem.amount += amount
                 prepareBillDetails(
                         billItem.billDetails,

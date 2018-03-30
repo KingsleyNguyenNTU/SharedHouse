@@ -19,6 +19,7 @@ import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
 import com.example.mkhoi.sharedhouse.util.combineProfilePictures
 import com.example.mkhoi.sharedhouse.util.getProfilePicture
+import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import kotlinx.android.synthetic.main.fragment_room_list.*
 
@@ -65,9 +66,9 @@ class RoomsFragment : Fragment() {
                         mainName = it.unit.name,
                         caption = resources.getQuantityString(R.plurals.unitSize,
                                 it.roommates?.size?:0,
-                                it.roommates?.size?:0),
-                        profilePicture = it.getProfilePicture(context)
+                                it.roommates?.size?:0)
                     ).apply {
+                        it.getProfilePictureLiveData(context, profilePicture)
                         deleteAction = {
                             context.showBasicDialog(
                                     titleResId = R.string.delete_room_dialog_title,

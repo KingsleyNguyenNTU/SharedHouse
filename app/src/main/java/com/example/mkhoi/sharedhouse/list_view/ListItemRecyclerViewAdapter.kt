@@ -40,7 +40,7 @@ class ListItemRecyclerViewAdapter(private val data: List<ListItem>) : RecyclerVi
             data[position].onClickAction.invoke()
         }
 
-        data[position].profilePicture?.let {
+        data[position].profilePicture.observeForever {
             Picasso.with(holder.mainView.context)
                     .load(it)
                     .placeholder(R.drawable.ic_account_circle_grey_24dp)

@@ -1,5 +1,6 @@
 package com.example.mkhoi.sharedhouse.util
 
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
@@ -17,6 +18,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.widget.ImageView
+import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import java.io.ByteArrayInputStream
 
@@ -45,6 +47,12 @@ fun View.toImage(): Bitmap {
     isDrawingCacheEnabled = false
 
     return result
+}
+
+fun Person.getProfilePictureLiveData(context: Context, uriLiveData: MutableLiveData<Uri?>){
+    BackgroundAsyncTask().execute({
+        uriLiveData.postValue(this.getProfilePicture(context))
+    })
 }
 
 fun Person.getProfilePicture(context: Context): Uri?{
@@ -89,6 +97,13 @@ fun ImageView.displayRoundImage(resources: Resources){
 }
 
 fun Uri.toBitmap(context: Context) = MediaStore.Images.Media.getBitmap(context.contentResolver, this)
+
+
+fun UnitWithPersons.getProfilePictureLiveData(context: Context, uriLiveData: MutableLiveData<Uri?>){
+    BackgroundAsyncTask().execute({
+        uriLiveData.postValue(this.getProfilePicture(context))
+    })
+}
 
 fun UnitWithPersons.getProfilePicture(context: Context) = roommates?.map { it.getProfilePicture(context) }?.toList()?.combineProfilePictures(context)
 
