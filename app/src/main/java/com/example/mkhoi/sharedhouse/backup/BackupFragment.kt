@@ -22,7 +22,7 @@ class BackupFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, BackupViewModel.Factory(activity))
+        viewModel = ViewModelProviders.of(this, activity?.let { BackupViewModel.Factory(it) })
                 .get(BackupViewModel::class.java)
     }
 
@@ -30,9 +30,9 @@ class BackupFragment : Fragment() {
                               savedInstanceState: Bundle?): View?
             = inflater.inflate(R.layout.fragment_backup, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity.findViewById<Toolbar>(R.id.toolbar).title = getString(R.string.backup_fragment_title)
+        activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.backup_fragment_title)
 
         backup_btn.setOnClickListener{
             viewModel.backup()

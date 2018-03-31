@@ -27,7 +27,6 @@ import com.example.mkhoi.sharedhouse.database.entity.FeeShare
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditFeeBinding
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
-import com.example.mkhoi.sharedhouse.util.getProfilePicture
 import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import com.example.mkhoi.sharedhouse.util.showCustomDialog
 import com.example.mkhoi.sharedhouse.util.showMultipleChoicesDialog
@@ -56,8 +55,8 @@ class EditFeeFragment: Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders
                 .of(this, EditFeeViewModel.Factory(
-                        arguments[SELECTED_MONTH_KEY] as Calendar,
-                        arguments[FEE_BUNDLE_KEY] as? FeeWithSplitters))
+                        arguments?.get(SELECTED_MONTH_KEY) as Calendar,
+                        arguments?.get(FEE_BUNDLE_KEY) as FeeWithSplitters))
                 .get(EditFeeViewModel::class.java)
     }
 
@@ -70,7 +69,7 @@ class EditFeeFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentEditFeeBinding.bind(view)
         binding.viewModel = viewModel
-        (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.edit_fee_fragment_title)
+        (activity?.findViewById(R.id.toolbar) as? Toolbar)?.title = getString(R.string.edit_fee_fragment_title)
 
         initViewModelObserver()
         initView()
@@ -96,11 +95,11 @@ class EditFeeFragment: Fragment() {
             when (it) {
                 true -> {
                     save_fee_btn.isEnabled = false
-                    (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
+                    (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.VISIBLE
                 }
                 false -> {
-                    (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.GONE
-                    activity.supportFragmentManager.popBackStack()
+                    (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.GONE
+                    activity?.supportFragmentManager?.popBackStack()
                 }
             }
         })
@@ -139,8 +138,8 @@ class EditFeeFragment: Fragment() {
     }
 
     private fun initView() {
-        val fab = activity.findViewById(R.id.fab) as FloatingActionButton
-        fab.visibility = View.GONE
+        val fab = activity?.findViewById(R.id.fab) as? FloatingActionButton
+        fab?.visibility = View.GONE
 
         save_fee_btn.setOnClickListener {
             viewModel.save()
@@ -166,7 +165,7 @@ class EditFeeFragment: Fragment() {
                             index++
                         }
 
-                        context.showMultipleChoicesDialog(
+                        context?.showMultipleChoicesDialog(
                                 titleResId = R.string.add_room_splitter_dialog_title,
                                 selectedItems = selectedItems,
                                 multipleChoices = multipleChoices,
@@ -191,7 +190,7 @@ class EditFeeFragment: Fragment() {
                             index++
                         }
 
-                        context.showMultipleChoicesDialog(
+                        context?.showMultipleChoicesDialog(
                                 titleResId = R.string.add_person_splitter_dialog_title,
                                 selectedItems = selectedItems,
                                 multipleChoices = multipleChoices,
@@ -261,7 +260,7 @@ class EditFeeFragment: Fragment() {
                 viewModel.roomSplitters.value?.let {
                     val dataList = it.map{
                         val uriLiveData: MutableLiveData<Uri?> = MutableLiveData()
-                        it.roomWithRoommates.getProfilePictureLiveData(context, uriLiveData)
+                        context?.let { context -> it.roomWithRoommates.getProfilePictureLiveData(context, uriLiveData) }
                         it.feeShare?.let { feeShare ->
                             Pair(
                                     first = it.roomWithRoommates.unit.name,
@@ -275,7 +274,7 @@ class EditFeeFragment: Fragment() {
                 viewModel.personSplitters.value?.let {
                     val dataList = it.map{
                         val uriLiveData: MutableLiveData<Uri?> = MutableLiveData()
-                        it.person.getProfilePictureLiveData(context, uriLiveData)
+                        context?.let { context -> it.person.getProfilePictureLiveData(context, uriLiveData) }
                         it.feeShare?.let { feeShare ->
                             Pair(
                                     first = it.person.name,
@@ -309,7 +308,7 @@ class EditFeeFragment: Fragment() {
                             val inputShareFraction = dialogView.findViewById(R.id.input_splitter_fraction) as EditText
                             inputShareFraction.setText((it.second.first.share).toString())
 
-                            context.showCustomDialog(
+                            context?.showCustomDialog(
                                     customView = dialogView,
                                     titleResId = R.string.edit_splitter_fraction_dialog_title,
                                     positiveFunction = {

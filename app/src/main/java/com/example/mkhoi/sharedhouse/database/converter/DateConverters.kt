@@ -1,8 +1,7 @@
 package com.example.mkhoi.sharedhouse.database.converter
 
 import android.arch.persistence.room.TypeConverter
-
-import java.util.Date
+import java.util.*
 
 class DateConverters {
     @TypeConverter

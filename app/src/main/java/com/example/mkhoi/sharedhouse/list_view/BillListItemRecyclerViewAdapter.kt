@@ -15,6 +15,7 @@ import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.util.*
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import java.lang.Exception
 
 
 class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
@@ -28,16 +29,17 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
         holder.detailList.adapter = BillDetailListItemRecyclerViewAdapter(data[position].billDetails)
 
         data[position].profilePicture.observeForever {
-            Picasso.with(holder.context)
+            Picasso.get()
                     .load(it)
                     .placeholder(R.drawable.ic_account_circle_grey_24dp)
                     .error(R.drawable.ic_account_circle_grey_24dp)
                     .into(holder.avatar, object : Callback {
+
                         override fun onSuccess() {
                             holder.avatar.displayRoundImage(holder.context.resources)
                         }
 
-                        override fun onError() {
+                        override fun onError(e: Exception?) {
                             holder.avatar.setImageResource(R.drawable.ic_account_circle_grey_24dp)
                         }
 

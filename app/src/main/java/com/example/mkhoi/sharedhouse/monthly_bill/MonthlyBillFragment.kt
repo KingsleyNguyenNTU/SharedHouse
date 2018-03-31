@@ -2,9 +2,9 @@ package com.example.mkhoi.sharedhouse.monthly_bill
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.support.v4.app.Fragment
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.*
@@ -37,7 +37,7 @@ class MonthlyBillFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_month_picker){
-            context.showMonthPickerDialog(viewModel.selectedMonth)
+            context?.showMonthPickerDialog(viewModel.selectedMonth)
             return true
         }
         else return super.onOptionsItemSelected(item)
@@ -47,10 +47,10 @@ class MonthlyBillFragment : Fragment() {
                               savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_monthly_bill_list, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity.findViewById<Toolbar>(R.id.toolbar).title = getString(R.string.bill_fragment_title)
-        activity.findViewById<FloatingActionButton>(R.id.fab).visibility = GONE
+        activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.bill_fragment_title)
+        activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = GONE
 
         monthly_bill_list.layoutManager = LinearLayoutManager(context)
         monthly_bill_list.adapter = BillListItemRecyclerViewAdapter(emptyList())
@@ -63,7 +63,7 @@ class MonthlyBillFragment : Fragment() {
 
         viewModel.selectedMonth.observe(this, Observer {
             it?.let {
-                (activity.findViewById(R.id.toolbar) as Toolbar).title = it.toString("MMMM yyyy")
+                activity?.findViewById<Toolbar>(R.id.toolbar)?.title = it.toString("MMMM yyyy")
                 viewModel.reloadMonthlyBills(it)
             }
         })

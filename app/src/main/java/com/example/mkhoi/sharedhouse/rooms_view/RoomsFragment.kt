@@ -17,8 +17,6 @@ import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
-import com.example.mkhoi.sharedhouse.util.combineProfilePictures
-import com.example.mkhoi.sharedhouse.util.getProfilePicture
 import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import kotlinx.android.synthetic.main.fragment_room_list.*
@@ -41,26 +39,26 @@ class RoomsFragment : Fragment() {
                               savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_room_list, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.rooms_fragment_title)
+        (activity?.findViewById(R.id.toolbar) as? Toolbar)?.title = getString(R.string.rooms_fragment_title)
 
         room_list.layoutManager = LinearLayoutManager(context)
         room_list.adapter = ListItemRecyclerViewAdapter(emptyList())
-        (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
+        (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.VISIBLE
 
-        val fab = activity.findViewById(R.id.fab) as FloatingActionButton
-        fab.visibility = VISIBLE
-        fab.setOnClickListener { view ->
-            activity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.main_content_fragment, EditRoomFragment.newInstance())
-                    .addToBackStack(EditRoomFragment::class.java.canonicalName)
-                    .commit()
+        val fab = activity?.findViewById(R.id.fab) as? FloatingActionButton
+        fab?.visibility = VISIBLE
+        fab?.setOnClickListener { view ->
+            activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.main_content_fragment, EditRoomFragment.newInstance())
+                    ?.addToBackStack(EditRoomFragment::class.java.canonicalName)
+                    ?.commit()
         }
 
         viewModel.rooms.observe(this, Observer {
             it?.let {
-                (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = GONE
+                (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = GONE
                 room_list.adapter = ListItemRecyclerViewAdapter(it.map {
                     ListItem(
                         mainName = it.unit.name,
@@ -68,9 +66,9 @@ class RoomsFragment : Fragment() {
                                 it.roommates?.size?:0,
                                 it.roommates?.size?:0)
                     ).apply {
-                        it.getProfilePictureLiveData(context, profilePicture)
+                        context?.let { context -> it.getProfilePictureLiveData(context, profilePicture) }
                         deleteAction = {
-                            context.showBasicDialog(
+                            context?.showBasicDialog(
                                     titleResId = R.string.delete_room_dialog_title,
                                     message = getString(R.string.delete_room_dialog_message, mainName),
                                     positiveFunction = {
@@ -79,10 +77,10 @@ class RoomsFragment : Fragment() {
                             )
                         }
                         onClickAction = {
-                            activity.supportFragmentManager.beginTransaction()
-                                    .replace(R.id.main_content_fragment, EditRoomFragment.newInstance(it))
-                                    .addToBackStack(EditRoomFragment::class.java.canonicalName)
-                                    .commit()
+                            activity?.supportFragmentManager?.beginTransaction()
+                                    ?.replace(R.id.main_content_fragment, EditRoomFragment.newInstance(it))
+                                    ?.addToBackStack(EditRoomFragment::class.java.canonicalName)
+                                    ?.commit()
                         }
                     }
                 })

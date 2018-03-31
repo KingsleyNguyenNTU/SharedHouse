@@ -1,26 +1,26 @@
 package com.example.mkhoi.sharedhouse.util
 
 import android.arch.lifecycle.MutableLiveData
-import android.content.Context
-import android.graphics.Bitmap
-import android.net.Uri
-import android.provider.MediaStore
-import android.view.View
-import com.example.mkhoi.sharedhouse.database.entity.Person
-import java.io.ByteArrayOutputStream
-import java.util.*
-import android.provider.ContactsContract
 import android.content.ContentUris
+import android.content.Context
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
+import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.view.View
 import android.widget.ImageView
 import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
+import com.example.mkhoi.sharedhouse.database.entity.Person
+import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.util.*
 
 
 private const val IMAGE_SIZE = 1024

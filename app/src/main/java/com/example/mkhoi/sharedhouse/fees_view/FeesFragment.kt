@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.*
-import android.widget.CalendarView
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeFragment
@@ -47,13 +46,13 @@ class FeesFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId){
             R.id.action_month_picker -> {
-                context.showMonthPickerDialog(viewModel.selectedMonth)
+                context?.showMonthPickerDialog(viewModel.selectedMonth)
                 return true
             }
             R.id.action_copy_fee -> {
                 viewModel.fees.value?.let {
                     val selectedItems: MutableList<Int> = mutableListOf()
-                    context.showMultipleChoicesDialog(
+                    context?.showMultipleChoicesDialog(
                             titleResId = R.string.action_copy_fee_title,
                             multipleChoices = it.map { it.fee.name }.toTypedArray(),
                             selectedItems = selectedItems,
@@ -78,28 +77,28 @@ class FeesFragment : Fragment() {
                               savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_fees, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.fees_fragment_title)
+        (activity?.findViewById(R.id.toolbar) as? Toolbar)?.title = getString(R.string.fees_fragment_title)
 
         fee_list.layoutManager = LinearLayoutManager(context)
         fee_list.adapter = ListItemRecyclerViewAdapter(emptyList())
-        (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
+        (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.VISIBLE
 
-        val fab = activity.findViewById(R.id.fab) as FloatingActionButton
+        val fab = activity?.findViewById(R.id.fab) as FloatingActionButton
         fab.visibility = View.VISIBLE
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener { _ ->
             viewModel.selectedMonth.value?.let {
-                activity.supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_content_fragment, EditFeeFragment.newInstance(it))
-                        .addToBackStack(EditFeeFragment::class.java.canonicalName)
-                        .commit()
+                activity?.supportFragmentManager?.beginTransaction()
+                        ?.replace(R.id.main_content_fragment, EditFeeFragment.newInstance(it))
+                        ?.addToBackStack(EditFeeFragment::class.java.canonicalName)
+                        ?.commit()
             }
         }
 
         viewModel.fees.observe(this, Observer {
             it?.let {
-                (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.GONE
+                (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.GONE
                 fee_list.adapter = ListItemRecyclerViewAdapter(it.map {
                     ListItem(
                             mainName = it.fee.name,
@@ -107,7 +106,7 @@ class FeesFragment : Fragment() {
                             profilePictureId = it.fee.feeType.drawableId
                     ).apply {
                         deleteAction = {
-                            context.showBasicDialog(
+                            context?.showBasicDialog(
                                     titleResId = R.string.delete_fee_dialog_title,
                                     message = getString(R.string.delete_fee_dialog_message, mainName),
                                     positiveFunction = {
@@ -117,10 +116,10 @@ class FeesFragment : Fragment() {
                         }
                         onClickAction = {
                             viewModel.selectedMonth.value?.let {selectedMonth ->
-                                activity.supportFragmentManager.beginTransaction()
-                                        .replace(R.id.main_content_fragment, EditFeeFragment.newInstance(selectedMonth,it))
-                                        .addToBackStack(EditRoomFragment::class.java.canonicalName)
-                                        .commit()
+                                activity?.supportFragmentManager?.beginTransaction()
+                                        ?.replace(R.id.main_content_fragment, EditFeeFragment.newInstance(selectedMonth,it))
+                                        ?.addToBackStack(EditRoomFragment::class.java.canonicalName)
+                                        ?.commit()
                             }
                         }
                     }
@@ -130,7 +129,7 @@ class FeesFragment : Fragment() {
 
         viewModel.selectedMonth.observe(this, Observer {
             it?.let {
-                (activity.findViewById(R.id.toolbar) as Toolbar).title = it.toString("MMMM yyyy")
+                (activity?.findViewById(R.id.toolbar) as? Toolbar)?.title = it.toString("MMMM yyyy")
                 viewModel.reloadFees(it)
                 menu?.findItem(R.id.action_copy_fee)?.isVisible =
                         (it.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH) &&

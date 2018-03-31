@@ -29,8 +29,8 @@ class SettingsFragment : Fragment() {
                               savedInstanceState: Bundle?): View?
             = inflater.inflate(R.layout.fragment_settings, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity.findViewById<Toolbar>(R.id.toolbar).title = getString(R.string.settings_fragment_title)
+        activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.settings_fragment_title)
     }
 }

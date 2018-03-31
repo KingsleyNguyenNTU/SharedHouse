@@ -34,9 +34,9 @@ class RestoreFragment : Fragment() {
                               savedInstanceState: Bundle?): View?
             = inflater.inflate(R.layout.fragment_restore, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity.findViewById<Toolbar>(R.id.toolbar).title = getString(R.string.restore_fragment_title)
+        activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.restore_fragment_title)
 
         choose_backup_file_btn.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -45,7 +45,7 @@ class RestoreFragment : Fragment() {
         }
 
         restore_btn.setOnClickListener{
-            viewModel.restore(context)
+            context?.let { context -> viewModel.restore(context) }
         }
 
         viewModel.backupFilePath.observe(this, Observer {

@@ -12,7 +12,6 @@ import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.list_view.BillDetailListItem
 import com.example.mkhoi.sharedhouse.list_view.BillListItem
 import com.example.mkhoi.sharedhouse.list_view.BillRoommateListItem
-import com.example.mkhoi.sharedhouse.util.getProfilePicture
 import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import java.util.*
 import javax.inject.Inject

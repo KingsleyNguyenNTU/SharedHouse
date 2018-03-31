@@ -9,16 +9,10 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.mkhoi.sharedhouse.R
+import com.example.mkhoi.sharedhouse.util.displayRoundImage
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import android.databinding.adapters.ImageViewBindingAdapter.setImageDrawable
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.Bitmap
-import com.example.mkhoi.sharedhouse.util.displayRoundImage
+import java.lang.Exception
 
 
 class ListItemRecyclerViewAdapter(private val data: List<ListItem>) : RecyclerView.Adapter<ListItemRecyclerViewAdapter.ViewHolder>() {
@@ -41,7 +35,7 @@ class ListItemRecyclerViewAdapter(private val data: List<ListItem>) : RecyclerVi
         }
 
         data[position].profilePicture.observeForever {
-            Picasso.with(holder.mainView.context)
+            Picasso.get()
                     .load(it)
                     .placeholder(R.drawable.ic_account_circle_grey_24dp)
                     .error(R.drawable.ic_account_circle_grey_24dp)
@@ -50,7 +44,7 @@ class ListItemRecyclerViewAdapter(private val data: List<ListItem>) : RecyclerVi
                             holder.avatar.displayRoundImage(holder.mainView.context.resources)
                         }
 
-                        override fun onError() {
+                        override fun onError(e: Exception?) {
                             holder.avatar.setImageResource(R.drawable.ic_account_circle_grey_24dp)
                         }
 

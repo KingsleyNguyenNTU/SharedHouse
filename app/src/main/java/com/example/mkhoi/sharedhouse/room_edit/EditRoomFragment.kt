@@ -24,7 +24,6 @@ import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditRoomBinding
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
-import com.example.mkhoi.sharedhouse.util.getProfilePicture
 import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import com.example.mkhoi.sharedhouse.util.showCustomDialog
@@ -53,7 +52,7 @@ class EditRoomFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders
-                .of(this, EditRoomViewModel.Factory(arguments[ROOM_BUNDLE_KEY] as UnitWithPersons?))
+                .of(this, EditRoomViewModel.Factory(arguments?.get(ROOM_BUNDLE_KEY) as UnitWithPersons?))
                 .get(EditRoomViewModel::class.java)
     }
 
@@ -67,9 +66,9 @@ class EditRoomFragment : Fragment() {
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity.findViewById(R.id.toolbar) as Toolbar).title = getString(R.string.edit_rooms_fragment_title)
+        (activity?.findViewById(R.id.toolbar) as? Toolbar)?.title = getString(R.string.edit_rooms_fragment_title)
 
         roommates_list.layoutManager = LinearLayoutManager(context)
         roommates_list.adapter = ListItemRecyclerViewAdapter(emptyList())
@@ -82,9 +81,9 @@ class EditRoomFragment : Fragment() {
                         data = roommates.map {
                             ListItem(mainName = it.name,
                                      caption = it.phone).apply {
-                                it.getProfilePictureLiveData(context, profilePicture)
+                                context?.let { context -> it.getProfilePictureLiveData(context, profilePicture) }
                                 deleteAction = {
-                                    context.showBasicDialog(
+                                    context?.showBasicDialog(
                                             titleResId = R.string.delete_roommate_dialog_title,
                                             message = getString(R.string.delete_roommate_dialog_message, it.name),
                                             positiveFunction = {
@@ -104,19 +103,19 @@ class EditRoomFragment : Fragment() {
             when (it) {
                 true -> {
                     save_room_btn.isEnabled = false
-                    (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
+                    (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.VISIBLE
                 }
                 false -> {
-                    (activity.findViewById(R.id.progress_bar) as ProgressBar).visibility = View.GONE
-                    activity.supportFragmentManager.popBackStack()
+                    (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.GONE
+                    activity?.supportFragmentManager?.popBackStack()
                 }
             }
         })
     }
 
     private fun initButtonListener() {
-        val fab = activity.findViewById(R.id.fab) as FloatingActionButton
-        fab.visibility = GONE
+        val fab = activity?.findViewById(R.id.fab) as? FloatingActionButton
+        fab?.visibility = GONE
 
         save_room_btn.setOnClickListener {
             viewModel.save()
@@ -133,7 +132,7 @@ class EditRoomFragment : Fragment() {
         val countryCodeView = dialogView.findViewById<AutoCompleteTextView>(R.id.input_roommate_country_code)
         prepareCountryCodeList(countryCodeView, Locale.getDefault())
 
-        val dialog = context.showCustomDialog(
+        val dialog = context?.showCustomDialog(
                 customView = dialogView,
                 titleResId = R.string.add_roommate_dialog_title,
                 positiveFunction = {
@@ -167,7 +166,7 @@ class EditRoomFragment : Fragment() {
             inputRoommatePhone.setText(roommate.phone)
         }
 
-        val dialog = context.showCustomDialog(
+        val dialog = context?.showCustomDialog(
                 customView = dialogView,
                 titleResId = R.string.edit_roommate_dialog_title,
                 positiveFunction = {
