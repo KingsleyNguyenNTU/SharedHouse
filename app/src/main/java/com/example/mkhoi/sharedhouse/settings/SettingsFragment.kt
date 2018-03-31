@@ -3,6 +3,7 @@ package com.example.mkhoi.sharedhouse.settings
 
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.graphics.Bitmap
@@ -17,11 +18,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 
 import com.example.mkhoi.sharedhouse.R
+import com.example.mkhoi.sharedhouse.database.bean.SettingKey
+import com.example.mkhoi.sharedhouse.database.entity.Setting
 import com.example.mkhoi.sharedhouse.util.displayRoundImage
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
+import com.example.mkhoi.sharedhouse.util.toBase64String
+import com.example.mkhoi.sharedhouse.util.toBitmap
+import com.example.mkhoi.sharedhouse.util.toBitmapFromBase64
 import kotlinx.android.synthetic.main.fragment_settings.*
-import java.lang.Exception
 
 class SettingsFragment : Fragment() {
 
@@ -49,7 +52,18 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.settings_fragment_title)
 
+        initViewModelObservers()
         initImagePicker()
+    }
+
+    private fun initViewModelObservers() {
+        viewModel.housePictureSetting.observe(this, Observer {
+            it?.let {
+                val imageBitmap = it.value.toBitmapFromBase64()
+                house_profile_picture.setImageBitmap(imageBitmap)
+                house_profile_picture.displayRoundImage(resources)
+            }
+        })
     }
 
     private fun initImagePicker() {
@@ -82,27 +96,21 @@ class SettingsFragment : Fragment() {
         when (requestCode){
             TAKE_PICTURE_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK){
-                    val imageBitmap = data?.extras?.get("data") as? Bitmap
-                    house_profile_picture.setImageBitmap(imageBitmap)
-                    house_profile_picture.displayRoundImage(resources)
+                    (data?.extras?.get("data") as? Bitmap)?.let {
+                        val newSetting = Setting(SettingKey.HOUSE_PICTURE, it.toBase64String())
+                        viewModel.saveSetting(newSetting)
+                    }
+
                 }
             }
             OPEN_GALLERY_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK){
-                    Picasso.get()
-                            .load(data?.data)
-                            .placeholder(R.mipmap.ic_launcher_round)
-                            .error(R.mipmap.ic_launcher_round)
-                            .into(house_profile_picture, object : Callback {
-                                override fun onSuccess() {
-                                    house_profile_picture.displayRoundImage(resources)
-                                }
-
-                                override fun onError(e: Exception?) {
-                                    house_profile_picture.setImageResource(R.mipmap.ic_launcher_round)
-                                }
-                            })
-
+                    context?.let {
+                        data?.data?.toBitmap(it)?.let {
+                            val newSetting = Setting(SettingKey.HOUSE_PICTURE, it.toBase64String())
+                            viewModel.saveSetting(newSetting)
+                        }
+                    }
                 }
             }
             else -> super.onActivityResult(requestCode, resultCode, data)

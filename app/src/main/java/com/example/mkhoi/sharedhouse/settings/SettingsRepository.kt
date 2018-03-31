@@ -12,8 +12,8 @@ class SettingsRepository @Inject constructor(private val settingDao: SettingDao)
     fun getSetting(key: SettingKey) = settingDao.getSetting(key)
 
     @Transaction
-    fun saveSetting(setting: Setting){
-        settingDao.deleteSetting(setting)
+    fun saveSetting(setting: Setting, oldSetting: Setting?){
+        oldSetting?.let { settingDao.deleteSetting(it) }
         settingDao.insertSetting(setting)
     }
 

@@ -21,6 +21,7 @@ import com.example.mkhoi.sharedhouse.database.entity.Person
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.*
+import android.util.Base64
 
 
 private const val IMAGE_SIZE = 1024
@@ -39,8 +40,8 @@ fun View.toImage(): Bitmap {
     isDrawingCacheEnabled = true
     measure(
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-    layout(0, 0, measuredWidth, measuredHeight);
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+    layout(0, 0, measuredWidth, measuredHeight)
     buildDrawingCache(true)
 
     val result = Bitmap.createBitmap(drawingCache)
@@ -170,4 +171,16 @@ fun List<Uri?>.combineProfilePictures(context: Context) : Uri?{
             }
         }
     }
+}
+
+fun Bitmap.toBase64String(): String{
+    val bytes = ByteArrayOutputStream()
+    this.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+    val byteArray = bytes.toByteArray()
+    return Base64.encodeToString(byteArray, Base64.DEFAULT)
+}
+
+fun String.toBitmapFromBase64(): Bitmap{
+    val bytes = Base64.decode(this, Base64.DEFAULT)
+    return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 }
