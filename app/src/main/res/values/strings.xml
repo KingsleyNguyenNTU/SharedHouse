@@ -53,8 +53,6 @@
     <string name="action_copy_fee_title">Copy Expenses to Current Month</string>
     <string name="backup_nav">Backup</string>
     <string name="restore_nav">Restore</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="backup_text_title">Backup Database</string>
     <string name="backup_text_details">Backup your database to prevent your exisitng data from losing as well as importing it to a new device.</string>
@@ -71,4 +69,15 @@
     <string name="restore_fragment_title">Restore</string>
     <string name="roommate_country_code_label">Country Code</string>
     <string name="phone_number_error_msg">Wrong phone number</string>
+    <string name="setting_nav">Settings</string>
+    <string name="settings_fragment_title">Settings</string>
+    <string name="general_settings_label">General Settings</string>
+    <string name="send_bill_setting_label">Sending Bills Configurations</string>
+    <string name="house_name_setting_label">House Name</string>
+    <string name="input_house_name_hint">Enter your house name here</string>
+    <string name="default_message_setting_label">Default message when sending bill</string>
+    <string name="input_default_message_hint">Enter your message here</string>
+    <string name="default_whatsapp_setting_label">Set Whatsapp as default service to send bills</string>
+    <string name="btn_yes">Yes</string>
+    <string name="btn_no">No</string>
 </resources>

@@ -15,6 +15,7 @@ import com.example.mkhoi.sharedhouse.backup.RestoreFragment
 import com.example.mkhoi.sharedhouse.fees_view.FeesFragment
 import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillFragment
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsFragment
+import com.example.mkhoi.sharedhouse.settings.SettingsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
@@ -108,6 +109,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.main_content_fragment, FeesFragment.newInstance())
                         .addToBackStack(FeesFragment::class.java.canonicalName)
+                        .commit()
+            }
+            R.id.nav_setting -> {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_content_fragment, SettingsFragment.newInstance())
+                        .addToBackStack(SettingsFragment::class.java.canonicalName)
                         .commit()
             }
             R.id.nav_backup -> {

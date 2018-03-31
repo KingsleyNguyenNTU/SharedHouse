@@ -9,12 +9,11 @@ import com.example.mkhoi.sharedhouse.database.AppDatabase.Companion.DB_NAME
 import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 
 
-class BackupViewModel(private val activity: FragmentActivity,
+class BackupViewModel(private val currentDBPath: String,
                       private val backupRepository: BackupRepository): ViewModel() {
     val backupResultLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     fun backup() {
-        val currentDBPath = activity.getDatabasePath(DB_NAME).absolutePath
         BackgroundAsyncTask().execute({
             backupRepository.backup(currentDBPath, backupResultLiveData)
         })
@@ -22,7 +21,9 @@ class BackupViewModel(private val activity: FragmentActivity,
 
     class Factory(private val activity: FragmentActivity) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return BackupViewModel(activity, MyApp.component.backupRepository()) as T
+            return BackupViewModel(
+                    activity.getDatabasePath(DB_NAME).absolutePath,
+                    MyApp.component.backupRepository()) as T
         }
     }
 }
