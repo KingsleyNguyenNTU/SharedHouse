@@ -1,8 +1,12 @@
 package com.example.mkhoi.sharedhouse.dagger
 
+import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Room
+import android.arch.persistence.room.migration.Migration
+import android.content.Context
 import com.example.mkhoi.sharedhouse.MyApp
 import com.example.mkhoi.sharedhouse.database.AppDatabase
+import com.example.mkhoi.sharedhouse.database.AppDatabase.Companion.MIGRATION_1_2
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -14,7 +18,7 @@ import javax.inject.Singleton
 
     @Provides
     @Singleton
-    fun provideContext() =  app.applicationContext
+    fun provideContext(): Context =  app.applicationContext
 
     @Provides
     @Singleton
@@ -38,5 +42,11 @@ import javax.inject.Singleton
 
     @Provides
     @Singleton
-    fun provideDatabase() =  Room.databaseBuilder(app, AppDatabase::class.java!!, AppDatabase.DB_NAME).build()
+    fun provideSettingDao(appDatabase: AppDatabase) = appDatabase.settingDao()
+
+    @Provides
+    @Singleton
+    fun provideDatabase() =  Room.databaseBuilder(app, AppDatabase::class.java, AppDatabase.DB_NAME)
+            .addMigrations(MIGRATION_1_2)
+            .build()
 }

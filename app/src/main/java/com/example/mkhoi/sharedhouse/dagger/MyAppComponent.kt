@@ -8,6 +8,7 @@ import com.example.mkhoi.sharedhouse.fees_view.FeesRepository
 import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillRepository
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomRepository
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsRepository
+import com.example.mkhoi.sharedhouse.settings.SettingsRepository
 import dagger.Component
 import javax.inject.Singleton
 
@@ -23,4 +24,5 @@ interface MyAppComponent {
     fun monthlyBillRepository(): MonthlyBillRepository
     fun backupRepository(): BackupRepository
     fun restoreRepository(): RestoreRepository
+    fun settingsRepository(): SettingsRepository
 }
