@@ -80,4 +80,7 @@
     <string name="default_whatsapp_setting_label">Set Whatsapp as default service to send bills</string>
     <string name="btn_yes">Yes</string>
     <string name="btn_no">No</string>
+    <string name="image_picker_camera_label">Camera</string>
+    <string name="image_picker_gallery_label">Gallery</string>
+    <string name="image_picker_dialog_title">Choose picture from</string>
 </resources>
