@@ -1,6 +1,8 @@
 package com.example.mkhoi.sharedhouse
 
 import android.Manifest
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -16,8 +18,11 @@ import com.example.mkhoi.sharedhouse.fees_view.FeesFragment
 import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillFragment
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsFragment
 import com.example.mkhoi.sharedhouse.settings.SettingsFragment
+import com.example.mkhoi.sharedhouse.util.displayRoundImage
+import com.example.mkhoi.sharedhouse.util.toBitmapFromBase64
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -27,15 +32,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         private const val READ_CONTACTS_REQUEST_CODE = 1
     }
 
+    internal lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        viewModel = ViewModelProviders.of(this, MainViewModel.Factory())
+                .get(MainViewModel::class.java)
+
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+
+        viewModel.housePictureSetting.observe(this, Observer {
+            it?.let {
+                val imageBitmap = it.value.toBitmapFromBase64()
+                drawer_top_picture.setImageBitmap(imageBitmap)
+                drawer_top_picture.displayRoundImage(resources)
+            }
+        })
 
         nav_view.setNavigationItemSelectedListener(this)
 
