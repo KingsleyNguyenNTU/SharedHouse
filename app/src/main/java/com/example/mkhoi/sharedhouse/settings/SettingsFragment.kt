@@ -21,7 +21,6 @@ import android.widget.LinearLayout
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.SettingKey
 import com.example.mkhoi.sharedhouse.database.entity.Setting
-import com.example.mkhoi.sharedhouse.databinding.FragmentSettingsBinding
 import com.example.mkhoi.sharedhouse.util.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
