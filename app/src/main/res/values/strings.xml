@@ -71,9 +71,6 @@
     <string name="phone_number_error_msg">Wrong phone number</string>
     <string name="setting_nav">Settings</string>
     <string name="settings_fragment_title">Settings</string>
-    <string name="general_settings_label">General Settings</string>
-    <string name="send_bill_setting_label">Sending Bills Configurations</string>
-    <string name="house_name_setting_label">House Name</string>
     <string name="input_house_name_hint">Enter your house name here</string>
     <string name="default_message_setting_label">Default message when sending bill</string>
     <string name="input_default_message_hint">Enter your message here</string>
@@ -83,4 +80,6 @@
     <string name="image_picker_camera_label">Camera</string>
     <string name="image_picker_gallery_label">Gallery</string>
     <string name="image_picker_dialog_title">Choose picture from</string>
+    <string name="house_picture_setting_label">House Profile Picture</string>
+    <string name="house_name_setting_label">House Name</string>
 </resources>

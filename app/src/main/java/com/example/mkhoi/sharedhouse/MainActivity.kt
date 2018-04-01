@@ -54,6 +54,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 drawer_top_picture.displayRoundImage(resources)
             }
         })
+        viewModel.houseNameSetting.observe(this, Observer {
+            it?.let { drawer_name.text = it.value }
+        })
 
         nav_view.setNavigationItemSelectedListener(this)
 

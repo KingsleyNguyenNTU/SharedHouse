@@ -15,15 +15,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.LinearLayout
 
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.SettingKey
 import com.example.mkhoi.sharedhouse.database.entity.Setting
-import com.example.mkhoi.sharedhouse.util.displayRoundImage
-import com.example.mkhoi.sharedhouse.util.toBase64String
-import com.example.mkhoi.sharedhouse.util.toBitmap
-import com.example.mkhoi.sharedhouse.util.toBitmapFromBase64
+import com.example.mkhoi.sharedhouse.databinding.FragmentSettingsBinding
+import com.example.mkhoi.sharedhouse.util.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 class SettingsFragment : Fragment() {
@@ -54,6 +53,13 @@ class SettingsFragment : Fragment() {
 
         initViewModelObservers()
         initImagePicker()
+        initListener()
+    }
+
+    private fun initListener() {
+        house_name_edit_btn.setOnClickListener {
+            openTextInputDialog(SettingKey.HOUSE_NAME)
+        }
     }
 
     private fun initViewModelObservers() {
@@ -63,6 +69,10 @@ class SettingsFragment : Fragment() {
                 house_profile_picture.setImageBitmap(imageBitmap)
                 house_profile_picture.displayRoundImage(resources)
             }
+        })
+
+        viewModel.houseNameSetting.observe(this, Observer {
+            it?.let { house_name_value.text = it.value }
         })
     }
 
@@ -115,5 +125,17 @@ class SettingsFragment : Fragment() {
             }
             else -> super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    fun openTextInputDialog(settingKey: SettingKey){
+        val editTextInput = EditText(context)
+        context?.showCustomDialog(
+                customView = editTextInput,
+                positiveFunction = {
+                    val newSetting = Setting(settingKey, editTextInput.text.toString())
+                    viewModel.saveSetting(newSetting)
+                },
+                titleResId = settingKey.labelKey
+        )
     }
 }

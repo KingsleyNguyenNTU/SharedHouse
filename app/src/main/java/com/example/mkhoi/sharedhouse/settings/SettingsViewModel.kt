@@ -11,10 +11,12 @@ import com.example.mkhoi.sharedhouse.database.entity.Setting
 
 class SettingsViewModel(private val repository: SettingsRepository): ViewModel() {
     val housePictureSetting: LiveData<Setting> = repository.getSetting(SettingKey.HOUSE_PICTURE)
+    val houseNameSetting: LiveData<Setting> = repository.getSetting(SettingKey.HOUSE_NAME)
 
     fun saveSetting(setting: Setting){
         val oldSetting = when(setting.key){
             SettingKey.HOUSE_PICTURE -> housePictureSetting.value
+            SettingKey.HOUSE_NAME -> houseNameSetting.value
         }
         BackgroundAsyncTask().execute({
             repository.saveSetting(setting, oldSetting)
