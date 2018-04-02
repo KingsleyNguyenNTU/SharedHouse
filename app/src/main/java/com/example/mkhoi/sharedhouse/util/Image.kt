@@ -13,15 +13,16 @@ import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.util.Base64
 import android.view.View
 import android.widget.ImageView
 import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.entity.Person
+import com.squareup.picasso.Transformation
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.*
-import android.util.Base64
 
 
 private const val IMAGE_SIZE = 1024
@@ -183,4 +184,43 @@ fun Bitmap.toBase64String(): String{
 fun String.toBitmapFromBase64(): Bitmap{
     val bytes = Base64.decode(this, Base64.DEFAULT)
     return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+}
+
+fun Bitmap.reduceSize(maxSize: Int, imageTransformation: Transformation? = null) : Bitmap{
+    var result = this
+
+    imageTransformation?.let {
+        result = imageTransformation.transform(this)
+    }
+
+    val ratio: Double = Math.sqrt(result.byteCount.toDouble()/maxSize.toDouble())
+    if (ratio > 1) {
+        val scaledWidthSize: Int = Math.floor(result.width/ratio).toInt()
+        val scaledHeightSize: Int = Math.floor(result.height/ratio).toInt()
+        result = Bitmap.createScaledBitmap(result, scaledWidthSize, scaledHeightSize, true)
+    }
+
+    return result
+}
+
+fun Bitmap.resize(width: Int, height: Int, context: Context): Bitmap{
+    val contentResolver = context.contentResolver
+    var inputStream = contentResolver.openInputStream(this)
+
+    val options = BitmapFactory.Options()
+    options.inJustDecodeBounds = true
+    BitmapFactory.decodeStream(inputStream, null, options)
+    val imageHeight = options.outHeight
+    val imageWidth = options.outWidth
+
+    val heightRatio = height.toDouble().div(imageHeight.toDouble())
+    val widthRatio = width.toDouble().div(imageWidth.toDouble())
+
+    //resize based on maximum ratio
+    val maxRatio = Math.max(heightRatio, widthRatio)
+    options.inSampleSize = Math.pow(2.0, Math.floor(Math.log(1f.div(maxRatio)).div(Math.log(2.0)))).toInt()
+    options.inJustDecodeBounds = false
+    inputStream = contentResolver.openInputStream(this)
+
+    val resizeBitmap = BitmapFactory.decodeStream(inputStream, null, options)
 }
