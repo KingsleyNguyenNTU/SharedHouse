@@ -1,11 +1,17 @@
 package com.example.mkhoi.sharedhouse.database.bean
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Relation
+import android.content.Context
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
 import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.database.entity.Unit
+import com.example.mkhoi.sharedhouse.util.combineProfilePictures
+import com.example.mkhoi.sharedhouse.util.getProfilePicture
 
 class UnitWithPersons(@Embedded var unit: Unit): Parcelable {
     @Relation(parentColumn = "id", entityColumn = "unitId")
@@ -34,4 +40,14 @@ class UnitWithPersons(@Embedded var unit: Unit): Parcelable {
             return arrayOfNulls(size)
         }
     }
+
+    fun getProfilePictureLiveData(context: Context, uriLiveData: MutableLiveData<Uri?>){
+        BackgroundAsyncTask().execute({
+            uriLiveData.postValue(this.getProfilePicture(context))
+        })
+    }
+
+    private fun getProfilePicture(context: Context) =
+            roommates?.map { it.getProfilePicture(context) }?.toList()?.combineProfilePictures(context)
+
 }

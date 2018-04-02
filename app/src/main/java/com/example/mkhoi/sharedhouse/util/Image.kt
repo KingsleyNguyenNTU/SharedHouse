@@ -3,24 +3,19 @@ package com.example.mkhoi.sharedhouse.util
 import android.arch.lifecycle.MutableLiveData
 import android.content.ContentUris
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.provider.ContactsContract
-import android.provider.MediaStore
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.util.Base64
 import android.view.View
-import android.widget.ImageView
 import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
-import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
 import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.squareup.picasso.Transformation
 import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
 
@@ -30,11 +25,11 @@ private const val BORDER_SIZE = 50
 
 fun Bitmap.toUri(context: Context): Uri {
     val fileName = UUID.randomUUID().toString()
-    val bytes = ByteArrayOutputStream()
-    this.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-    val path = MediaStore.Images.Media.insertImage(context.contentResolver, this, fileName, null)
+    val fileOutputStream: FileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+    this.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+    fileOutputStream.close()
 
-    return Uri.parse(path)
+    return Uri.fromFile(context.getFileStreamPath(fileName))
 }
 
 fun View.toImage(): Bitmap {
@@ -86,24 +81,10 @@ fun Person.getProfilePicture(context: Context): Uri?{
     return photo?.toUri(context)
 }
 
-fun ImageView.displayRoundImage(resources: Resources){
-    val imageBitmap = (drawable as BitmapDrawable).bitmap
-    val imageDrawable = RoundedBitmapDrawableFactory.create(resources, imageBitmap)
-    imageDrawable.isCircular = true
-    imageDrawable.cornerRadius = Math.max(imageBitmap.width, imageBitmap.height) / 2.0f
-    setImageDrawable(imageDrawable)
+fun Uri.toBitmap(context: Context): Bitmap{
+    val inputStream = context.contentResolver.openInputStream(this)
+    return BitmapFactory.decodeStream(inputStream)
 }
-
-fun Uri.toBitmap(context: Context) = MediaStore.Images.Media.getBitmap(context.contentResolver, this)
-
-
-fun UnitWithPersons.getProfilePictureLiveData(context: Context, uriLiveData: MutableLiveData<Uri?>){
-    BackgroundAsyncTask().execute({
-        uriLiveData.postValue(this.getProfilePicture(context))
-    })
-}
-
-fun UnitWithPersons.getProfilePicture(context: Context) = roommates?.map { it.getProfilePicture(context) }?.toList()?.combineProfilePictures(context)
 
 /**
  * Maximum combine 4 pictures
@@ -201,26 +182,4 @@ fun Bitmap.reduceSize(maxSize: Int, imageTransformation: Transformation? = null)
     }
 
     return result
-}
-
-fun Bitmap.resize(width: Int, height: Int, context: Context): Bitmap{
-    val contentResolver = context.contentResolver
-    var inputStream = contentResolver.openInputStream(this)
-
-    val options = BitmapFactory.Options()
-    options.inJustDecodeBounds = true
-    BitmapFactory.decodeStream(inputStream, null, options)
-    val imageHeight = options.outHeight
-    val imageWidth = options.outWidth
-
-    val heightRatio = height.toDouble().div(imageHeight.toDouble())
-    val widthRatio = width.toDouble().div(imageWidth.toDouble())
-
-    //resize based on maximum ratio
-    val maxRatio = Math.max(heightRatio, widthRatio)
-    options.inSampleSize = Math.pow(2.0, Math.floor(Math.log(1f.div(maxRatio)).div(Math.log(2.0)))).toInt()
-    options.inJustDecodeBounds = false
-    inputStream = contentResolver.openInputStream(this)
-
-    val resizeBitmap = BitmapFactory.decodeStream(inputStream, null, options)
 }

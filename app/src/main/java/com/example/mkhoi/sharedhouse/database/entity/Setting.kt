@@ -6,4 +6,8 @@ import com.example.mkhoi.sharedhouse.database.bean.SettingKey
 
 @Entity
 data class Setting(@PrimaryKey var key: SettingKey,
-                   var value: String)
+                   var value: String){
+    companion object {
+        const val IMAGE_MAX_SIZE = 2000000 // 2MB
+    }
+}

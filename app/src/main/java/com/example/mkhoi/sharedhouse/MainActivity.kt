@@ -18,7 +18,7 @@ import com.example.mkhoi.sharedhouse.fees_view.FeesFragment
 import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillFragment
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsFragment
 import com.example.mkhoi.sharedhouse.settings.SettingsFragment
-import com.example.mkhoi.sharedhouse.util.displayRoundImage
+import com.example.mkhoi.sharedhouse.util.CircleImageTransformation
 import com.example.mkhoi.sharedhouse.util.toBitmapFromBase64
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -49,9 +49,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         viewModel.housePictureSetting.observe(this, Observer {
             it?.let {
-                val imageBitmap = it.value.toBitmapFromBase64()
+                val imageBitmap = CircleImageTransformation().transform(it.value.toBitmapFromBase64())
                 drawer_top_picture.setImageBitmap(imageBitmap)
-                drawer_top_picture.displayRoundImage(resources)
             }
         })
         viewModel.houseNameSetting.observe(this, Observer {

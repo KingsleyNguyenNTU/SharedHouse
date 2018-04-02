@@ -9,10 +9,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.mkhoi.sharedhouse.R
-import com.example.mkhoi.sharedhouse.util.displayRoundImage
-import com.squareup.picasso.Callback
+import com.example.mkhoi.sharedhouse.util.CircleImageTransformation
 import com.squareup.picasso.Picasso
-import java.lang.Exception
 
 
 class ListItemRecyclerViewAdapter(private val data: List<ListItem>) : RecyclerView.Adapter<ListItemRecyclerViewAdapter.ViewHolder>() {
@@ -37,18 +35,10 @@ class ListItemRecyclerViewAdapter(private val data: List<ListItem>) : RecyclerVi
         data[position].profilePicture.observeForever {
             Picasso.get()
                     .load(it)
+                    .transform(CircleImageTransformation())
                     .placeholder(R.drawable.ic_account_circle_grey_24dp)
                     .error(R.drawable.ic_account_circle_grey_24dp)
-                    .into(holder.avatar, object : Callback{
-                        override fun onSuccess() {
-                            holder.avatar.displayRoundImage(holder.mainView.context.resources)
-                        }
-
-                        override fun onError(e: Exception?) {
-                            holder.avatar.setImageResource(R.drawable.ic_account_circle_grey_24dp)
-                        }
-
-                    })
+                    .into(holder.avatar)
         }
 
         data[position].profilePictureId?.let {

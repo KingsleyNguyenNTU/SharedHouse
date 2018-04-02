@@ -17,10 +17,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
-
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.SettingKey
 import com.example.mkhoi.sharedhouse.database.entity.Setting
+import com.example.mkhoi.sharedhouse.database.entity.Setting.Companion.IMAGE_MAX_SIZE
 import com.example.mkhoi.sharedhouse.util.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
@@ -64,9 +64,8 @@ class SettingsFragment : Fragment() {
     private fun initViewModelObservers() {
         viewModel.housePictureSetting.observe(this, Observer {
             it?.let {
-                val imageBitmap = it.value.toBitmapFromBase64()
+                val imageBitmap = CircleImageTransformation().transform(it.value.toBitmapFromBase64())
                 house_profile_picture.setImageBitmap(imageBitmap)
-                house_profile_picture.displayRoundImage(resources)
             }
         })
 
@@ -106,7 +105,9 @@ class SettingsFragment : Fragment() {
             TAKE_PICTURE_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK){
                     (data?.extras?.get("data") as? Bitmap)?.let {
-                        val newSetting = Setting(SettingKey.HOUSE_PICTURE, it.toBase64String())
+                        //reduced image size and make it circle before storing into DB
+                        val circlePicture = it.reduceSize(IMAGE_MAX_SIZE, CircleImageTransformation())
+                        val newSetting = Setting(SettingKey.HOUSE_PICTURE, circlePicture.toBase64String())
                         viewModel.saveSetting(newSetting)
                     }
 

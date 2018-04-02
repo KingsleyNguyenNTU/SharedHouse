@@ -13,9 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.util.*
-import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import java.lang.Exception
 
 
 class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
@@ -31,19 +29,10 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
         data[position].profilePicture.observeForever {
             Picasso.get()
                     .load(it)
+                    .transform(CircleImageTransformation())
                     .placeholder(R.drawable.ic_account_circle_grey_24dp)
                     .error(R.drawable.ic_account_circle_grey_24dp)
-                    .into(holder.avatar, object : Callback {
-
-                        override fun onSuccess() {
-                            holder.avatar.displayRoundImage(holder.context.resources)
-                        }
-
-                        override fun onError(e: Exception?) {
-                            holder.avatar.setImageResource(R.drawable.ic_account_circle_grey_24dp)
-                        }
-
-                    })
+                    .into(holder.avatar)
         }
 
         holder.sendBtn.setOnClickListener {
