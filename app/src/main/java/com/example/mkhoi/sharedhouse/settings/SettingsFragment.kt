@@ -57,7 +57,7 @@ class SettingsFragment : Fragment() {
 
     private fun initListener() {
         house_name_edit_btn.setOnClickListener {
-            openTextInputDialog(SettingKey.HOUSE_NAME)
+            openTextInputDialog(SettingKey.HOUSE_NAME, viewModel.houseNameSetting.value?.value)
         }
     }
 
@@ -127,12 +127,15 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    fun openTextInputDialog(settingKey: SettingKey){
-        val editTextInput = EditText(context)
+    private fun openTextInputDialog(settingKey: SettingKey, initValue: String?){
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.input_setting_dialog, null)
+        val inputSettingEditText = dialogView.findViewById<EditText>(R.id.input_setting_edit_text)
+        inputSettingEditText.setText(initValue)
+
         context?.showCustomDialog(
-                customView = editTextInput,
+                customView = dialogView,
                 positiveFunction = {
-                    val newSetting = Setting(settingKey, editTextInput.text.toString())
+                    val newSetting = Setting(settingKey, inputSettingEditText.text.toString())
                     viewModel.saveSetting(newSetting)
                 },
                 titleResId = settingKey.labelKey

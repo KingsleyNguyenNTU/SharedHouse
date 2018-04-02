@@ -21,7 +21,7 @@ fun Context.showCustomDialog(customView: View,
                 positiveFunction.invoke()
             })
             .setNegativeButton(this.getString(R.string.cancel_btn_label), {
-                dialog, whichButton -> dialog.cancel()
+                dialog, _ -> dialog.cancel()
             })
             .show()
 }
@@ -36,7 +36,7 @@ fun Context.showBasicDialog(@StringRes titleResId: Int,
                 positiveFunction.invoke()
             })
             .setNegativeButton(this.getString(R.string.cancel_btn_label), {
-                dialog, whichButton -> dialog.cancel()
+                dialog, _ -> dialog.cancel()
             })
             .show()
 }
