@@ -22,6 +22,7 @@ import com.example.mkhoi.sharedhouse.settings.SettingsFragment
 import com.example.mkhoi.sharedhouse.util.CircleImageTransformation
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import com.example.mkhoi.sharedhouse.util.toBitmapFromBase64
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
@@ -42,6 +43,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        val adRequest = PublisherAdRequest.Builder().build()
+        publisherAdView.loadAd(adRequest)
 
         viewModel = ViewModelProviders.of(this, MainViewModel.Factory())
                 .get(MainViewModel::class.java)

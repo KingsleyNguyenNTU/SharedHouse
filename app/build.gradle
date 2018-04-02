@@ -43,6 +43,7 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.9.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.google.android.gms:play-services-ads:12.0.1'
 
     kapt "android.arch.persistence.room:compiler:$room_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
