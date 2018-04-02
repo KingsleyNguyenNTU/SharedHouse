@@ -2,8 +2,8 @@ package com.example.mkhoi.sharedhouse.list_view
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -16,6 +16,8 @@ import android.widget.TextView
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.util.*
 import com.squareup.picasso.Picasso
+
+
 
 
 class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
@@ -56,20 +58,36 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
         val billImage = prepareBill(context, billListItem)
 
         if (defaultWhatsapp){
+            if (isWhatsappInstalled(context)){
+                val phoneNumbers = billListItem.roommates.map { it.phone.removePrefix("+") }.toTypedArray()
+                val roommateNames = billListItem.roommates.map { "${it.name} (${it.phone})" }.toTypedArray()
 
-            //sending bill via Whatsapp
-            billListItem.phoneNumbers.forEach {
-                val whatsappPhone = "$it@s.whatsapp.net"
-                val sendIntent = Intent(Intent.ACTION_SEND)
-                sendIntent.`package` = "com.whatsapp"
-                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                sendIntent.type = "image/jpeg"
-                sendIntent.putExtra(Intent.EXTRA_STREAM, billImage)
-                defaultMessage?.let {
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, it)
-                }
-                sendIntent.putExtra("jid", whatsappPhone)
-                context.startActivity(sendIntent)
+                AlertDialog.Builder(context)
+                        .setTitle(R.string.select_sending_contact_title)
+                        .setItems(roommateNames) { dialog, which ->
+                            phoneNumbers[which].let {
+                                val whatsappPhone = "$it@s.whatsapp.net"
+                                val sendIntent = Intent(Intent.ACTION_SEND)
+                                sendIntent.`package` = "com.whatsapp"
+                                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                sendIntent.type = "image/jpeg"
+                                sendIntent.putExtra(Intent.EXTRA_STREAM, billImage)
+                                defaultMessage?.let {
+                                    sendIntent.putExtra(Intent.EXTRA_TEXT, it)
+                                }
+                                sendIntent.putExtra("jid", whatsappPhone)
+                                context.startActivity(sendIntent)
+                            }
+                            dialog.dismiss()
+                        }
+                        .show()
+            }
+            else {
+                context.showBasicDialog(
+                        titleResId = R.string.no_whatsapp_alert_title,
+                        message = context.getString(R.string.no_whatsapp_alert_message),
+                        positiveFunction = {}
+                )
             }
         }
         else {
@@ -82,6 +100,15 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
                 sendIntent.putExtra(Intent.EXTRA_TEXT, it)
             }
             context.startActivity(Intent.createChooser(sendIntent, context.getString(R.string.send_bill_msg)))
+        }
+    }
+
+    private fun isWhatsappInstalled(context: Context): Boolean {
+        return try {
+            context.packageManager.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
         }
     }
 

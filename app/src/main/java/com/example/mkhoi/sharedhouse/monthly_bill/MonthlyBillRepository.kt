@@ -63,8 +63,7 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
                         ?: BillListItem(
                                 mainName = room.name,
                                 amount = 0f,
-                                phoneNumbers = rooms[roomId]!!.roommates?.map { it.phone.removePrefix("+") }
-                                        ?: emptyList(),
+                                roommates = rooms[roomId]!!.roommates ?: emptyList(),
                                 billDetails = mutableListOf()
                         ).apply {
                             rooms[roomId]!!.getProfilePictureLiveData(context, profilePicture)

@@ -61,6 +61,8 @@ class MonthlyBillFragment : Fragment() {
         viewModel.monthlyBillList.observe(this, Observer {
             it?.let {
                 listAdapter = BillListItemRecyclerViewAdapter(it)
+                listAdapter.defaultMessage = viewModel.defaultMessageSetting.value?.value
+                listAdapter.defaultWhatsapp = (viewModel.defaultWhatsappSetting.value?.value == TRUE_VALUE)
                 monthly_bill_list.adapter = listAdapter
             }
         })

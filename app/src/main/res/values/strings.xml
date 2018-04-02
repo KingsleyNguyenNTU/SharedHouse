@@ -88,4 +88,6 @@
     <string name="input_setting_dialog_msg">Please input the new value for this setting</string>
     <string name="send_bill_msg">Send Bill via</string>
     <string name="select_sending_contact_title">Select Person</string>
+    <string name="no_whatsapp_alert_title">Cannot find Whatsapp</string>
+    <string name="no_whatsapp_alert_message">It seems that you don\'t have Whatsapp app on your device. Please go to Settings to turn off the option to use Whatsapp to send bills.</string>
 </resources>
