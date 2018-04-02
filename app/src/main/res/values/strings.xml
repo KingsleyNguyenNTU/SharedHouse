@@ -87,4 +87,5 @@
     <string name="read_contact_dialog_msg">Without the permission to read contacts, profile pictures for rooms and roommates won\'t be shown</string>
     <string name="input_setting_dialog_msg">Please input the new value for this setting</string>
     <string name="send_bill_msg">Send Bill via</string>
+    <string name="select_sending_contact_title">Select Person</string>
 </resources>

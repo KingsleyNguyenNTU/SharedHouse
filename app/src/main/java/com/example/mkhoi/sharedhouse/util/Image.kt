@@ -11,6 +11,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
 import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.support.v4.content.ContextCompat
 import android.util.Base64
 import android.view.View
@@ -26,13 +27,22 @@ import java.util.*
 private const val IMAGE_SIZE = 1024
 private const val BORDER_SIZE = 50
 
-fun Bitmap.toUri(context: Context): Uri {
+fun Bitmap.toUri(context: Context, isPrivate: Boolean): Uri {
     val fileName = UUID.randomUUID().toString()
-    val fileOutputStream: FileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
-    this.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-    fileOutputStream.close()
 
-    return Uri.fromFile(context.getFileStreamPath(fileName))
+    return if (isPrivate){
+        val fileOutputStream: FileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE)
+        this.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+        fileOutputStream.close()
+
+        Uri.fromFile(context.getFileStreamPath(fileName))
+    } else{
+        val bytes = ByteArrayOutputStream()
+        this.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(context.contentResolver, this, fileName, null)
+
+        Uri.parse(path)
+    }
 }
 
 fun View.toImage(): Bitmap {
@@ -84,7 +94,7 @@ fun Person.getProfilePicture(context: Context): Uri?{
             }
         }
 
-        return photo?.toUri(context)
+        return photo?.toUri(context, true)
     }
     else return null
 }
@@ -120,7 +130,7 @@ fun List<Uri?>.combineProfilePictures(context: Context) : Uri?{
                 combinedImage.drawBitmap(croppedFirstImage, 0f, 0f, null)
                 combinedImage.drawBitmap(croppedSecondImage, (IMAGE_SIZE - width).toFloat(), 0f, null)
 
-                combinedBitmap.toUri(context)
+                combinedBitmap.toUri(context, true)
             }
             3 -> {
                 //1 on the left, 1 on top right, 1 on bottom right
@@ -139,7 +149,7 @@ fun List<Uri?>.combineProfilePictures(context: Context) : Uri?{
                 combinedImage.drawBitmap(secondImage, (IMAGE_SIZE - width).toFloat(), 0f, null)
                 combinedImage.drawBitmap(thirdImage, (IMAGE_SIZE - width).toFloat(), (IMAGE_SIZE - width).toFloat(), null)
 
-                combinedBitmap.toUri(context)
+                combinedBitmap.toUri(context, true)
             }
             else -> {
                 //1 on each corners, maximum 4 pictures
@@ -157,7 +167,7 @@ fun List<Uri?>.combineProfilePictures(context: Context) : Uri?{
                 combinedImage.drawBitmap(thirdImage, (IMAGE_SIZE - width).toFloat(), (IMAGE_SIZE - width).toFloat(), null)
                 combinedImage.drawBitmap(fourthImage, 0f, (IMAGE_SIZE - width).toFloat(), null)
 
-                combinedBitmap.toUri(context)
+                combinedBitmap.toUri(context, true)
             }
         }
     }

@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.ViewTreeObserver
 import com.example.mkhoi.sharedhouse.backup.BackupFragment
 import com.example.mkhoi.sharedhouse.backup.RestoreFragment
 import com.example.mkhoi.sharedhouse.fees_view.FeesFragment
@@ -24,6 +25,8 @@ import com.example.mkhoi.sharedhouse.util.toBitmapFromBase64
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
+
+
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -48,15 +51,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
-        viewModel.housePictureSetting.observe(this, Observer {
-            it?.let {
-                val imageBitmap = CircleImageTransformation().transform(it.value.toBitmapFromBase64())
-                drawer_top_picture.setImageBitmap(imageBitmap)
-            }
-        })
-        viewModel.houseNameSetting.observe(this, Observer {
-            it?.let { drawer_name.text = it.value }
-        })
+        drawer_layout.viewTreeObserver.addOnGlobalLayoutListener(
+                object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+
+                        // only want to do this once
+                        drawer_layout.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                        viewModel.housePictureSetting.observe(this@MainActivity, Observer {
+                            it?.let {
+                                val imageBitmap = CircleImageTransformation().transform(it.value.toBitmapFromBase64())
+                                drawer_top_picture.setImageBitmap(imageBitmap)
+                            }
+                        })
+                        viewModel.houseNameSetting.observe(this@MainActivity, Observer {
+                            it?.let { drawer_name.text = it.value }
+                        })
+                    }
+                })
 
         nav_view.setNavigationItemSelectedListener(this)
 
@@ -71,6 +83,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     arrayOf(Manifest.permission.READ_CONTACTS),
                     READ_CONTACTS_REQUEST_CODE)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     fun hasWriteExternalPermission() = (ContextCompat.checkSelfPermission(this,

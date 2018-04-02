@@ -1,6 +1,8 @@
 package com.example.mkhoi.sharedhouse.list_view
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.support.v7.widget.LinearLayoutManager
@@ -52,25 +54,33 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
 
     private fun sendBill(context: Context, billListItem: BillListItem) {
         val billImage = prepareBill(context, billListItem)
-        val sendIntent = Intent(Intent.ACTION_SEND)
-        sendIntent.putExtra(Intent.EXTRA_STREAM, billImage)
-        defaultMessage?.let {
-            sendIntent.putExtra(Intent.EXTRA_TEXT, it)
-        }
 
         if (defaultWhatsapp){
+
             //sending bill via Whatsapp
             billListItem.phoneNumbers.forEach {
                 val whatsappPhone = "$it@s.whatsapp.net"
+                val sendIntent = Intent(Intent.ACTION_SEND)
                 sendIntent.`package` = "com.whatsapp"
-                sendIntent.type = "image/jpeg";
-                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                sendIntent.type = "image/jpeg"
+                sendIntent.putExtra(Intent.EXTRA_STREAM, billImage)
+                defaultMessage?.let {
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, it)
+                }
                 sendIntent.putExtra("jid", whatsappPhone)
                 context.startActivity(sendIntent)
             }
         }
         else {
             //share bill as an image
+            val sendIntent = Intent(Intent.ACTION_SEND)
+            sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            sendIntent.type = "image/jpeg"
+            sendIntent.putExtra(Intent.EXTRA_STREAM, billImage)
+            defaultMessage?.let {
+                sendIntent.putExtra(Intent.EXTRA_TEXT, it)
+            }
             context.startActivity(Intent.createChooser(sendIntent, context.getString(R.string.send_bill_msg)))
         }
     }
@@ -86,7 +96,7 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
 
         layout.findViewById<TextView>(R.id.total_amount).text = billListItem.amount.toDisplayAmount()
 
-        return layout.toImage().toUri(context)
+        return layout.toImage().toUri(context, false)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
