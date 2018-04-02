@@ -22,6 +22,7 @@ class MonthlyBillFragment : Fragment() {
     }
 
     internal lateinit var viewModel: MonthlyBillViewModel
+    internal lateinit var listAdapter: BillListItemRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +54,13 @@ class MonthlyBillFragment : Fragment() {
         activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = GONE
 
         monthly_bill_list.layoutManager = LinearLayoutManager(context)
-        monthly_bill_list.adapter = BillListItemRecyclerViewAdapter(emptyList())
+        listAdapter = BillListItemRecyclerViewAdapter(emptyList())
+        monthly_bill_list.adapter = listAdapter
 
         viewModel.monthlyBillList.observe(this, Observer {
             it?.let {
-                monthly_bill_list.adapter = BillListItemRecyclerViewAdapter(it)
+                listAdapter = BillListItemRecyclerViewAdapter(it)
+                monthly_bill_list.adapter = listAdapter
             }
         })
 
@@ -65,6 +68,12 @@ class MonthlyBillFragment : Fragment() {
             it?.let {
                 activity?.findViewById<Toolbar>(R.id.toolbar)?.title = it.toString("MMMM yyyy")
                 viewModel.reloadMonthlyBills(it)
+            }
+        })
+
+        viewModel.defaultMessageSetting.observe(this, Observer {
+            it?.value?.let {
+                listAdapter.defaultMessage = it
             }
         })
     }

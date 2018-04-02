@@ -18,6 +18,9 @@ import com.squareup.picasso.Picasso
 
 class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
     : RecyclerView.Adapter<BillListItemRecyclerViewAdapter.ViewHolder>() {
+
+    var defaultMessage: String? =null
+
     override fun getItemCount() = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -53,6 +56,9 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
             val whatsappPhone = "$it@s.whatsapp.net"
             val sendIntent = Intent(Intent.ACTION_SEND)
             sendIntent.`package` = "com.whatsapp"
+            defaultMessage?.let {
+                sendIntent.putExtra(Intent.EXTRA_TEXT, it)
+            }
             sendIntent.putExtra(Intent.EXTRA_STREAM, billImage);
             sendIntent.type = "image/jpeg";
             sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
