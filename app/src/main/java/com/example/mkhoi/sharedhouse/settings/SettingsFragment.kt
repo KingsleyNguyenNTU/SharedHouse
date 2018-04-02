@@ -20,7 +20,9 @@ import android.widget.LinearLayout
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.SettingKey
 import com.example.mkhoi.sharedhouse.database.entity.Setting
+import com.example.mkhoi.sharedhouse.database.entity.Setting.Companion.FALSE_VALUE
 import com.example.mkhoi.sharedhouse.database.entity.Setting.Companion.IMAGE_MAX_SIZE
+import com.example.mkhoi.sharedhouse.database.entity.Setting.Companion.TRUE_VALUE
 import com.example.mkhoi.sharedhouse.util.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
@@ -59,6 +61,24 @@ class SettingsFragment : Fragment() {
         house_name_edit_btn.setOnClickListener {
             openTextInputDialog(SettingKey.HOUSE_NAME, viewModel.houseNameSetting.value?.value)
         }
+
+        default_whatsapp_radio_group.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId){
+                R.id.default_whatsapp_yes_option -> {
+                    val newSetting = Setting(SettingKey.DEFAULT_WHATSAPP, TRUE_VALUE)
+                    viewModel.saveSetting(newSetting)
+                }
+
+                R.id.default_whatsapp_no_option -> {
+                    val newSetting = Setting(SettingKey.DEFAULT_WHATSAPP, FALSE_VALUE)
+                    viewModel.saveSetting(newSetting)
+                }
+            }
+        }
+
+        default_message_edit_btn.setOnClickListener{
+            openTextInputDialog(SettingKey.DEFAULT_MESSAGE, viewModel.defaultMessageSetting.value?.value)
+        }
     }
 
     private fun initViewModelObservers() {
@@ -71,6 +91,17 @@ class SettingsFragment : Fragment() {
 
         viewModel.houseNameSetting.observe(this, Observer {
             it?.let { house_name_value.text = it.value }
+        })
+
+        viewModel.defaultWhatsappSetting.observe(this, Observer {
+            when (it?.value){
+                TRUE_VALUE -> default_whatsapp_radio_group.check(R.id.default_whatsapp_yes_option)
+                FALSE_VALUE -> default_whatsapp_radio_group.check(R.id.default_whatsapp_no_option)
+            }
+        })
+
+        viewModel.defaultMessageSetting.observe(this, Observer {
+            it?.let { default_message_value.text = it.value }
         })
     }
 
@@ -138,7 +169,7 @@ class SettingsFragment : Fragment() {
                     val newSetting = Setting(settingKey, inputSettingEditText.text.toString())
                     viewModel.saveSetting(newSetting)
                 },
-                titleResId = settingKey.labelKey
+                titleResId = settingKey.labelKey!!
         )
     }
 }
