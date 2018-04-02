@@ -20,6 +20,7 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
     : RecyclerView.Adapter<BillListItemRecyclerViewAdapter.ViewHolder>() {
 
     var defaultMessage: String? =null
+    var defaultWhatsapp = false
 
     override fun getItemCount() = data.size
 
@@ -51,19 +52,26 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
 
     private fun sendBill(context: Context, billListItem: BillListItem) {
         val billImage = prepareBill(context, billListItem)
+        val sendIntent = Intent(Intent.ACTION_SEND)
+        sendIntent.putExtra(Intent.EXTRA_STREAM, billImage)
+        defaultMessage?.let {
+            sendIntent.putExtra(Intent.EXTRA_TEXT, it)
+        }
 
-        billListItem.phoneNumbers.forEach {
-            val whatsappPhone = "$it@s.whatsapp.net"
-            val sendIntent = Intent(Intent.ACTION_SEND)
-            sendIntent.`package` = "com.whatsapp"
-            defaultMessage?.let {
-                sendIntent.putExtra(Intent.EXTRA_TEXT, it)
+        if (defaultWhatsapp){
+            //sending bill via Whatsapp
+            billListItem.phoneNumbers.forEach {
+                val whatsappPhone = "$it@s.whatsapp.net"
+                sendIntent.`package` = "com.whatsapp"
+                sendIntent.type = "image/jpeg";
+                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                sendIntent.putExtra("jid", whatsappPhone)
+                context.startActivity(sendIntent)
             }
-            sendIntent.putExtra(Intent.EXTRA_STREAM, billImage);
-            sendIntent.type = "image/jpeg";
-            sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            sendIntent.putExtra("jid", whatsappPhone)
-            context.startActivity(sendIntent)
+        }
+        else {
+            //share bill as an image
+            context.startActivity(Intent.createChooser(sendIntent, context.getString(R.string.send_bill_msg)))
         }
     }
 

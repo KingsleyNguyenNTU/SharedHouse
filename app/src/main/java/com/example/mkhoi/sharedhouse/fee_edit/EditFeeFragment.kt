@@ -56,7 +56,7 @@ class EditFeeFragment: Fragment() {
         viewModel = ViewModelProviders
                 .of(this, EditFeeViewModel.Factory(
                         arguments?.get(SELECTED_MONTH_KEY) as Calendar,
-                        arguments?.get(FEE_BUNDLE_KEY) as FeeWithSplitters))
+                        arguments?.get(FEE_BUNDLE_KEY) as? FeeWithSplitters))
                 .get(EditFeeViewModel::class.java)
     }
 
