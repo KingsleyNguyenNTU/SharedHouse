@@ -19,6 +19,7 @@ import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillFragment
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsFragment
 import com.example.mkhoi.sharedhouse.settings.SettingsFragment
 import com.example.mkhoi.sharedhouse.util.CircleImageTransformation
+import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import com.example.mkhoi.sharedhouse.util.toBitmapFromBase64
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -28,7 +29,7 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
-        private const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 0
+        const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 0
         private const val READ_CONTACTS_REQUEST_CODE = 1
     }
 
@@ -65,12 +66,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .commitNow()
         }
 
-        if (hasWriteExternalPermission().not()) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
-        }
-
         if(hasReadContactsPermission().not()) {
             ActivityCompat.requestPermissions(this,
                     arrayOf(Manifest.permission.READ_CONTACTS),
@@ -78,26 +73,35 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun hasWriteExternalPermission() = (ContextCompat.checkSelfPermission(this,
+    fun hasWriteExternalPermission() = (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
 
     private fun hasReadContactsPermission() = (ContextCompat.checkSelfPermission(this,
             Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE){
-            if (hasWriteExternalPermission().not()){
-                ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
+        when(requestCode){
+            WRITE_EXTERNAL_STORAGE_REQUEST_CODE -> {
+                if (hasWriteExternalPermission().not()){
+                    showBasicDialog(
+                            titleResId = R.string.permission_required_dialog_title,
+                            message = getString(R.string.write_external_storage_dialog_msg),
+                            positiveFunction = { ActivityCompat.requestPermissions(this,
+                                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                                    WRITE_EXTERNAL_STORAGE_REQUEST_CODE)}
+                    )
+                }
             }
-        }
-
-        if (requestCode == READ_CONTACTS_REQUEST_CODE){
-            if (hasReadContactsPermission().not()){
-                ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.READ_CONTACTS),
-                        READ_CONTACTS_REQUEST_CODE)
+            READ_CONTACTS_REQUEST_CODE -> {
+                if (hasReadContactsPermission().not()){
+                    showBasicDialog(
+                        titleResId = R.string.permission_required_dialog_title,
+                        message = getString(R.string.read_contact_dialog_msg),
+                        positiveFunction = { ActivityCompat.requestPermissions(this,
+                                arrayOf(Manifest.permission.READ_CONTACTS),
+                                READ_CONTACTS_REQUEST_CODE)}
+                    )
+                }
             }
         }
     }

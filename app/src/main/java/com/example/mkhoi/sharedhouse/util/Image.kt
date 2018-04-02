@@ -1,14 +1,17 @@
 package com.example.mkhoi.sharedhouse.util
 
+import android.Manifest
 import android.arch.lifecycle.MutableLiveData
 import android.content.ContentUris
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
 import android.provider.ContactsContract
+import android.support.v4.content.ContextCompat
 import android.util.Base64
 import android.view.View
 import com.example.mkhoi.sharedhouse.database.BackgroundAsyncTask
@@ -53,32 +56,37 @@ fun Person.getProfilePictureLiveData(context: Context, uriLiveData: MutableLiveD
 }
 
 fun Person.getProfilePicture(context: Context): Uri?{
-    var photo: Bitmap? = null
-    //find contact ID by phone
-    val contentResolver = context.contentResolver
-    var contactId: Long? = null
-    val uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(this.phone))
-    val projection = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID)
-    contentResolver.query(uri, projection, null, null, null)?.apply {
-        while (moveToNext()) {
-            contactId = getString(getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID)).toLong()
-        }
-        close()
-    }
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
+            == PackageManager.PERMISSION_GRANTED) {
 
-    //find photo by contact ID
-    contactId?.let {
-        val contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, it)
-        val photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.DISPLAY_PHOTO)
-        try {
-            val fd = contentResolver.openAssetFileDescriptor(photoUri, "r")
-            photo = BitmapFactory.decodeStream(fd.createInputStream())
-        } catch (e: IOException) {
-            photo = null
+        var photo: Bitmap? = null
+        //find contact ID by phone
+        val contentResolver = context.contentResolver
+        var contactId: Long? = null
+        val uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(this.phone))
+        val projection = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID)
+        contentResolver.query(uri, projection, null, null, null)?.apply {
+            while (moveToNext()) {
+                contactId = getString(getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID)).toLong()
+            }
+            close()
         }
-    }
 
-    return photo?.toUri(context)
+        //find photo by contact ID
+        contactId?.let {
+            val contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, it)
+            val photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.DISPLAY_PHOTO)
+            try {
+                val fd = contentResolver.openAssetFileDescriptor(photoUri, "r")
+                photo = BitmapFactory.decodeStream(fd.createInputStream())
+            } catch (e: IOException) {
+                photo = null
+            }
+        }
+
+        return photo?.toUri(context)
+    }
+    else return null
 }
 
 fun Uri.toBitmap(context: Context): Bitmap{
