@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.mkhoi.sharedhouse.MainActivity
 import com.example.mkhoi.sharedhouse.R
+import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillActivity
 import kotlinx.android.synthetic.main.fragment_backup.*
 
 class BackupFragment : Fragment() {
@@ -38,12 +39,12 @@ class BackupFragment : Fragment() {
         activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.backup_fragment_title)
 
         backup_btn.setOnClickListener{
-            val mainActivity = activity as MainActivity
+            val mainActivity = activity as MonthlyBillActivity
             if (mainActivity.hasWriteExternalPermission()) {
                 viewModel.backup()
             } else ActivityCompat.requestPermissions(mainActivity,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    MainActivity.WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
+                    MonthlyBillActivity.WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
         }
 
         viewModel.backupResultLiveData.observe(this, Observer {

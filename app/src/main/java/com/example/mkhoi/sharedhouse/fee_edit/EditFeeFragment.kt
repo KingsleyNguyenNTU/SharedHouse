@@ -1,44 +1,33 @@
 package com.example.mkhoi.sharedhouse.fee_edit
 
-import android.arch.lifecycle.MutableLiveData
+import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.EditText
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.FeeType
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.bean.ReducedShareType
-import com.example.mkhoi.sharedhouse.database.entity.FeeShare
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditFeeBinding
-import com.example.mkhoi.sharedhouse.list_view.ListItem
-import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
-import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
-import com.example.mkhoi.sharedhouse.util.showCustomDialog
-import com.example.mkhoi.sharedhouse.util.showMultipleChoicesDialog
+import com.example.mkhoi.sharedhouse.fee_edit.EditFeeActivity.Companion.FEE_BUNDLE_KEY
+import com.example.mkhoi.sharedhouse.fee_edit.EditFeeActivity.Companion.SELECTED_MONTH_KEY
+import com.example.mkhoi.sharedhouse.fee_edit.tabs.EditFeeViewPagerAdapter
 import kotlinx.android.synthetic.main.fragment_edit_fee.*
 import java.util.*
 
 
 class EditFeeFragment: Fragment() {
     companion object {
-        private const val FEE_BUNDLE_KEY = "FEE_BUNDLE_KEY"
-        private const val SELECTED_MONTH_KEY = "SELECTED_MONTH_KEY"
-
         fun newInstance(selectedMonth: Calendar,
                         feeWithSplitters: FeeWithSplitters? = null) = EditFeeFragment().apply {
             arguments = Bundle().apply {
@@ -54,7 +43,7 @@ class EditFeeFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders
-                .of(this, EditFeeViewModel.Factory(
+                .of(activity!!, EditFeeViewModel.Factory(
                         arguments?.get(SELECTED_MONTH_KEY) as Calendar,
                         arguments?.get(FEE_BUNDLE_KEY) as? FeeWithSplitters))
                 .get(EditFeeViewModel::class.java)
@@ -81,16 +70,6 @@ class EditFeeFragment: Fragment() {
             initDropDownLists()
         })
 
-        viewModel.roomSplitters.observe(this, Observer {
-            updateAddSplitterBtnListener()
-            updateSplitterList()
-        })
-
-        viewModel.personSplitters.observe(this, Observer {
-            updateAddSplitterBtnListener()
-            updateSplitterList()
-        })
-
         viewModel.isSaving.observe(this, Observer {
             when (it) {
                 true -> {
@@ -98,8 +77,8 @@ class EditFeeFragment: Fragment() {
                     (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.VISIBLE
                 }
                 false -> {
-                    (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.GONE
-                    activity?.supportFragmentManager?.popBackStack()
+                    activity?.setResult(RESULT_OK)
+                    activity?.finish()
                 }
             }
         })
@@ -127,7 +106,9 @@ class EditFeeFragment: Fragment() {
         }}
         input_share_type.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                updateSplitterList()
+                viewModel.updateSplittersListFlag.let {
+                    it.value = it.value?.not() ?: true
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -138,186 +119,11 @@ class EditFeeFragment: Fragment() {
     }
 
     private fun initView() {
-        val fab = activity?.findViewById(R.id.fab) as? FloatingActionButton
-        fab?.visibility = View.GONE
-
         save_fee_btn.setOnClickListener {
             viewModel.save()
         }
 
-        splitters_list.layoutManager = LinearLayoutManager(context)
-    }
-
-    private fun updateAddSplitterBtnListener() {
-        add_splitters_btn.setOnClickListener{
-            when(viewModel.fee.value?.isSharedByRoom()){
-                true -> {
-                    val selectedItems: MutableList<Int> = mutableListOf()
-                    viewModel.roomSplitters.value?.let {
-                        Log.d("EditFeeFragment", "Active rooms: ${it.map { it.roomWithRoommates.unit.name }}")
-                        val multipleChoices: Array<String> = Array(it.size, {""})
-                        var index = 0
-                        it.forEach {
-                            multipleChoices[index] = it.roomWithRoommates.unit.name
-                            it.feeShare?.let {
-                                selectedItems.add(index)
-                            }
-                            index++
-                        }
-
-                        context?.showMultipleChoicesDialog(
-                                titleResId = R.string.add_room_splitter_dialog_title,
-                                selectedItems = selectedItems,
-                                multipleChoices = multipleChoices,
-                                positiveFunction = {
-                                    updateRoomSplitters(selectedItems)
-                                }
-                        )
-                    }
-                }
-
-                false -> {
-                    val selectedItems: MutableList<Int> = mutableListOf()
-                    viewModel.personSplitters.value?.let {
-                        Log.d("EditFeeFragment", "Active persons: ${it.map { it.person.name }}")
-                        val multipleChoices: Array<String> = Array(it.size, {""})
-                        var index = 0
-                        it.forEach {
-                            multipleChoices[index] = it.person.name
-                            it.feeShare?.let {
-                                selectedItems.add(index)
-                            }
-                            index++
-                        }
-
-                        context?.showMultipleChoicesDialog(
-                                titleResId = R.string.add_person_splitter_dialog_title,
-                                selectedItems = selectedItems,
-                                multipleChoices = multipleChoices,
-                                positiveFunction = {
-                                    updatePersonSplitters(selectedItems)
-                                }
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    private fun updatePersonSplitters(selectedItems: MutableList<Int>) {
-        viewModel.personSplitters.value?.let {
-            for (i in 0 until it.size){
-                val personSplitter = it[i]
-                if (selectedItems.contains(i)){
-                    if (personSplitter.feeShare == null){
-                        personSplitter.feeShare = FeeShare(
-                                feeId = viewModel.fee.value?.id ?: 0,
-                                personId = personSplitter.person.id!!,
-                                unitId = 0,
-                                share = 1
-                        )
-                    }
-                }
-                else {
-                    personSplitter.feeShare = null
-                }
-                Log.d("EditFeeFragment", "Person Splitter: ${personSplitter.person.name}, " +
-                        "Fee Share: ${personSplitter.feeShare?.share}")
-            }
-        }
-
-        updateSplitterList()
-    }
-
-    private fun updateRoomSplitters(selectedItems: MutableList<Int>) {
-        viewModel.roomSplitters.value?.let {
-            for (i in 0 until it.size){
-                val roomSplitter = it[i]
-                if (selectedItems.contains(i)){
-                    if (roomSplitter.feeShare == null){
-                        roomSplitter.feeShare = FeeShare(
-                                feeId = viewModel.fee.value?.id ?: 0,
-                                personId = 0,
-                                unitId = roomSplitter.roomWithRoommates.unit.id!!,
-                                share = 1
-                        )
-                    }
-                }
-                else {
-                    roomSplitter.feeShare = null
-                }
-                Log.d("EditFeeFragment", "Room Splitter: ${roomSplitter.roomWithRoommates.unit.name}, " +
-                        "Fee Share: ${roomSplitter.feeShare?.share}")
-            }
-        }
-
-        updateSplitterList()
-    }
-
-    private fun updateSplitterList() {
-        when (viewModel.fee.value?.isSharedByRoom()){
-            true -> {
-                viewModel.roomSplitters.value?.let {
-                    val dataList = it.map{
-                        val uriLiveData: MutableLiveData<Uri?> = MutableLiveData()
-                        context?.let { context -> it.roomWithRoommates.getProfilePictureLiveData(context, uriLiveData) }
-                        it.feeShare?.let { feeShare ->
-                            Pair(
-                                    first = it.roomWithRoommates.unit.name,
-                                    second = Pair(feeShare, uriLiveData))
-                        }
-                    }
-                    reloadSplitterList(dataList.filterNotNull())
-                }
-            }
-            false -> {
-                viewModel.personSplitters.value?.let {
-                    val dataList = it.map{
-                        val uriLiveData: MutableLiveData<Uri?> = MutableLiveData()
-                        context?.let { context -> it.person.getProfilePictureLiveData(context, uriLiveData) }
-                        it.feeShare?.let { feeShare ->
-                            Pair(
-                                    first = it.person.name,
-                                    second = Pair(feeShare, uriLiveData))
-                        }
-                    }
-                    reloadSplitterList(dataList.filterNotNull())
-                }
-            }
-        }
-    }
-
-    private fun reloadSplitterList(dataList: List<Pair<String, Pair<FeeShare, MutableLiveData<Uri?>>>>){
-        val totalShare = dataList.map { it.second.first.share }.sum()
-        val totalExpense = viewModel.fee.value?.amount ?: 0.0
-
-        splitters_list.adapter = ListItemRecyclerViewAdapter(
-                data = dataList.map {
-                    val shareAmount = it.second.first.share.toDouble()*totalExpense/totalShare.toDouble()
-                    ListItem(
-                            mainName = it.first,
-                            caption = getString(R.string.splitter_caption_text,
-                                    String.format("%.2f", shareAmount),
-                                    it.second.first.share,
-                                    totalShare),
-                            profilePicture = it.second.second
-                    ).apply {
-                        deleteAction = null
-                        onClickAction = {
-                            val dialogView = LayoutInflater.from(context).inflate(R.layout.add_feeshare_dialog, null)
-                            val inputShareFraction = dialogView.findViewById(R.id.input_splitter_fraction) as EditText
-                            inputShareFraction.setText((it.second.first.share).toString())
-
-                            context?.showCustomDialog(
-                                    customView = dialogView,
-                                    titleResId = R.string.edit_splitter_fraction_dialog_title,
-                                    positiveFunction = {
-                                        it.second.first.share = inputShareFraction.text.toString().toInt()
-                                        updateSplitterList()
-                                    }
-                            )
-                        }
-                    }
-                })
+        fee_view_pager.adapter = EditFeeViewPagerAdapter(childFragmentManager, this)
+        fee_tab_layout.setupWithViewPager(fee_view_pager)
     }
 }

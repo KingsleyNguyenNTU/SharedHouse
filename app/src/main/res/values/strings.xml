@@ -31,7 +31,7 @@
     <string name="edit_fee_text_label">Expense General Info</string>
     <string name="fee_name_label">Fee Name</string>
     <string name="fee_amount_label">Total Amount</string>
-    <string name="edit_fee_splitters_text_label">Split between</string>
+    <string name="edit_fee_splitters_text_label">Splitters</string>
     <string name="delete_room_dialog_title">Remove room</string>
     <string name="delete_room_dialog_message">Are you sure that you want to remove %1$s as a shared room?</string>
     <string name="edit_fee_fragment_title">Expense Details</string>
@@ -90,4 +90,5 @@
     <string name="select_sending_contact_title">Select Person</string>
     <string name="no_whatsapp_alert_title">Cannot find Whatsapp</string>
     <string name="no_whatsapp_alert_message">It seems that you don\'t have Whatsapp app on your device. Please go to Settings to turn off the option to use Whatsapp to send bills.</string>
+    <string name="edit_fee_payerers_text_label">Payers</string>
 </resources>

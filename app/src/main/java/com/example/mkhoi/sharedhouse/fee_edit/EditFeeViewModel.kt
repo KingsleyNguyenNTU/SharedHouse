@@ -44,6 +44,8 @@ class EditFeeViewModel(private val selectedMonth: Calendar,
             return field
         }
 
+    val updateSplittersListFlag: MutableLiveData<Boolean> = MutableLiveData()
+
     val isSaving: MutableLiveData<Boolean> = MutableLiveData()
 
     fun save() {

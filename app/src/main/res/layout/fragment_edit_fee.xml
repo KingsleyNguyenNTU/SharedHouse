@@ -98,37 +98,27 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <android.support.design.widget.TabLayout
+            android:id="@+id/fee_tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                style="@style/TextAppearance.AppCompat.Headline"
-                android:textColor="@color/colorPrimary"
-                android:text="@string/edit_fee_splitters_text_label" />
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/add_splitters_btn"
+            <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="@string/add_btn_label"/>
+                tools:text="@string/edit_fee_splitters_text_label" />
 
-        </LinearLayout>
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="@string/edit_fee_payerers_text_label" />
+        </android.support.design.widget.TabLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/splitters_list"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/fee_view_pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/list_item"/>
+            android:layout_weight="1"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/save_fee_btn"

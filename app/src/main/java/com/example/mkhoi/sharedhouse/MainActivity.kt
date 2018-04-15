@@ -30,14 +30,9 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+open class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    companion object {
-        const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 0
-        private const val READ_CONTACTS_REQUEST_CODE = 1
-    }
-
-    internal lateinit var viewModel: MainViewModel
+    internal open lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,55 +70,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 })
 
         nav_view.setNavigationItemSelectedListener(this)
-
-        if (supportFragmentManager.findFragmentById(R.id.main_content_fragment) == null) {
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.main_content_fragment, MonthlyBillFragment.newInstance())
-                    .commitNow()
-        }
-
-        if(hasReadContactsPermission().not()) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.READ_CONTACTS),
-                    READ_CONTACTS_REQUEST_CODE)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    fun hasWriteExternalPermission() = (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-
-    private fun hasReadContactsPermission() = (ContextCompat.checkSelfPermission(this,
-            Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when(requestCode){
-            WRITE_EXTERNAL_STORAGE_REQUEST_CODE -> {
-                if (hasWriteExternalPermission().not()){
-                    showBasicDialog(
-                            titleResId = R.string.permission_required_dialog_title,
-                            message = getString(R.string.write_external_storage_dialog_msg),
-                            positiveFunction = { ActivityCompat.requestPermissions(this,
-                                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                                    WRITE_EXTERNAL_STORAGE_REQUEST_CODE)}
-                    )
-                }
-            }
-            READ_CONTACTS_REQUEST_CODE -> {
-                if (hasReadContactsPermission().not()){
-                    showBasicDialog(
-                        titleResId = R.string.permission_required_dialog_title,
-                        message = getString(R.string.read_contact_dialog_msg),
-                        positiveFunction = { ActivityCompat.requestPermissions(this,
-                                arrayOf(Manifest.permission.READ_CONTACTS),
-                                READ_CONTACTS_REQUEST_CODE)}
-                    )
-                }
-            }
-        }
     }
 
     override fun onBackPressed() {
