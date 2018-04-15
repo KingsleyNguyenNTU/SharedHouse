@@ -16,6 +16,7 @@ import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
+import com.example.mkhoi.sharedhouse.room_edit.EditRoomActivity
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
 import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
@@ -67,10 +68,7 @@ class RoomsFragment : Fragment() {
                             )
                         }
                         onClickAction = {
-                            activity?.supportFragmentManager?.beginTransaction()
-                                    ?.replace(R.id.main_content_fragment, EditRoomFragment.newInstance(it))
-                                    ?.addToBackStack(EditRoomFragment::class.java.canonicalName)
-                                    ?.commit()
+                            startActivity(EditRoomActivity.createIntent(activity!!, it))
                         }
                     }
                 })

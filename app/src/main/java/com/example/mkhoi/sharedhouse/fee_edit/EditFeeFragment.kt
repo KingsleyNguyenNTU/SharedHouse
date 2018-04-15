@@ -8,9 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ProgressBar
@@ -42,6 +40,7 @@ class EditFeeFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         viewModel = ViewModelProviders
                 .of(activity!!, EditFeeViewModel.Factory(
                         arguments?.get(SELECTED_MONTH_KEY) as Calendar,
@@ -63,6 +62,18 @@ class EditFeeFragment: Fragment() {
         initView()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.edit_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return if (item?.itemId == R.id.action_saving){
+            viewModel.save()
+            true
+        } else super.onOptionsItemSelected(item)
+    }
+
     private fun initViewModelObserver() {
         viewModel.fee.observe(this, Observer {
             binding.executePendingBindings()
@@ -72,7 +83,6 @@ class EditFeeFragment: Fragment() {
         viewModel.isSaving.observe(this, Observer {
             when (it) {
                 true -> {
-                    save_fee_btn.isEnabled = false
                     (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.VISIBLE
                 }
                 false -> {
@@ -118,10 +128,6 @@ class EditFeeFragment: Fragment() {
     }
 
     private fun initView() {
-        save_fee_btn.setOnClickListener {
-            viewModel.save()
-        }
-
         fee_view_pager.adapter = EditFeeViewPagerAdapter(childFragmentManager, this)
         fee_tab_layout.setupWithViewPager(fee_view_pager)
     }

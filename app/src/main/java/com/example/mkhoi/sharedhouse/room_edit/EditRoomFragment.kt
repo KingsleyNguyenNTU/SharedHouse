@@ -1,5 +1,6 @@
 package com.example.mkhoi.sharedhouse.room_edit
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -10,10 +11,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.view.View.GONE
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
@@ -24,6 +23,7 @@ import com.example.mkhoi.sharedhouse.database.entity.Person
 import com.example.mkhoi.sharedhouse.databinding.FragmentEditRoomBinding
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
+import com.example.mkhoi.sharedhouse.room_edit.EditRoomActivity.Companion.ROOM_BUNDLE_KEY
 import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import com.example.mkhoi.sharedhouse.util.showCustomDialog
@@ -35,7 +35,6 @@ import java.util.*
 class EditRoomFragment : Fragment() {
 
     companion object {
-        val ROOM_BUNDLE_KEY = "ROOM_BUNDLE_KEY"
         private val phoneUtil = PhoneNumberUtil.getInstance()
 
         fun newInstance(room: UnitWithPersons? = null): EditRoomFragment {
@@ -51,6 +50,7 @@ class EditRoomFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         viewModel = ViewModelProviders
                 .of(this, EditRoomViewModel.Factory(arguments?.get(ROOM_BUNDLE_KEY) as UnitWithPersons?))
                 .get(EditRoomViewModel::class.java)
@@ -66,9 +66,20 @@ class EditRoomFragment : Fragment() {
         return view
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.edit_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return if (item?.itemId == R.id.action_saving){
+            viewModel.save()
+            true
+        } else super.onOptionsItemSelected(item)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity?.findViewById(R.id.toolbar) as? Toolbar)?.title = getString(R.string.edit_rooms_fragment_title)
 
         roommates_list.layoutManager = LinearLayoutManager(context)
         roommates_list.adapter = ListItemRecyclerViewAdapter(emptyList())
@@ -102,12 +113,11 @@ class EditRoomFragment : Fragment() {
         viewModel.isSaving.observe(this, Observer {
             when (it) {
                 true -> {
-                    save_room_btn.isEnabled = false
                     (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.VISIBLE
                 }
                 false -> {
-                    (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.GONE
-                    activity?.supportFragmentManager?.popBackStack()
+                    activity?.setResult(Activity.RESULT_OK)
+                    activity?.finish()
                 }
             }
         })
@@ -115,13 +125,8 @@ class EditRoomFragment : Fragment() {
 
     private fun initButtonListener() {
         val fab = activity?.findViewById(R.id.fab) as? FloatingActionButton
-        fab?.visibility = GONE
 
-        save_room_btn.setOnClickListener {
-            viewModel.save()
-        }
-
-        add_room_btn.setOnClickListener {
+        fab?.setOnClickListener {
             openAddRoommateDialog()
         }
     }

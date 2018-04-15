@@ -55,5 +55,9 @@
         <activity android:name=".restore.RestoreActivity"
             android:label="@string/restore_fragment_title"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".room_edit.EditRoomActivity"
+            android:label="@string/edit_rooms_fragment_title"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 </manifest>
