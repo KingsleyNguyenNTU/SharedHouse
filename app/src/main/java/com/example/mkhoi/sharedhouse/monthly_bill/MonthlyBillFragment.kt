@@ -51,8 +51,6 @@ class MonthlyBillFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.bill_fragment_title)
-        activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = GONE
 
         monthly_bill_list.layoutManager = LinearLayoutManager(context)
         listAdapter = BillListItemRecyclerViewAdapter(emptyList())

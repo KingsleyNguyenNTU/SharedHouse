@@ -41,20 +41,10 @@ class RoomsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity?.findViewById(R.id.toolbar) as? Toolbar)?.title = getString(R.string.rooms_fragment_title)
 
         room_list.layoutManager = LinearLayoutManager(context)
         room_list.adapter = ListItemRecyclerViewAdapter(emptyList())
         (activity?.findViewById(R.id.progress_bar) as? ProgressBar)?.visibility = View.VISIBLE
-
-        val fab = activity?.findViewById(R.id.fab) as? FloatingActionButton
-        fab?.visibility = VISIBLE
-        fab?.setOnClickListener { view ->
-            activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.main_content_fragment, EditRoomFragment.newInstance())
-                    ?.addToBackStack(EditRoomFragment::class.java.canonicalName)
-                    ?.commit()
-        }
 
         viewModel.rooms.observe(this, Observer {
             it?.let {

@@ -84,7 +84,6 @@ class FeesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity?.findViewById(R.id.toolbar) as? Toolbar)?.title = getString(R.string.fees_fragment_title)
 
         fee_list.layoutManager = LinearLayoutManager(context)
         fee_list.adapter = ListItemRecyclerViewAdapter(emptyList())

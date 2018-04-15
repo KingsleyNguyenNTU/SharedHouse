@@ -22,7 +22,7 @@
 
         <activity
             android:name=".monthly_bill.MonthlyBillActivity"
-            android:label="@string/app_name"
+            android:label="@string/bill_fragment_title"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +33,27 @@
 
         <activity
             android:name=".fee_edit.EditFeeActivity"
-            android:label="@string/app_name"
+            android:label="@string/edit_fee_fragment_title"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".rooms_view.RoomsActivity"
+            android:label="@string/rooms_fragment_title"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".fees_view.FeesActivity"
+            android:label="@string/fees_fragment_title"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".settings.SettingsActivity"
+            android:label="@string/settings_fragment_title"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".backup.BackupActivity"
+            android:label="@string/backup_fragment_title"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".restore.RestoreActivity"
+            android:label="@string/restore_fragment_title"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 </manifest>

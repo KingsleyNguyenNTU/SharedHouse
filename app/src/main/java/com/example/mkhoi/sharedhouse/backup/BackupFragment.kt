@@ -36,15 +36,14 @@ class BackupFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.backup_fragment_title)
 
         backup_btn.setOnClickListener{
-            val mainActivity = activity as MonthlyBillActivity
+            val mainActivity = activity as BackupActivity
             if (mainActivity.hasWriteExternalPermission()) {
                 viewModel.backup()
             } else ActivityCompat.requestPermissions(mainActivity,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    MonthlyBillActivity.WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
+                    MainActivity.WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
         }
 
         viewModel.backupResultLiveData.observe(this, Observer {

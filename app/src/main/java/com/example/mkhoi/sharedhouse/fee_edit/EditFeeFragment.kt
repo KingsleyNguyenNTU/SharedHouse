@@ -58,7 +58,6 @@ class EditFeeFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentEditFeeBinding.bind(view)
         binding.viewModel = viewModel
-        (activity?.findViewById(R.id.toolbar) as? Toolbar)?.title = getString(R.string.edit_fee_fragment_title)
 
         initViewModelObserver()
         initView()
