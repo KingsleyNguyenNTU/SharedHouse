@@ -8,4 +8,6 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
+    android:paddingBottom="80dp"
+    android:clipToPadding="false"
     tools:listitem="@layout/list_item" />
