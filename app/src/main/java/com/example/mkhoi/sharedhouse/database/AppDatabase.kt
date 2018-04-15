@@ -20,7 +20,7 @@ import com.example.mkhoi.sharedhouse.database.entity.Unit
     (Fee::class),
     (FeeShare::class),
     (Setting::class)],
-        version = 2)
+        version = 3)
 @TypeConverters(
         DateConverters::class,
         BooleanConverters::class,
@@ -42,6 +42,16 @@ abstract class AppDatabase : RoomDatabase() {
         val MIGRATION_1_2: Migration = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("CREATE TABLE `Setting` (`key` TEXT NOT NULL, " + "`value` TEXT NOT NULL, PRIMARY KEY(`key`))")
+            }
+        }
+
+        val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `FeePrepaid` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "`feeId` INTEGER NOT NULL, " +
+                        "`personId` INTEGER NOT NULL, " +
+                        "`amount` REAL NOT NULL)")
             }
         }
     }

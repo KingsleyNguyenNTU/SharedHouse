@@ -7,6 +7,7 @@ import android.content.Context
 import com.example.mkhoi.sharedhouse.MyApp
 import com.example.mkhoi.sharedhouse.database.AppDatabase
 import com.example.mkhoi.sharedhouse.database.AppDatabase.Companion.MIGRATION_1_2
+import com.example.mkhoi.sharedhouse.database.AppDatabase.Companion.MIGRATION_2_3
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -48,5 +49,6 @@ import javax.inject.Singleton
     @Singleton
     fun provideDatabase() =  Room.databaseBuilder(app, AppDatabase::class.java, AppDatabase.DB_NAME)
             .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_2_3)
             .build()
 }
