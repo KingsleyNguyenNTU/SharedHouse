@@ -1,9 +1,8 @@
 package com.example.mkhoi.sharedhouse.database.dao
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Update
+import android.arch.persistence.room.*
+import com.example.mkhoi.sharedhouse.database.bean.FeePayer
+import com.example.mkhoi.sharedhouse.database.bean.PersonSplitter
 import com.example.mkhoi.sharedhouse.database.entity.Fee
 
 @Dao
@@ -16,4 +15,14 @@ interface FeeDao {
 
     @Delete
     fun deleteFee(fee: Fee)
+
+    @Query("select person.*, " +
+            "FeePrepaid.id as FeePrepaid_id, " +
+            "FeePrepaid.feeId as FeePrepaid_feeId, " +
+            "FeePrepaid.personId as FeePrepaid_personId, " +
+            "FeePrepaid.amount as FeePrepaid_amount " +
+            "from Person left join FeePrepaid " +
+            "on person.id = FeePrepaid.personId and FeePrepaid.feeId = :feeId " +
+            "where person.active = :active")
+    fun getAllFeePayers(feeId: Int?, active: Boolean = true): List<FeePayer>
 }

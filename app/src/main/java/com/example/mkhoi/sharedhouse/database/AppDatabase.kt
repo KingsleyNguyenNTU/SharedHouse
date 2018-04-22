@@ -19,6 +19,7 @@ import com.example.mkhoi.sharedhouse.database.entity.Unit
     (LeaveRecord::class),
     (Fee::class),
     (FeeShare::class),
+    (FeePrepaid::class),
     (Setting::class)],
         version = 3)
 @TypeConverters(
