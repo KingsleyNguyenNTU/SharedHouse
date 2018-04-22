@@ -44,6 +44,14 @@ class EditFeeViewModel(private val selectedMonth: Calendar,
             return field
         }
 
+    val feePayers: MutableLiveData<List<FeePayer>> = MutableLiveData()
+        get(){
+            if (field.value == null) {
+                editFeeRepository.getFeePayers(field, fee.value?.id)
+            }
+            return field
+        }
+
     val updateSplittersListFlag: MutableLiveData<Boolean> = MutableLiveData()
 
     val isSaving: MutableLiveData<Boolean> = MutableLiveData()
@@ -52,7 +60,7 @@ class EditFeeViewModel(private val selectedMonth: Calendar,
         isSaving.value = true
         fee.value?.let {fee ->
             BackgroundAsyncTask().execute({
-                editFeeRepository.saveFee(fee, roomSplitters.value, personSplitters.value)
+                editFeeRepository.saveFee(fee, roomSplitters.value, personSplitters.value, feePayers.value)
                 isSaving.postValue(false)
             })
         }

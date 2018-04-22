@@ -31,7 +31,6 @@ class SplittersTabFragment: Fragment() {
     }
 
     internal lateinit var viewModel: EditFeeViewModel
-    internal var fab: FloatingActionButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,16 +44,12 @@ class SplittersTabFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fab = activity?.findViewById(R.id.fab)
-
         splitters_list.layoutManager = LinearLayoutManager(context)
         viewModel.roomSplitters.observe(this, Observer {
-            updateAddSplitterBtnListener()
             updateSplitterList()
         })
 
         viewModel.personSplitters.observe(this, Observer {
-            updateAddSplitterBtnListener()
             updateSplitterList()
         })
 
@@ -63,57 +58,55 @@ class SplittersTabFragment: Fragment() {
         })
     }
 
-    private fun updateAddSplitterBtnListener() {
-        fab?.setOnClickListener{
-            when(viewModel.fee.value?.isSharedByRoom()){
-                true -> {
-                    val selectedItems: MutableList<Int> = mutableListOf()
-                    viewModel.roomSplitters.value?.let {
-                        Log.d("EditFeeFragment", "Active rooms: ${it.map { it.roomWithRoommates.unit.name }}")
-                        val multipleChoices: Array<String> = Array(it.size, {""})
-                        var index = 0
-                        it.forEach {
-                            multipleChoices[index] = it.roomWithRoommates.unit.name
-                            it.feeShare?.let {
-                                selectedItems.add(index)
-                            }
-                            index++
+    fun addSplitters() {
+        when(viewModel.fee.value?.isSharedByRoom()){
+            true -> {
+                val selectedItems: MutableList<Int> = mutableListOf()
+                viewModel.roomSplitters.value?.let {
+                    Log.d("EditFeeFragment", "Active rooms: ${it.map { it.roomWithRoommates.unit.name }}")
+                    val multipleChoices: Array<String> = Array(it.size, {""})
+                    var index = 0
+                    it.forEach {
+                        multipleChoices[index] = it.roomWithRoommates.unit.name
+                        it.feeShare?.let {
+                            selectedItems.add(index)
                         }
-
-                        context?.showMultipleChoicesDialog(
-                                titleResId = R.string.add_room_splitter_dialog_title,
-                                selectedItems = selectedItems,
-                                multipleChoices = multipleChoices,
-                                positiveFunction = {
-                                    updateRoomSplitters(selectedItems)
-                                }
-                        )
+                        index++
                     }
+
+                    context?.showMultipleChoicesDialog(
+                            titleResId = R.string.add_room_splitter_dialog_title,
+                            selectedItems = selectedItems,
+                            multipleChoices = multipleChoices,
+                            positiveFunction = {
+                                updateRoomSplitters(selectedItems)
+                            }
+                    )
                 }
+            }
 
-                false -> {
-                    val selectedItems: MutableList<Int> = mutableListOf()
-                    viewModel.personSplitters.value?.let {
-                        Log.d("EditFeeFragment", "Active persons: ${it.map { it.person.name }}")
-                        val multipleChoices: Array<String> = Array(it.size, {""})
-                        var index = 0
-                        it.forEach {
-                            multipleChoices[index] = it.person.name
-                            it.feeShare?.let {
-                                selectedItems.add(index)
-                            }
-                            index++
+            false -> {
+                val selectedItems: MutableList<Int> = mutableListOf()
+                viewModel.personSplitters.value?.let {
+                    Log.d("EditFeeFragment", "Active persons: ${it.map { it.person.name }}")
+                    val multipleChoices: Array<String> = Array(it.size, {""})
+                    var index = 0
+                    it.forEach {
+                        multipleChoices[index] = it.person.name
+                        it.feeShare?.let {
+                            selectedItems.add(index)
                         }
-
-                        context?.showMultipleChoicesDialog(
-                                titleResId = R.string.add_person_splitter_dialog_title,
-                                selectedItems = selectedItems,
-                                multipleChoices = multipleChoices,
-                                positiveFunction = {
-                                    updatePersonSplitters(selectedItems)
-                                }
-                        )
+                        index++
                     }
+
+                    context?.showMultipleChoicesDialog(
+                            titleResId = R.string.add_person_splitter_dialog_title,
+                            selectedItems = selectedItems,
+                            multipleChoices = multipleChoices,
+                            positiveFunction = {
+                                updatePersonSplitters(selectedItems)
+                            }
+                    )
                 }
             }
         }

@@ -1,10 +1,11 @@
 package com.example.mkhoi.sharedhouse.database.entity
 
+import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
 
-
+@Entity
 class FeePrepaid(@PrimaryKey(autoGenerate = true) var id: Int? = null,
                  var feeId: Int,
                  var personId: Int,
@@ -13,8 +14,7 @@ class FeePrepaid(@PrimaryKey(autoGenerate = true) var id: Int? = null,
             parcel.readValue(Int::class.java.classLoader) as? Int,
             parcel.readInt(),
             parcel.readInt(),
-            parcel.readDouble()) {
-    }
+            parcel.readDouble())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeValue(id)

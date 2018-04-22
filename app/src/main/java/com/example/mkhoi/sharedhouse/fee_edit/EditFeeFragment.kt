@@ -4,8 +4,8 @@ import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -20,6 +20,10 @@ import com.example.mkhoi.sharedhouse.databinding.FragmentEditFeeBinding
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeActivity.Companion.FEE_BUNDLE_KEY
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeActivity.Companion.SELECTED_MONTH_KEY
 import com.example.mkhoi.sharedhouse.fee_edit.tabs.EditFeeViewPagerAdapter
+import com.example.mkhoi.sharedhouse.fee_edit.tabs.EditFeeViewPagerAdapter.Companion.PAYER_TAB_POS
+import com.example.mkhoi.sharedhouse.fee_edit.tabs.EditFeeViewPagerAdapter.Companion.SPLITTER_TAB_POS
+import com.example.mkhoi.sharedhouse.fee_edit.tabs.PayersTabFragment
+import com.example.mkhoi.sharedhouse.fee_edit.tabs.SplittersTabFragment
 import kotlinx.android.synthetic.main.fragment_edit_fee.*
 import java.util.*
 
@@ -37,6 +41,7 @@ class EditFeeFragment: Fragment() {
 
     internal lateinit var viewModel: EditFeeViewModel
     private lateinit var binding: FragmentEditFeeBinding
+    internal var fab: FloatingActionButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,7 +133,21 @@ class EditFeeFragment: Fragment() {
     }
 
     private fun initView() {
-        fee_view_pager.adapter = EditFeeViewPagerAdapter(childFragmentManager, this)
+        fab = activity?.findViewById(R.id.fab)
+
+        val pagerAdapter = EditFeeViewPagerAdapter(
+                fm = childFragmentManager,
+                fragment = this)
+
+        fee_view_pager.adapter = pagerAdapter
         fee_tab_layout.setupWithViewPager(fee_view_pager)
+
+        fab?.setOnClickListener{
+            when (fee_tab_layout.selectedTabPosition){
+                SPLITTER_TAB_POS -> pagerAdapter.splittersTabFragment.addSplitters()
+                PAYER_TAB_POS -> pagerAdapter.payersTabFragment.addPayers()
+                else -> {}
+            }
+        }
     }
 }

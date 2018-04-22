@@ -92,4 +92,5 @@
     <string name="no_whatsapp_alert_message">It seems that you don\'t have Whatsapp app on your device. Please go to Settings to turn off the option to use Whatsapp to send bills.</string>
     <string name="edit_fee_payerers_text_label">Payers</string>
     <string name="action_saving_title">Save</string>
+    <string name="payers_caption_text">Paid: %1$s</string>
 </resources>

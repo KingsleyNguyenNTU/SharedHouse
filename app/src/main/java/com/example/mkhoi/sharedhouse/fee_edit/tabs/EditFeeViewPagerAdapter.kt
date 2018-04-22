@@ -7,16 +7,23 @@ import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeFragment
 
 
-class EditFeeViewPagerAdapter(fm: FragmentManager?, val fragment: EditFeeFragment) : FragmentPagerAdapter(fm) {
+class EditFeeViewPagerAdapter(fm: FragmentManager?,
+                              val fragment: EditFeeFragment) : FragmentPagerAdapter(fm) {
 
     companion object {
         private const val TABS_SIZE =2
+
+        const val SPLITTER_TAB_POS = 0
+        const val PAYER_TAB_POS = 1
     }
+
+    val splittersTabFragment = SplittersTabFragment.createInstance()
+    val payersTabFragment =  PayersTabFragment.createInstance()
 
     override fun getItem(position: Int): Fragment {
         return when (position){
-            0 -> SplittersTabFragment.createInstance()
-            else -> PayersTabFragment.createInstance()
+            SPLITTER_TAB_POS -> splittersTabFragment
+            else -> payersTabFragment
         }
     }
 
@@ -24,8 +31,8 @@ class EditFeeViewPagerAdapter(fm: FragmentManager?, val fragment: EditFeeFragmen
 
     override fun getPageTitle(position: Int): CharSequence? {
         return when (position){
-            0 -> fragment.context?.getString(R.string.edit_fee_splitters_text_label)
-            1 -> fragment.context?.getString(R.string.edit_fee_payerers_text_label)
+            SPLITTER_TAB_POS -> fragment.context?.getString(R.string.edit_fee_splitters_text_label)
+            PAYER_TAB_POS -> fragment.context?.getString(R.string.edit_fee_payerers_text_label)
             else -> super.getPageTitle(position)
         }
     }
