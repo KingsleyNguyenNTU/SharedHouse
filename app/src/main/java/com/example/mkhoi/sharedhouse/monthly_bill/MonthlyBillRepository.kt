@@ -2,8 +2,10 @@ package com.example.mkhoi.sharedhouse.monthly_bill
 
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import com.example.mkhoi.sharedhouse.database.bean.FeePayer
 import com.example.mkhoi.sharedhouse.database.bean.FeeWithSplitters
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
+import com.example.mkhoi.sharedhouse.database.dao.FeeDao
 import com.example.mkhoi.sharedhouse.database.dao.PersonDao
 import com.example.mkhoi.sharedhouse.database.dao.SplitterDao
 import com.example.mkhoi.sharedhouse.database.dao.UnitPersonDao
@@ -19,6 +21,7 @@ import javax.inject.Singleton
 @Singleton
 class MonthlyBillRepository @Inject constructor(private val splitterDao: SplitterDao,
                                                 private val unitPersonDao: UnitPersonDao,
+                                                private val feeDao: FeeDao,
                                                 private val personDao: PersonDao,
                                                 private val context: Context) {
     fun getMonthlyBills(selectedMonth: Calendar, resultLiveData: MutableLiveData<List<BillListItem>>) {
@@ -33,10 +36,23 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
         val persons = personDao.getAllPersons().associateBy({it.id}, {it})
 
         for (feeWithSplitters in feesWithSplitters){
-            val (roomSplitFees: MutableMap<Int, Float>, personSplitFees: MutableMap<Int, Float>) =
-                    createListFeeShareByRoomAndByPerson(feeWithSplitters, rooms, persons)
+            val (roomSplitFees: MutableMap<Int, Float>,
+                    personSplitFees: MutableMap<Int, Float>,
+                    personPrepaidFees: Map<Int, Float>
+            ) =
+                    createListFeeShareByRoomAndByPerson(
+                            feeWithSplitters = feeWithSplitters,
+                            rooms = rooms,
+                            persons = persons,
+                            payers = feeDao.getAllFeePayers(feeWithSplitters.fee.id))
 
-            prepareBillItems(roomSplitFees, rooms, billItemToRoomId, feeWithSplitters, personSplitFees)
+            prepareBillItems(
+                    roomSplitFees = roomSplitFees,
+                    rooms = rooms,
+                    billItemToRoomId = billItemToRoomId,
+                    feeWithSplitters = feeWithSplitters,
+                    personSplitFees = personSplitFees,
+                    payers = personPrepaidFees)
         }
 
         resultLiveData.postValue(billItemToRoomId.values.toList())
@@ -53,10 +69,11 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
                                  rooms: Map<Int?, UnitWithPersons>,
                                  billItemToRoomId: MutableMap<Int, BillListItem>,
                                  feeWithSplitters: FeeWithSplitters,
-                                 personSplitFees: MutableMap<Int, Float>) {
+                                 personSplitFees: MutableMap<Int, Float>,
+                                 payers: Map<Int, Float>) {
         for (roomSplitFee in roomSplitFees) {
             val roomId = roomSplitFee.key
-            val amount = roomSplitFee.value
+            var amount = roomSplitFee.value
 
             rooms[roomId]?.unit?.let { room ->
                 val billItem = billItemToRoomId[roomId]
@@ -68,13 +85,21 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
                         ).apply {
                             rooms[roomId]!!.getProfilePictureLiveData(context, profilePicture)
                         }
+
+                //minus all amount of prepaid money
+                rooms[roomId]!!.roommates?.forEach {
+                    payers[it.id]?.let { amount -=it }
+                }
+
                 billItem.amount += amount
+
                 prepareBillDetails(
-                        billItem.billDetails,
-                        feeWithSplitters.fee,
-                        amount,
-                        rooms[roomId]!!.roommates,
-                        personSplitFees)
+                        billDetails = billItem.billDetails,
+                        fee = feeWithSplitters.fee,
+                        amount = amount,
+                        roommates = rooms[roomId]!!.roommates,
+                        personSplitFees = personSplitFees,
+                        payers = payers)
 
                 billItemToRoomId.put(roomId, billItem)
             }
@@ -82,9 +107,10 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
     }
 
     /**
-     * Create 2 lists for the current fee:
+     * Create 3 lists for the current fee:
      *  + List of person sharing this fee
      *  + List of roomWithRoommates sharing this fee
+     *  + List of pre-payers for this fee
      *
      * In case this fee is shared by roomWithRoommates, for each roomWithRoommates sharing this fee:
      * include all roommates in this roomWithRoommates into list of person sharing this fee,
@@ -96,10 +122,12 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
      */
     private fun createListFeeShareByRoomAndByPerson(feeWithSplitters: FeeWithSplitters,
                                                     rooms: Map<Int?, UnitWithPersons>,
-                                                    persons: Map<Int?, Person>):
-            Pair<MutableMap<Int, Float>, MutableMap<Int, Float>> {
+                                                    persons: Map<Int?, Person>,
+                                                    payers: List<FeePayer>):
+            Triple<MutableMap<Int, Float>, MutableMap<Int, Float>, Map<Int, Float>> {
         val roomSplitFees: MutableMap<Int, Float> = mutableMapOf()
         val personSplitFees: MutableMap<Int, Float> = mutableMapOf()
+        val personPrepaidFees = payers.filter { it.feePrepaid?.amount != null }.associateBy ({it.person.id!!} , {it.feePrepaid!!.amount.toFloat()})
 
         feeWithSplitters.splitters?.let {
             val totalShare = it.sumBy { it.share }.toFloat()
@@ -123,7 +151,8 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
                 }
             }
         }
-        return Pair(roomSplitFees, personSplitFees)
+
+        return Triple(roomSplitFees, personSplitFees, personPrepaidFees)
     }
 
     /**
@@ -134,11 +163,13 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
                                    fee: Fee,
                                    amount: Float,
                                    roommates: List<Person>?,
-                                   personSplitFees: MutableMap<Int, Float>) {
+                                   personSplitFees: MutableMap<Int, Float>,
+                                   payers: Map<Int, Float>) {
         val newItem = BillDetailListItem(
                 mainName = fee.name,
                 amount = amount,
-                roommates = prepareBillRoommates(roommates, personSplitFees)
+                roommates = prepareBillRoommates(roommates, personSplitFees),
+                payers = prepareBillPayers(roommates, payers)
         )
         billDetails.add(newItem)
     }
@@ -152,6 +183,24 @@ class MonthlyBillRepository @Inject constructor(private val splitterDao: Splitte
         val roommateSplitFee : MutableList<BillRoommateListItem> = mutableListOf()
         roommates?.forEach { roommate ->
             personSplitFees[roommate.id]?.let {
+                roommateSplitFee.add(BillRoommateListItem(
+                        mainName = roommate.name,
+                        amount = it
+                ))
+            }
+        }
+        return roommateSplitFee
+    }
+
+    /**
+     * Create a list of roommates prepaying the current fee in the current roomWithRoommates
+     */
+    private fun prepareBillPayers(roommates: List<Person>?,
+                                  payers: Map<Int, Float>)
+            : MutableList<BillRoommateListItem> {
+        val roommateSplitFee : MutableList<BillRoommateListItem> = mutableListOf()
+        roommates?.forEach { roommate ->
+            payers[roommate.id]?.let {
                 roommateSplitFee.add(BillRoommateListItem(
                         mainName = roommate.name,
                         amount = it

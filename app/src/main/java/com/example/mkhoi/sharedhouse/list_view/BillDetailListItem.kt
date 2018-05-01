@@ -5,16 +5,20 @@ import android.os.Parcelable
 
 data class BillDetailListItem(var mainName: String,
                               var amount: Float,
-                              var roommates: MutableList<BillRoommateListItem>): Parcelable {
+                              var roommates: MutableList<BillRoommateListItem>,
+                              var payers: MutableList<BillRoommateListItem>): Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readFloat(),
-            parcel.createTypedArrayList(BillRoommateListItem.CREATOR).toMutableList())
+            parcel.createTypedArrayList(BillRoommateListItem.CREATOR).toMutableList(),
+            parcel.createTypedArrayList(BillRoommateListItem.CREATOR).toMutableList()
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(mainName)
         parcel.writeFloat(amount)
         parcel.writeTypedList(roommates)
+        parcel.writeTypedList(payers)
     }
 
     override fun describeContents(): Int {

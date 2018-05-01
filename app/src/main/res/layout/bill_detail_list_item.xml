@@ -61,6 +61,27 @@
                 app:layoutManager="LinearLayoutManager"
                 tools:listitem="@layout/bill_simple_detail_list_item" />
 
+            <LinearLayout
+                android:id="@+id/bill_detail_payers_list_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Caption"
+                    android:text="@string/bill_detail_payers_list_caption"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/bill_detail_payers_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="LinearLayoutManager"
+                    tools:listitem="@layout/bill_simple_detail_list_item" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

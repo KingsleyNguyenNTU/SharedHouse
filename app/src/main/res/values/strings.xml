@@ -97,4 +97,5 @@
     <string name="save_fee_fail_title">Saving Expense Failed</string>
     <string name="save_fee_fail_message">Total prepaod money should be less than the expense amount.</string>
     <string name="prepaid_label">Prepaid amount</string>
+    <string name="bill_detail_payers_list_caption">This expense has been prepaid by:</string>
 </resources>

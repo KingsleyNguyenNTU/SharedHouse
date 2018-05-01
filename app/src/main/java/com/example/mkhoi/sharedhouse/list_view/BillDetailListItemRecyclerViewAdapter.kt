@@ -5,6 +5,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.mkhoi.sharedhouse.R
@@ -20,6 +22,17 @@ class BillDetailListItemRecyclerViewAdapter(private val data: List<BillDetailLis
         holder.amount.text = data[position].amount.toDisplayAmount()
         holder.detailList.layoutManager = LinearLayoutManager(holder.context)
         holder.detailList.adapter = BillRoommateListItemRecyclerViewAdapter(data[position].roommates)
+
+        data[position].payers.apply {
+            if (isEmpty()){
+                holder.payerListRoot.visibility = GONE
+            } else {
+                holder.payerListRoot.visibility = VISIBLE
+                holder.payersList.layoutManager = LinearLayoutManager(holder.context)
+                holder.payersList.adapter = BillRoommateListItemRecyclerViewAdapter(this)
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,12 +47,16 @@ class BillDetailListItemRecyclerViewAdapter(private val data: List<BillDetailLis
         val name: TextView
         val amount: TextView
         val detailList: RecyclerView
+        val payersList: RecyclerView
+        val payerListRoot: View
 
         init {
             context = mView.context
             name = mView.findViewById(R.id.list_item_name)
             amount = mView.findViewById(R.id.list_item_amount)
             detailList = mView.findViewById(R.id.bill_detail_roommate_list)
+            payersList = mView.findViewById(R.id.bill_detail_payers_list)
+            payerListRoot = mView.findViewById(R.id.bill_detail_payers_list_root)
         }
     }
 }
