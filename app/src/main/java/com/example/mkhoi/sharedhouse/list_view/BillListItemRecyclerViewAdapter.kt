@@ -10,15 +10,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.mkhoi.sharedhouse.R
+import com.example.mkhoi.sharedhouse.monthly_bill.detail.MonthlyBillDetailActivity
 import com.example.mkhoi.sharedhouse.util.*
 import com.squareup.picasso.Picasso
-
-
-
 
 class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
     : RecyclerView.Adapter<BillListItemRecyclerViewAdapter.ViewHolder>() {
@@ -31,8 +30,6 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.name.text = data[position].mainName
         holder.amount.text = data[position].amount.toDisplayAmount()
-        holder.detailList.layoutManager = LinearLayoutManager(holder.context)
-        holder.detailList.adapter = BillDetailListItemRecyclerViewAdapter(data[position].billDetails)
 
         data[position].profilePicture.observeForever {
             Picasso.get()
@@ -51,6 +48,13 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
                         sendBill(holder.context, data[position])
                     }
             )
+        }
+
+        holder.mainView.setOnClickListener {
+            holder.context.startActivity(MonthlyBillDetailActivity.createIntent(
+                    context = holder.context,
+                    billDetailList = ArrayList(data[position].billDetails),
+                    name = data[position].mainName))
         }
     }
 
@@ -135,11 +139,11 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
 
     inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val context: Context = mView.context
-        val avatar: ImageView = mView.findViewById(R.id.list_item_avatar)
-        val name: TextView = mView.findViewById(R.id.list_item_name)
-        val amount: TextView = mView.findViewById(R.id.list_item_amount)
-        val detailList: RecyclerView = mView.findViewById(R.id.bill_detail_list)
-        val sendBtn: ImageView = mView.findViewById(R.id.list_item_send)
+        val mainView = mView.findViewById<View>(R.id.bill_list_item_root)
+        val avatar: ImageView = mView.findViewById(R.id.bill_list_item_avatar)
+        val name: TextView = mView.findViewById(R.id.bill_list_item_name)
+        val amount: TextView = mView.findViewById(R.id.bill_list_item_amount)
+        val sendBtn: Button = mView.findViewById(R.id.bill_list_item_send)
 
     }
 }

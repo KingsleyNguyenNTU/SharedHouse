@@ -47,6 +47,7 @@ dependencies {
     implementation "com.android.support:exifinterface:$sdk_version"
     implementation "com.android.support:customtabs:$sdk_version"
 
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     kapt "android.arch.persistence.room:compiler:$room_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.android.databinding:compiler:$gradle_version"

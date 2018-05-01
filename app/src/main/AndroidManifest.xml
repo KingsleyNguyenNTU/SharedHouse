@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mkhoi.sharedhouse">
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name=".MyApp"
@@ -14,50 +17,51 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".monthly_bill.MonthlyBillActivity"
             android:label="@string/bill_fragment_title"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".fee_edit.EditFeeActivity"
             android:label="@string/edit_fee_fragment_title"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".rooms_view.RoomsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".rooms_view.RoomsActivity"
             android:label="@string/rooms_fragment_title"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".fees_view.FeesActivity"
+        <activity
+            android:name=".fees_view.FeesActivity"
             android:label="@string/fees_fragment_title"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".settings.SettingsActivity"
+        <activity
+            android:name=".settings.SettingsActivity"
             android:label="@string/settings_fragment_title"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".backup.BackupActivity"
+        <activity
+            android:name=".backup.BackupActivity"
             android:label="@string/backup_fragment_title"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".restore.RestoreActivity"
+        <activity
+            android:name=".restore.RestoreActivity"
             android:label="@string/restore_fragment_title"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".room_edit.EditRoomActivity"
+        <activity
+            android:name=".room_edit.EditRoomActivity"
             android:label="@string/edit_rooms_fragment_title"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".monthly_bill.detail.MonthlyBillDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
+
 </manifest>
