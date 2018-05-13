@@ -5,4 +5,5 @@
     <color name="colorAccent">#109689</color>
     <color name="app_background">#FFFFFF</color>
     <color name="app_grey_background">#ababab</color>
+    <color name="app_red">#c90000</color>
 </resources>
