@@ -1,10 +1,12 @@
 package com.example.mkhoi.sharedhouse.list_view
 
+import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,6 +16,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.example.mkhoi.sharedhouse.MainActivity
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.monthly_bill.detail.MonthlyBillDetailActivity
 import com.example.mkhoi.sharedhouse.util.*
@@ -41,13 +44,19 @@ class BillListItemRecyclerViewAdapter(private val data: List<BillListItem>)
         }
 
         holder.sendBtn.setOnClickListener {
-            holder.context.showBasicDialog(
-                    titleResId = R.string.send_bill_dialog_title,
-                    message = holder.context.getString(R.string.send_bill_dialog_msg, data[position].mainName),
-                    positiveFunction = {
-                        sendBill(holder.context, data[position])
-                    }
-            )
+            val mainActivity = holder.context as MainActivity
+            if (mainActivity.hasWriteExternalPermission()) {
+                holder.context.showBasicDialog(
+                        titleResId = R.string.send_bill_dialog_title,
+                        message = holder.context.getString(R.string.send_bill_dialog_msg, data[position].mainName),
+                        positiveFunction = {
+                            sendBill(holder.context, data[position])
+                        }
+                )
+            } else ActivityCompat.requestPermissions(mainActivity,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    MainActivity.WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
+
         }
 
         holder.mainView.setOnClickListener {

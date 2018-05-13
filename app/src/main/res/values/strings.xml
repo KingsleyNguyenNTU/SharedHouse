@@ -83,7 +83,7 @@
     <string name="house_picture_setting_label">House Profile Picture</string>
     <string name="house_name_setting_label">House Name</string>
     <string name="permission_required_dialog_title">Permission Required</string>
-    <string name="write_external_storage_dialog_msg">Without the permission to write to external storage, we cannot perform backup</string>
+    <string name="write_external_storage_dialog_msg">Without the permission to write to external storage, we cannot perform the action</string>
     <string name="read_contact_dialog_msg">Without the permission to read contacts, profile pictures for rooms and roommates won\'t be shown</string>
     <string name="input_setting_dialog_msg">Please input the new value for this setting</string>
     <string name="send_bill_msg">Send Bill via</string>

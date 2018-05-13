@@ -43,20 +43,12 @@ class BillDetailListItemRecyclerViewAdapter(private val data: List<BillDetailLis
     }
 
     inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
-        val context: Context
-        val name: TextView
-        val amount: TextView
-        val detailList: RecyclerView
-        val payersList: RecyclerView
-        val payerListRoot: View
+        val context: Context = mView.context
+        val name: TextView = mView.findViewById(R.id.list_item_name)
+        val amount: TextView = mView.findViewById(R.id.list_item_amount)
+        val detailList: RecyclerView = mView.findViewById(R.id.bill_detail_roommate_list)
+        val payersList: RecyclerView = mView.findViewById(R.id.bill_detail_payers_list)
+        val payerListRoot: View = mView.findViewById(R.id.bill_detail_payers_list_root)
 
-        init {
-            context = mView.context
-            name = mView.findViewById(R.id.list_item_name)
-            amount = mView.findViewById(R.id.list_item_amount)
-            detailList = mView.findViewById(R.id.bill_detail_roommate_list)
-            payersList = mView.findViewById(R.id.bill_detail_payers_list)
-            payerListRoot = mView.findViewById(R.id.bill_detail_payers_list_root)
-        }
     }
 }
