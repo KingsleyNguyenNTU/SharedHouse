@@ -8,11 +8,9 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.view.View.GONE
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText

@@ -14,17 +14,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.ViewTreeObserver
 import com.example.mkhoi.sharedhouse.backup.BackupActivity
-import com.example.mkhoi.sharedhouse.backup.BackupFragment
-import com.example.mkhoi.sharedhouse.backup.RestoreFragment
 import com.example.mkhoi.sharedhouse.fees_view.FeesActivity
-import com.example.mkhoi.sharedhouse.fees_view.FeesFragment
 import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillActivity
-import com.example.mkhoi.sharedhouse.monthly_bill.MonthlyBillFragment
 import com.example.mkhoi.sharedhouse.restore.RestoreActivity
 import com.example.mkhoi.sharedhouse.rooms_view.RoomsActivity
-import com.example.mkhoi.sharedhouse.rooms_view.RoomsFragment
 import com.example.mkhoi.sharedhouse.settings.SettingsActivity
-import com.example.mkhoi.sharedhouse.settings.SettingsFragment
 import com.example.mkhoi.sharedhouse.util.CircleImageTransformation
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import com.example.mkhoi.sharedhouse.util.toBitmapFromBase64
@@ -32,8 +26,6 @@ import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
-
-
 
 
 open class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {

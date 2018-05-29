@@ -3,22 +3,17 @@ package com.example.mkhoi.sharedhouse.rooms_view
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.room_edit.EditRoomActivity
-import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
-import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import kotlinx.android.synthetic.main.fragment_room_list.*
 

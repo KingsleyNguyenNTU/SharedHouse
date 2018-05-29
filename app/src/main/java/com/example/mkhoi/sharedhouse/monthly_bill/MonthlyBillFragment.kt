@@ -3,12 +3,10 @@ package com.example.mkhoi.sharedhouse.monthly_bill
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.*
-import android.view.View.GONE
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.entity.Setting.Companion.TRUE_VALUE
 import com.example.mkhoi.sharedhouse.list_view.BillListItemRecyclerViewAdapter

@@ -13,10 +13,8 @@ import android.view.*
 import android.widget.ProgressBar
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.fee_edit.EditFeeActivity
-import com.example.mkhoi.sharedhouse.fee_edit.EditFeeFragment
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
-import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
 import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import com.example.mkhoi.sharedhouse.util.showMonthPickerDialog
 import com.example.mkhoi.sharedhouse.util.showMultipleChoicesDialog

@@ -2,7 +2,6 @@ package com.example.mkhoi.sharedhouse.database.dao
 
 import android.arch.persistence.room.*
 import com.example.mkhoi.sharedhouse.database.bean.FeePayer
-import com.example.mkhoi.sharedhouse.database.bean.PersonSplitter
 import com.example.mkhoi.sharedhouse.database.entity.Fee
 import com.example.mkhoi.sharedhouse.database.entity.FeePrepaid
 

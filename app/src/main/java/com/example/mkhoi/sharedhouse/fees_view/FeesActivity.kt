@@ -3,11 +3,8 @@ package com.example.mkhoi.sharedhouse.fees_view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import com.example.mkhoi.sharedhouse.MainActivity
 import com.example.mkhoi.sharedhouse.R
-import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
-import kotlinx.android.synthetic.main.app_bar_main.*
 
 
 class FeesActivity: MainActivity() {

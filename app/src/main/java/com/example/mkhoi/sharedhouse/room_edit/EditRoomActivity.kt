@@ -3,13 +3,9 @@ package com.example.mkhoi.sharedhouse.room_edit
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import com.example.mkhoi.sharedhouse.MainActivity
 import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.bean.UnitWithPersons
-import com.example.mkhoi.sharedhouse.room_edit.EditRoomFragment
-import com.example.mkhoi.sharedhouse.rooms_view.RoomsFragment
-import kotlinx.android.synthetic.main.app_bar_main.*
 
 
 class EditRoomActivity: MainActivity() {

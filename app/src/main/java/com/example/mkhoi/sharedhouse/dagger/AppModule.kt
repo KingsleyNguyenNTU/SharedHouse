@@ -1,8 +1,6 @@
 package com.example.mkhoi.sharedhouse.dagger
 
-import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Room
-import android.arch.persistence.room.migration.Migration
 import android.content.Context
 import com.example.mkhoi.sharedhouse.MyApp
 import com.example.mkhoi.sharedhouse.database.AppDatabase

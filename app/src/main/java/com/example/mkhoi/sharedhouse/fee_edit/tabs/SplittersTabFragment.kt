@@ -2,21 +2,19 @@ package com.example.mkhoi.sharedhouse.fee_edit.tabs
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.mkhoi.sharedhouse.R
-import com.example.mkhoi.sharedhouse.fee_edit.EditFeeViewModel
-import android.arch.lifecycle.ViewModelProviders
-import android.net.Uri
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.widget.EditText
+import com.example.mkhoi.sharedhouse.R
 import com.example.mkhoi.sharedhouse.database.entity.FeeShare
-import com.example.mkhoi.sharedhouse.fee_edit.EditFeeFragment
+import com.example.mkhoi.sharedhouse.fee_edit.EditFeeViewModel
 import com.example.mkhoi.sharedhouse.list_view.ListItem
 import com.example.mkhoi.sharedhouse.list_view.ListItemRecyclerViewAdapter
 import com.example.mkhoi.sharedhouse.util.getProfilePictureLiveData
