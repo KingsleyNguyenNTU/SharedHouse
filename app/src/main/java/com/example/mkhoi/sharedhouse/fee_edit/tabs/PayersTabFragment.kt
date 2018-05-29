@@ -62,15 +62,15 @@ class PayersTabFragment: Fragment() {
             ).apply {
                 onClickAction = {
                     val feePrepaid = it.feePrepaid!!
-                    val dialogView = LayoutInflater.from(context).inflate(R.layout.add_feeshare_dialog, null)
-                    val inputShareFraction = dialogView.findViewById(R.id.input_splitter_fraction) as EditText
-                    inputShareFraction.setText((feePrepaid.amount).toString())
+                    val dialogView = LayoutInflater.from(context).inflate(R.layout.add_prepaid_dialog, null)
+                    val amount = dialogView.findViewById(R.id.input_prepaid) as EditText
+                    amount.setText((feePrepaid.amount).toString())
 
                     context?.showCustomDialog(
                             customView = dialogView,
                             titleResId = R.string.edit_splitter_fraction_dialog_title,
                             positiveFunction = {
-                                feePrepaid.amount = inputShareFraction.text.toString().toDouble()
+                                feePrepaid.amount = amount.text.toString().toDouble()
                                 updatePayerList(payers)
                             }
                     )
@@ -96,7 +96,7 @@ class PayersTabFragment: Fragment() {
             }
 
             context?.showMultipleChoicesDialog(
-                    titleResId = R.string.add_person_splitter_dialog_title,
+                    titleResId = R.string.add_fee_payers_dialog_title,
                     selectedItems = selectedItems,
                     multipleChoices = multipleChoices,
                     positiveFunction = {

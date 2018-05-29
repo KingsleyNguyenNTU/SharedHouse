@@ -67,6 +67,14 @@ class EditFeeViewModel(private val selectedMonth: Calendar,
 
     }
 
+    fun saveValidation(): Boolean{
+        return fee.value?.let {fee ->
+            val totalPrepaid = feePayers.value?.map { it.feePrepaid?.amount ?: 0.0 }?.sum() ?: 0.0
+            (totalPrepaid <= fee.amount)
+        } ?: false
+
+    }
+
     class Factory(private val selectedMonth: Calendar,
                   private val feeWithSplitters: FeeWithSplitters?) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

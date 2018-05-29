@@ -22,8 +22,7 @@ import com.example.mkhoi.sharedhouse.fee_edit.EditFeeActivity.Companion.SELECTED
 import com.example.mkhoi.sharedhouse.fee_edit.tabs.EditFeeViewPagerAdapter
 import com.example.mkhoi.sharedhouse.fee_edit.tabs.EditFeeViewPagerAdapter.Companion.PAYER_TAB_POS
 import com.example.mkhoi.sharedhouse.fee_edit.tabs.EditFeeViewPagerAdapter.Companion.SPLITTER_TAB_POS
-import com.example.mkhoi.sharedhouse.fee_edit.tabs.PayersTabFragment
-import com.example.mkhoi.sharedhouse.fee_edit.tabs.SplittersTabFragment
+import com.example.mkhoi.sharedhouse.util.showBasicDialog
 import kotlinx.android.synthetic.main.fragment_edit_fee.*
 import java.util.*
 
@@ -74,7 +73,15 @@ class EditFeeFragment: Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return if (item?.itemId == R.id.action_saving){
-            viewModel.save()
+            if (viewModel.saveValidation())
+                viewModel.save()
+            else {
+                context?.showBasicDialog(
+                        titleResId = R.string.save_fee_fail_title,
+                        message = getString(R.string.save_fee_fail_message),
+                        positiveFunction = {}
+                )
+            }
             true
         } else super.onOptionsItemSelected(item)
     }

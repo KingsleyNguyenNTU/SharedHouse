@@ -93,4 +93,8 @@
     <string name="edit_fee_payerers_text_label">Payers</string>
     <string name="action_saving_title">Save</string>
     <string name="payers_caption_text">Paid: %1$s</string>
+    <string name="add_fee_payers_dialog_title">Select Fee Payers</string>
+    <string name="save_fee_fail_title">Saving Expense Failed</string>
+    <string name="save_fee_fail_message">Total prepaod money should be less than the expense amount.</string>
+    <string name="prepaid_label">Prepaid amount</string>
 </resources>
